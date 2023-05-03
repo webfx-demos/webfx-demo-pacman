@@ -23,36 +23,33 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
+import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 /**
  * Base class of all 2D scenes. Each 2D scene has its own canvas.
@@ -133,7 +130,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		var width = ASPECT_RATIO * height;
 		var scaling = height / HEIGHT;
-		fxSubScene.resize(width, height);
+		fxSubScene.setMaxSize(width, height);
 		//fxSubScene.setWidth(width);
 		//fxSubScene.setHeight(height);
 		scale.setX(scaling);
