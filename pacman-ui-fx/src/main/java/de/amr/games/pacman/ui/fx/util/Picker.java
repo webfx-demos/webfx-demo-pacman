@@ -38,9 +38,9 @@ public class Picker<T> {
 
 	@SuppressWarnings("unchecked")
 	public Picker(T... items) {
-		/*if (items.length == 0) {
+		if (items.length == 0) {
 			throw new IllegalArgumentException("Must provide at least one item to select");
-		}*/
+		}
 		this.entries = Arrays.asList(Arrays.copyOf(items, items.length));
 		Collections.shuffle(entries);
 		current = 0;
