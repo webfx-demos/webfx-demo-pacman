@@ -180,7 +180,7 @@ public class AppRes {
 		public static String message(String keyPattern, Object... args) {
 			try {
 				var pattern = messageBundle.get(keyPattern);
-				for (int i= 0; i < args.length; i++) pattern = pattern.replaceAll("\\{" + i + "}", args[i].toString());
+				for (int i= 0; i < args.length; i++) pattern = pattern.replaceAll("\\{" + i + "\\D*}", args[i].toString());
 				return pattern; //return MessageFormat.format(pattern, args);
 			} catch (Exception x) {
 				Logger.error("No text resource found for key '{}'", keyPattern);
