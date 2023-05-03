@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project executable="true">
 
-    <exported-packages>
-        <source-packages/>
-    </exported-packages>
-
     <dependencies>
-        <used-by-source-modules/>
+        <used-by-source-modules>
+            <undetected-module>org.jresearch.gwt.time.tzdb</undetected-module>
+        </used-by-source-modules>
     </dependencies>
 
 </project>
