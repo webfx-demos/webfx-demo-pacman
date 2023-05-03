@@ -34,7 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
+//import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 /**
@@ -51,7 +51,7 @@ public class Ufx {
 		booleanProperty.set(!booleanProperty.get());
 	}
 
-	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> colorProperty) {
+	/*public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> colorProperty) {
 		var material = new PhongMaterial();
 		bindMaterialColorProperties(material, colorProperty);
 		return material;
@@ -61,7 +61,7 @@ public class Ufx {
 		material.diffuseColorProperty().bind(colorProperty);
 		material.specularColorProperty()
 				.bind(Bindings.createObjectBinding(() -> material.getDiffuseColor().brighter(), colorProperty));
-	}
+	}*/
 
 	/**
 	 * Pauses for the given number of seconds.

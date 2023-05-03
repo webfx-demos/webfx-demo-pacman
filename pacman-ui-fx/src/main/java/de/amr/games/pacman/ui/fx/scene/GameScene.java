@@ -27,8 +27,10 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 /**
@@ -72,7 +74,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	SubScene fxSubScene();
+	Node fxSubScene();
 
 	/**
 	 * @return if this is a scene with 3D content

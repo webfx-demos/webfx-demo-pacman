@@ -34,10 +34,14 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
+import dev.webfx.platform.console.Console;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 
 /**
  * @author Armin Reichert
@@ -66,7 +70,7 @@ public class BootScene extends GameScene2D {
 
 	private void clearImage() {
 		ctx.setFill(AppRes.ArcadeTheme.BLACK);
-		ctx.fillRect(0, 0, image.getWidth(), image.getHeight());
+		ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	private void saveImage() {
@@ -89,6 +93,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void drawScene(GraphicsContext g) {
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 		g.drawImage(image, 0, 0);
 	}
 
@@ -107,7 +112,8 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomSpriteImage() {
 		clearImage();
-		if (context.rendering2D() instanceof SpritesheetRenderer ssr) {
+		if (context.rendering2D() instanceof SpritesheetRenderer) {
+			SpritesheetRenderer ssr = (SpritesheetRenderer) context.rendering2D();
 			for (int row = 0; row < TILES_Y / 2; ++row) {
 				if (RND.nextInt(100) > 10) {
 					var region1 = randomSquare(ssr.spritesheet());
@@ -126,8 +132,8 @@ public class BootScene extends GameScene2D {
 	private Rectangle2D randomSquare(Spritesheet ss) {
 		var source = ss.source();
 		var raster = ss.raster();
-		double x = RND.nextDouble(source.getWidth() - raster);
-		double y = RND.nextDouble(source.getHeight() - raster);
+		double x = RND.nextDouble() * (source.getWidth() - raster);
+		double y = RND.nextDouble() * (source.getHeight() - raster);
 		return new Rectangle2D(x, y, raster, raster);
 	}
 

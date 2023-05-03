@@ -24,45 +24,44 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.util;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.function.Function;
-
-import org.tinylog.Logger;
-
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
  */
 public class ResourceMgr {
 
-	private final Function<String, URL> urlComputation;
+	//private final Function<String, URL> urlComputation;
 	private final String rootDir;
 
-	public ResourceMgr(String rootDir, Function<String, URL> urlComputation) {
+	public ResourceMgr(String rootDir/*, Function<String, URL> urlComputation*/) {
 		checkNotNull(rootDir);
-		checkNotNull(urlComputation);
+		//checkNotNull(urlComputation);
 		this.rootDir = rootDir;
-		this.urlComputation = urlComputation;
+		//this.urlComputation = urlComputation;
 	}
 
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return URL of resource addressed by this path
 	 */
-	public URL urlFromRelPath(String relPath) {
+	public String urlFromRelPath(String relPath) {
 		checkNotNull(relPath);
-		return urlComputation.apply(rootDir + relPath);
+		return dev.webfx.platform.resource.Resource.toUrl(rootDir + relPath, ResourceMgr.class);
+		//return urlComputation.apply(rootDir + relPath);
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class ResourceMgr {
 	 * @return audio clip from resource addressed by this path
 	 */
 	public AudioClip audioClip(String relPath) {
-		return new AudioClip(urlFromRelPath(relPath).toExternalForm());
+		return new AudioClip(urlFromRelPath(relPath));
 	}
 
 	/**
@@ -80,10 +79,10 @@ public class ResourceMgr {
 	 */
 	public Font font(String relPath, double size) {
 		if (size <= 0) {
-			throw new IllegalArgumentException("Font size must be positive but is %.2f".formatted(size));
+			throw new IllegalArgumentException("Font size must be positive but is %.2f"/*.formatted(size)*/);
 		}
 		var url = urlFromRelPath(relPath);
-		var font = Font.loadFont(url.toExternalForm(), size);
+		var font = Font.loadFont(url, size);
 		if (font == null) {
 			Logger.error("Font with URL '{}' could not be loaded", url);
 			return Font.font(Font.getDefault().getFamily(), size);
@@ -91,12 +90,20 @@ public class ResourceMgr {
 		return font;
 	}
 
+	private final ArrayList<Image> loadedImages = new ArrayList<>();
+
+	public Image[] getLoadedImages() {
+		return loadedImages.toArray(new Image[0]);
+	}
+
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return image loaded from resource addressed by this path.
 	 */
 	public Image image(String relPath) {
-		return new Image(urlFromRelPath(relPath).toExternalForm());
+		Image image = new Image(urlFromRelPath(relPath), true);
+		loadedImages.add(image);
+		return image;
 	}
 
 	public Background colorBackground(Color color) {
@@ -108,24 +115,38 @@ public class ResourceMgr {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
-	public PhongMaterial coloredMaterial(Color color) {
+	/*public PhongMaterial coloredMaterial(Color color) {
 		checkNotNull(color);
 		var material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		return material;
-	}
+	}*/
 
 	public Color color(Color color, double opacity) {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
-	public Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+	public Picker<String> createPicker(Map<String, String> bundle, String prefix) {
 		checkNotNull(bundle);
 		return new Picker<>(bundle.keySet().stream()//
 				.filter(key -> key.startsWith(prefix))//
 				.sorted()//
-				.map(bundle::getString)//
+				.map(bundle::get)//
 				.toArray(String[]::new));
+	}
+
+	public Map<String, String> loadBundle(String relPath) {
+		Map<String, String> map = new HashMap<>();
+		map.put("app.title.ms_pacman", "Ms. Pac-Man {0}");
+		map.put("app.title.ms_pacman.paused", "Ms. Pac-Man {0} (paused)");
+		map.put("app.title.pacman", "Pac-Man {0}");
+		map.put("app.title.pacman.paused", "Pac-Man {0} (paused)");
+		map.put("autopilot_on", "Autopilot ON");
+		map.put("autopilot_off", "Autopilot OFF");
+		map.put("player_immunity_on", "Player is immune");
+		map.put("player_immunity_off", "Player is vulnerable");
+		map.put("cheat_add_lives", "You have {0,number,integer} lives now");
+		return map;
 	}
 }

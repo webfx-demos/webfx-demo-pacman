@@ -25,8 +25,58 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 /**
  * @author Armin Reichert
  */
-public record MazeColoring(Color foodColor, Color wallTopColor, Color wallBaseColor, Color houseDoorColor) {
+public class MazeColoring {
+
+    Color foodColor; Color wallTopColor; Color wallBaseColor; Color houseDoorColor;
+
+    public MazeColoring(Color foodColor, Color wallTopColor, Color wallBaseColor, Color houseDoorColor) {
+        this.foodColor = foodColor;
+        this.wallTopColor = wallTopColor;
+        this.wallBaseColor = wallBaseColor;
+        this.houseDoorColor = houseDoorColor;
+    }
+
+    public Color foodColor() {
+        return foodColor;
+    }
+
+    public Color wallTopColor() {
+        return wallTopColor;
+    }
+
+    public Color wallBaseColor() {
+        return wallBaseColor;
+    }
+
+    public Color houseDoorColor() {
+        return houseDoorColor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MazeColoring that = (MazeColoring) o;
+
+        if (!Objects.equals(foodColor, that.foodColor)) return false;
+        if (!Objects.equals(wallTopColor, that.wallTopColor)) return false;
+        if (!Objects.equals(wallBaseColor, that.wallBaseColor))
+            return false;
+        return Objects.equals(houseDoorColor, that.houseDoorColor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = foodColor != null ? foodColor.hashCode() : 0;
+        result = 31 * result + (wallTopColor != null ? wallTopColor.hashCode() : 0);
+        result = 31 * result + (wallBaseColor != null ? wallBaseColor.hashCode() : 0);
+        result = 31 * result + (houseDoorColor != null ? houseDoorColor.hashCode() : 0);
+        return result;
+    }
 }

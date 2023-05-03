@@ -23,10 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
@@ -40,6 +36,10 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
 
 /**
  * Intro scene of the PacMan game.
@@ -105,26 +105,30 @@ public class PacManIntroScene extends GameScene2D {
 		var timer = intro.state().timer();
 		drawGallery(g);
 		switch (intro.state()) {
-		case SHOWING_POINTS -> {
+			case SHOWING_POINTS: {
 			drawPoints(g);
+			break;
 		}
-		case CHASING_PAC -> {
+			case CHASING_PAC: {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
 			drawCopyright(g);
+			break;
 		}
-		case CHASING_GHOSTS -> {
+			case CHASING_GHOSTS: {
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
+			break;
 		}
-		case READY_TO_PLAY -> {
+			case READY_TO_PLAY: {
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
+			break;
 		}
-		default -> { // nothing to do
+			default: { // nothing to do
 		}
 		}
 		drawLevelCounter(g);

@@ -31,6 +31,6 @@ package de.amr.games.pacman.ui.fx.sound;
 public class SoundException extends RuntimeException {
 
 	public SoundException(String message, Object... args) {
-		super(message.formatted(args));
+		super(message/*.formatted(args)*/);
 	}
 }

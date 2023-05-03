@@ -67,7 +67,8 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.show();
 
 		// TODO make this work for all renderers
-		if (context.rendering2D() instanceof PacManGameRenderer r) {
+		if (context.rendering2D() instanceof PacManGameRenderer) {
+			PacManGameRenderer r = (PacManGameRenderer) context.rendering2D();
 			var pacAnimations = r.createPacAnimations(pac);
 			pacAnimations.put(GameModel.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
 			pac.setAnimations(pacAnimations);
@@ -100,25 +101,29 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 260 -> {
+			case 260: {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.setPixelSpeed(0.75f);
 			blinky.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_GHOST_BLUE));
+			break;
 		}
-		case 400 -> {
+			case 400: {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_PAC_BIG));
+			break;
 		}
-		case 632 -> {
+			case 632: {
 			context.state().timer().expire();
+			break;
 		}
-		default -> {
+			default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
 			blinky.animate();
+			break;
 		}
 		}
 	}
@@ -136,9 +141,9 @@ public class PacManCutscene1 extends GameScene2D {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), TS * (1), TS * (5));
+				g.fillText("Wait " + initialDelay, TS * (1), TS * (5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), TS * (1), TS * (5));
+				g.fillText("Frame " + frame, TS * (1), TS * (5));
 			}
 		}
 	}

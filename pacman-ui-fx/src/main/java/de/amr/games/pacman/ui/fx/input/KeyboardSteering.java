@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.input;
 import java.util.Map;
 import java.util.Optional;
 
+import dev.webfx.platform.util.collection.Collections;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.Steering;
@@ -57,16 +58,20 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	public KeyboardSteering(KeyCodeCombination up, KeyCodeCombination down, KeyCodeCombination left,
 			KeyCodeCombination right) {
-		directionByKey = Map.of(up, Direction.UP, down, Direction.DOWN, left, Direction.LEFT, right, Direction.RIGHT);
+        directionByKey = Collections.mapOf(up, Direction.UP, down, Direction.DOWN, left, Direction.LEFT, right, Direction.RIGHT);
 	}
 
 	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
-		directionByKey = Map.of(//
-				new KeyCodeCombination(up), Direction.UP, //
-				new KeyCodeCombination(down), Direction.DOWN, //
-				new KeyCodeCombination(left), Direction.LEFT, //
-				new KeyCodeCombination(right), Direction.RIGHT//
-		);
+        KeyCodeCombination k1 = new KeyCodeCombination(up);
+        KeyCodeCombination k2 = new KeyCodeCombination(down);
+        KeyCodeCombination k3 = new KeyCodeCombination(left);
+        KeyCodeCombination k4 = new KeyCodeCombination(right);
+        //
+        //
+        //
+        //
+        //
+        directionByKey = Collections.mapOf(k1, Direction.UP, k2, Direction.DOWN, k3, Direction.LEFT, k4, Direction.RIGHT);
 	}
 
 	@Override
@@ -92,7 +97,8 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 			e.consume();
 			return;
 		}
-		dir = computeDirection(e).or(() -> DEFAULT_STEERING.computeDirection(e)).orElse(null);
+		//dir = computeDirection(e).or(() -> DEFAULT_STEERING.computeDirection(e)).orElse(null);
+		dir = computeDirection(e).orElse(DEFAULT_STEERING.computeDirection(e).orElse(null));
 		if (dir != null) {
 			e.consume();
 		}

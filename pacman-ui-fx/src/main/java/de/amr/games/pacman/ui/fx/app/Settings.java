@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.util.Map;
 import java.util.function.Function;
 
+import dev.webfx.platform.util.collection.Collections;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -48,18 +49,18 @@ public class Settings {
 	}
 
 	private static Map<Direction, KeyCode> parseKeyMap(String spec) {
-		return switch (spec) {
-		case "numpad" -> Map.of(//
-				Direction.UP, KeyCode.NUMPAD8, //
-				Direction.DOWN, KeyCode.NUMPAD5, //
-				Direction.LEFT, KeyCode.NUMPAD4, //
-				Direction.RIGHT, KeyCode.NUMPAD6);
-		default -> Map.of(//
-				Direction.UP, KeyCode.UP, //
-				Direction.DOWN, KeyCode.DOWN, //
-				Direction.LEFT, KeyCode.LEFT, //
-				Direction.RIGHT, KeyCode.RIGHT);
-		};
+		switch (spec) {
+			case "numpad": //
+                //
+                //
+                //
+                return Collections.mapOf(Direction.UP, KeyCode.NUMPAD8, Direction.DOWN, KeyCode.NUMPAD5, Direction.LEFT, KeyCode.NUMPAD4, Direction.RIGHT, KeyCode.NUMPAD6);
+            default: //
+                //
+                //
+                //
+                return Collections.mapOf(Direction.UP, KeyCode.UP, Direction.DOWN, KeyCode.DOWN, Direction.LEFT, KeyCode.LEFT, Direction.RIGHT, KeyCode.RIGHT);
+        }
 	}
 
 	public final boolean fullScreen;
@@ -81,8 +82,8 @@ public class Settings {
 		useTestRenderer = parse(parameters, "useTestRenderer", false, Boolean::valueOf);
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "{fullScreen=%s, variant=%s, zoom=%.2f, keyMap=%s}".formatted(fullScreen, variant, zoom, keyMap);
-	}
+	}*/
 }

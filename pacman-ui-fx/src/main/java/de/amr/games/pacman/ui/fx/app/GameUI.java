@@ -23,25 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.SoundEvent;
+import de.amr.games.pacman.event.*;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -52,19 +37,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.BootScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene3;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
-import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
+import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -73,63 +46,89 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
+
+import java.util.*;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
- * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No dashboard, no picture-in-picture view.
+ * User interface for Pac-Man and Ms. Pac-Man games.
+ * <p>
+ * The play scene is available in 2D and 3D. All others scenes are 2D only.
  * 
  * @author Armin Reichert
  */
-public class GameUI extends GameLoop implements GameEventListener {
+public class GameUI implements GameEventListener {
 
-	public static final byte TILES_X = 28;
-	public static final byte TILES_Y = 36;
+	private static final byte TILES_X = 28;
+	private static final byte TILES_Y = 36;
 
-	public static final byte INDEX_BOOT_SCENE = 0;
-	public static final byte INDEX_INTRO_SCENE = 1;
-	public static final byte INDEX_CREDIT_SCENE = 2;
-	public static final byte INDEX_PLAY_SCENE = 3;
+	private static final byte INDEX_BOOT_SCENE = 0;
+	private static final byte INDEX_INTRO_SCENE = 1;
+	private static final byte INDEX_CREDIT_SCENE = 2;
+	private static final byte INDEX_PLAY_SCENE = 3;
 
-	protected final GameController gameController;
-	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	protected final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
-	protected final Stage stage;
-	protected final Scene mainScene;
-	protected final StackPane root = new StackPane();
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final SoundHandler soundHandler = new SoundHandler();
-	protected KeyboardSteering keyboardSteering;
-	protected GameScene currentGameScene;
+	public class Simulation extends GameLoop {
 
-	public GameUI(Stage stage, Settings settings, GameController gameController) {
+		public Simulation() {
+			super(GameModel.FPS);
+		}
+
+		@Override
+		public void doUpdate() {
+			gameController.update();
+			currentGameScene.update();
+		}
+
+		@Override
+		public void doRender() {
+			flashMessageView.update();
+			currentGameScene.render();
+		}
+	}
+
+	private final GameController gameController;
+	private final Simulation simulation = new Simulation();
+	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
+	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
+	private final Stage stage;
+	private final StackPane root = new StackPane();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+
+	private GameScene currentGameScene;
+
+	public GameUI(final Stage stage, final Settings settings, GameController gameController,
+			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+
 		checkNotNull(stage);
 		checkNotNull(settings);
-		checkNotNull(gameController);
 
 		this.stage = stage;
 		this.gameController = gameController;
+		var keyboardSteering = new KeyboardSteering(//
+				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
+				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+		gameController.setManualPacSteering(keyboardSteering);
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
+		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
+
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		scenes.put(GameVariant.PACMAN, pacManScenes);
 
-		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
-		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
-
-		createLayout();
-
-		// main scene
-		mainScene = new Scene(root, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
-		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
-		mainScene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToOptimalSize();
-			}
-		});
-
-		// stage
+		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
+
+		GameEvents.addListener(this);
+		initEnv(settings);
+		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
+		Actions.reboot();
+
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -137,68 +136,50 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
-		// game loop
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateUI());
-		targetFrameratePy.bind(Env.simulationSpeedPy);
-		measuredPy.bind(Env.simulationTimeMeasuredPy);
-		pausedPy.bind(Env.simulationPausedPy);
-
-		// keyboard
-		keyboardSteering = new KeyboardSteering(//
-				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
-
-		gameController.setManualPacSteering(keyboardSteering);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
-
-		initEnv(settings);
-		GameEvents.addListener(this);
-		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
-		Actions.reboot();
-
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
 		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
-	@Override
-	public void doUpdate() {
-		gameController.update();
-		currentGameScene.update();
-	}
-
-	@Override
-	public void doRender() {
-		flashMessageView.update();
-		currentGameScene.render();
-	}
-
-	protected void createLayout() {
+	private Scene createMainScene(float sizeX, float sizeY) {
+		var scene = new Scene(root, sizeX, sizeY);
+		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
+		scene.setOnKeyPressed(this::handleKeyPressed);
+		scene.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 2) {
+				resizeStageToOptimalSize();
+			}
+		});
+		var topLayer = new BorderPane();
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
-		root.getChildren().add(new BorderPane());
+		root.getChildren().add(topLayer);
+
+		return scene;
 	}
 
-	protected void resizeStageToOptimalSize() {
+	private void resizeStageToOptimalSize() {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+			//stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
 		}
 	}
 
-	protected void updateUI() {
+	private void updateMainView() {
 		root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
-		case MS_PACMAN -> {
+			case MS_PACMAN: {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
+			//stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
+			break;
 		}
-		case PACMAN -> {
+			case PACMAN: {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
+			//stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
+			break;
 		}
-		default -> throw new IllegalGameVariantException(gameController.game().variant());
+			default: throw new IllegalGameVariantException(gameController.game().variant());
 		}
 	}
 
@@ -208,36 +189,13 @@ public class GameUI extends GameLoop implements GameEventListener {
 		Keyboard.clearState();
 	}
 
-	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateUI());
-	}
+	private void initEnv(Settings settings) {
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
-	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
-		return Arrays.asList(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new PacManIntroScene(gc)),
-			new GameSceneChoice(new PacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc)), 
-			new GameSceneChoice(new PacManCutscene2(gc)),
-			new GameSceneChoice(new PacManCutscene3(gc))
-		//@formatter:on
-		);
-	}
-
-	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		return Arrays.asList(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new MsPacManIntroScene(gc)), 
-			new GameSceneChoice(new MsPacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
-		//@formatter:on
-		);
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		simulation.pausedPy.bind(Env.simulationPausedPy);
+		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
+		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 	}
 
 	/**
@@ -246,55 +204,61 @@ public class GameUI extends GameLoop implements GameEventListener {
 	 */
 	public Optional<GameScene> findGameScene(int dimension) {
 		if (dimension != 2 && dimension != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d"/*.formatted(dimension)*/);
 		}
-		var choice = sceneChoiceMatchingCurrentGameState();
-		return Optional.ofNullable(dimension == 3 ? choice.scene3D() : choice.scene2D());
+		var matching = sceneSelectionMatchingCurrentGameState();
+		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
 	}
 
-	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
+	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
 		var game = gameController.game();
 		var gameState = gameController.state();
-		int index = switch (gameState) {
-		case BOOT -> INDEX_BOOT_SCENE;
-		case CREDIT -> INDEX_CREDIT_SCENE;
-		case INTRO -> INDEX_INTRO_SCENE;
-		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> INDEX_PLAY_SCENE;
-		case INTERMISSION -> INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
-		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
-		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameState));
+		int index;
+		switch (gameState) {
+			case BOOT: index = INDEX_BOOT_SCENE; break;
+			case CREDIT: index = INDEX_CREDIT_SCENE; break;
+			case INTRO: index = INDEX_INTRO_SCENE; break;
+			case GAME_OVER:
+			case GHOST_DYING:
+			case HUNTING:
+			case LEVEL_COMPLETE:
+			case LEVEL_TEST:
+			case CHANGING_TO_NEXT_LEVEL:
+			case PACMAN_DYING:
+			case READY: index = INDEX_PLAY_SCENE; break;
+			case INTERMISSION: index = INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;  break;
+			case INTERMISSION_TEST: index = INDEX_PLAY_SCENE + game.intermissionTestNumber; break;
+			default: throw new IllegalArgumentException("Unknown game state: %s"/*.formatted(gameState)*/);
 		};
 		return scenes.get(game.variant()).get(index);
 	}
 
 	public void updateGameScene(boolean reload) {
-		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
+		var matching = sceneSelectionMatchingCurrentGameState();
+		var nextGameScene = matching.scene2D();
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
+			throw new IllegalStateException("No game scene found for game state %s."/*.formatted(gameController.state())*/);
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateUI();
+		updateMainView();
 	}
 
-	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		return choice.scene2D();
-	}
-
-	protected final void changeGameScene(GameScene newGameScene) {
+	private void changeGameScene(GameScene nextGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		newGameScene.context().setRendering2D(renderers.get(gameController.game().variant()));
-		newGameScene.init();
-		root.getChildren().set(0, newGameScene.fxSubScene());
-		newGameScene.onEmbedIntoParentScene(stage.getScene());
-		currentGameScene = newGameScene;
-		Logger.trace("Game scene changed to {}", currentGameScene);
+		var renderer = renderers.get(gameController.game().variant());
+		nextGameScene.context().setRendering2D(renderer);
+		nextGameScene.init();
+		root.getChildren().set(0, nextGameScene.fxSubScene());
+		nextGameScene.onEmbedIntoParentScene(mainScene());
+		currentGameScene = nextGameScene;
+		Logger.trace("Game scene changed to {}", nextGameScene);
 	}
 
-	protected void handleKeyboardInput() {
+	private void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
@@ -359,15 +323,73 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		soundHandler.onSoundEvent(event);
+		var sounds = AppRes.Sounds.gameSounds(event.game.variant());
+		switch (event.id) {
+			case GameModel.SE_BONUS_EATEN: sounds.play(AudioClipID.BONUS_EATEN); break;
+			case GameModel.SE_CREDIT_ADDED: sounds.play(AudioClipID.CREDIT); break;
+			case GameModel.SE_EXTRA_LIFE: sounds.play(AudioClipID.EXTRA_LIFE); break;
+			case GameModel.SE_GHOST_EATEN: sounds.play(AudioClipID.GHOST_EATEN); break;
+			case GameModel.SE_HUNTING_PHASE_STARTED_0: sounds.ensureSirenStarted(0); break;
+			case GameModel.SE_HUNTING_PHASE_STARTED_2: sounds.ensureSirenStarted(1); break;
+			case GameModel.SE_HUNTING_PHASE_STARTED_4: sounds.ensureSirenStarted(2); break;
+			case GameModel.SE_HUNTING_PHASE_STARTED_6: sounds.ensureSirenStarted(3); break;
+			case GameModel.SE_READY_TO_PLAY: sounds.play(AudioClipID.GAME_READY); break;
+			case GameModel.SE_PACMAN_DEATH: sounds.play(AudioClipID.PACMAN_DEATH); break;
+		// TODO this does not sound as in the original game
+			case GameModel.SE_PACMAN_FOUND_FOOD: sounds.ensureLoop(AudioClipID.PACMAN_MUNCH, AudioClip.INDEFINITE); break;
+			case GameModel.SE_PACMAN_POWER_ENDS: {
+			sounds.stop(AudioClipID.PACMAN_POWER);
+			event.game.level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
+			break;
+		}
+			case GameModel.SE_PACMAN_POWER_STARTS: {
+			sounds.stopSirens();
+			sounds.stop(AudioClipID.PACMAN_POWER);
+			sounds.loop(AudioClipID.PACMAN_POWER, AudioClip.INDEFINITE);
+			break;
+		}
+			case GameModel.SE_START_INTERMISSION_1: {
+			switch (event.game.variant()) {
+				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
+				case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
+				default: throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+			case GameModel.SE_START_INTERMISSION_2: {
+			switch (event.game.variant()) {
+				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_2); break;
+				case PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
+				default: throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+			case GameModel.SE_START_INTERMISSION_3: {
+			switch (event.game.variant()) {
+				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_3); break;
+				case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
+				default: throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+			case GameModel.SE_STOP_ALL_SOUNDS: sounds.stopAll(); break;
+			default: {
+			// ignore
+		}
+		}
 	}
 
 	public GameController gameController() {
 		return gameController;
 	}
 
+	public Scene mainScene() {
+		return stage.getScene();
+	}
+
 	public GameScene currentGameScene() {
 		return currentGameScene;
+	}
+
+	public Simulation simulation() {
+		return simulation;
 	}
 
 	public FlashMessageView flashMessageView() {

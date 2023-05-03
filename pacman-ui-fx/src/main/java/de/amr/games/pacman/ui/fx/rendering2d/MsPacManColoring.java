@@ -29,6 +29,36 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public record MsPacManColoring(Color headColor, Color palateColor, Color eyesColor, Color hairBowColor,
-		Color hairBowPearlsColor) {
+public class MsPacManColoring {
+
+	Color headColor; Color palateColor; Color eyesColor; Color hairBowColor;
+	Color hairBowPearlsColor;
+
+	public MsPacManColoring(Color headColor, Color palateColor, Color eyesColor, Color hairBowColor, Color hairBowPearlsColor) {
+		this.headColor = headColor;
+		this.palateColor = palateColor;
+		this.eyesColor = eyesColor;
+		this.hairBowColor = hairBowColor;
+		this.hairBowPearlsColor = hairBowPearlsColor;
+	}
+
+	public Color headColor() {
+		return headColor;
+	}
+
+	public Color palateColor() {
+		return palateColor;
+	}
+
+	public Color eyesColor() {
+		return eyesColor;
+	}
+
+	public Color hairBowColor() {
+		return hairBowColor;
+	}
+
+	public Color hairBowPearlsColor() {
+		return hairBowPearlsColor;
+	}
 }

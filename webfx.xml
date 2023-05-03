@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <parent name="webfx-parent"/>
+
+    <groupId>dev.webfx</groupId>
+    <artifactId>webfx-demo-pacman</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>pacman-ui-fx</module>
+        <module>pacman-ui-fx-gwt</module>
+        <module>pacman-ui-fx-openjfx</module>
+    </modules>
+
+    <required-libraries>
+        <webfx-library artifact="dev.webfx:webfx:0.1.0-SNAPSHOT"/>
+        <webfx-library artifact="dev.webfx:webfx-demo-pacman-core:0.1.0-SNAPSHOT"/>
+    </required-libraries>
+
+</project>

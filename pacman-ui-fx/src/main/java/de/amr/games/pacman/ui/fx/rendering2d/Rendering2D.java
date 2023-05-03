@@ -50,19 +50,19 @@ public interface Rendering2D {
 	Font screenFont(double size);
 
 	default PacManColoring pacManColors() {
-		return AppRes.ArcadeTheme.PACMAN_COLORS;
+		return AppRes.ArcadeTheme.PACMAN_COLORING;
 	}
 
 	default MsPacManColoring msPacManColors() {
-		return AppRes.ArcadeTheme.MS_PACMAN_COLORS;
+		return AppRes.ArcadeTheme.MS_PACMAN_COLORING;
 	}
 
 	default GhostColoring[] ghostColors() {
-		return AppRes.ArcadeTheme.GHOST_COLORS;
+		return AppRes.ArcadeTheme.GHOST_COLORING;
 	}
 
 	default GhostColoring ghostColors(int ghostID) {
-		return AppRes.ArcadeTheme.GHOST_COLORS[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	MazeColoring mazeColors(int mazeNumber);
@@ -109,10 +109,10 @@ public interface Rendering2D {
 
 	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
 		drawText(g, title, color, font, x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		var pointsText = "" + score.points();
+		drawText(g, pointsText, color, font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + TS * (8), y + TS + 1);
+			drawText(g, "" + score.levelNumber(), color, font, x + TS * (8), y + TS + 1);
 		}
 	}
 

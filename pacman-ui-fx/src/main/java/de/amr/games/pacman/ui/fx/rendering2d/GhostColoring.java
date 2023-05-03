@@ -26,11 +26,98 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 /**
  * @author Armin Reichert
  */
-public record GhostColoring(//
-		Color dress, Color eyeballs, Color pupils, //
-		Color dressFrightened, Color eyeballsFrightened, Color pupilsFrightened, //
-		Color dressFlashing, Color eyeballsFlashing, Color pupilsFlashing) {
+public class GhostColoring {//
+		Color dress; Color eyeballs; Color pupils; //
+		Color dressFrightened; Color eyeballsFrightened; Color pupilsFrightened; //
+		Color dressFlashing; Color eyeballsFlashing; Color pupilsFlashing;
+
+	public GhostColoring(Color dress, Color eyeballs, Color pupils, Color dressFrightened, Color eyeballsFrightened, Color pupilsFrightened, Color dressFlashing, Color eyeballsFlashing, Color pupilsFlashing) {
+		this.dress = dress;
+		this.eyeballs = eyeballs;
+		this.pupils = pupils;
+		this.dressFrightened = dressFrightened;
+		this.eyeballsFrightened = eyeballsFrightened;
+		this.pupilsFrightened = pupilsFrightened;
+		this.dressFlashing = dressFlashing;
+		this.eyeballsFlashing = eyeballsFlashing;
+		this.pupilsFlashing = pupilsFlashing;
+	}
+
+	public Color dress() {
+		return dress;
+	}
+
+	public Color eyeballs() {
+		return eyeballs;
+	}
+
+	public Color pupils() {
+		return pupils;
+	}
+
+	public Color getDressFrightened() {
+		return dressFrightened;
+	}
+
+	public Color eyeballsFrightened() {
+		return eyeballsFrightened;
+	}
+
+	public Color pupilsFrightened() {
+		return pupilsFrightened;
+	}
+
+	public Color dressFlashing() {
+		return dressFlashing;
+	}
+
+	public Color eyeballsFlashing() {
+		return eyeballsFlashing;
+	}
+
+	public Color pupilsFlashing() {
+		return pupilsFlashing;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		GhostColoring that = (GhostColoring) o;
+
+		if (!Objects.equals(dress, that.dress)) return false;
+		if (!Objects.equals(eyeballs, that.eyeballs)) return false;
+		if (!Objects.equals(pupils, that.pupils)) return false;
+		if (!Objects.equals(dressFrightened, that.dressFrightened))
+			return false;
+		if (!Objects.equals(eyeballsFrightened, that.eyeballsFrightened))
+			return false;
+		if (!Objects.equals(pupilsFrightened, that.pupilsFrightened))
+			return false;
+		if (!Objects.equals(dressFlashing, that.dressFlashing))
+			return false;
+		if (!Objects.equals(eyeballsFlashing, that.eyeballsFlashing))
+			return false;
+		return Objects.equals(pupilsFlashing, that.pupilsFlashing);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = dress != null ? dress.hashCode() : 0;
+		result = 31 * result + (eyeballs != null ? eyeballs.hashCode() : 0);
+		result = 31 * result + (pupils != null ? pupils.hashCode() : 0);
+		result = 31 * result + (dressFrightened != null ? dressFrightened.hashCode() : 0);
+		result = 31 * result + (eyeballsFrightened != null ? eyeballsFrightened.hashCode() : 0);
+		result = 31 * result + (pupilsFrightened != null ? pupilsFrightened.hashCode() : 0);
+		result = 31 * result + (dressFlashing != null ? dressFlashing.hashCode() : 0);
+		result = 31 * result + (eyeballsFlashing != null ? eyeballsFlashing.hashCode() : 0);
+		result = 31 * result + (pupilsFlashing != null ? pupilsFlashing.hashCode() : 0);
+		return result;
+	}
 }

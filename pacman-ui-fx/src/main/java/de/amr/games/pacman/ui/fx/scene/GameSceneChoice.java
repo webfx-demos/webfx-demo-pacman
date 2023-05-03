@@ -23,17 +23,48 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.scene;
 
+import java.util.Objects;
+
 /**
  * @author Armin Reichert
  *
  */
-public record GameSceneChoice(GameScene scene2D, GameScene scene3D) {
+public class GameSceneChoice {
+
+	GameScene scene2D; GameScene scene3D;
+
+	public GameSceneChoice(GameScene scene2D, GameScene scene3D) {
+		this.scene2D = scene2D;
+		this.scene3D = scene3D;
+	}
 
 	public GameSceneChoice(GameScene scene2D) {
 		this(scene2D, null);
 	}
 
-	public boolean includes(GameScene gameScene) {
-		return gameScene == scene2D || gameScene == scene3D;
+	public GameScene scene2D() {
+		return scene2D;
+	}
+
+	public GameScene scene3D() {
+		return scene3D;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		GameSceneChoice that = (GameSceneChoice) o;
+
+		if (!Objects.equals(scene2D, that.scene2D)) return false;
+		return Objects.equals(scene3D, that.scene3D);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = scene2D != null ? scene2D.hashCode() : 0;
+		result = 31 * result + (scene3D != null ? scene3D.hashCode() : 0);
+		return result;
 	}
 }

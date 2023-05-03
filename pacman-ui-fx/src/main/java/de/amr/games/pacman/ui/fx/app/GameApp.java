@@ -23,14 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import org.tinylog.Logger;
-
-import de.amr.games.pacman.controller.GameController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * This is the entry point of the Pac-Man and Ms. Pac-Man games.
@@ -63,16 +59,20 @@ public class GameApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+/*
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		gameUI = new GameUI(primaryStage, settings, gameController);
 		gameUI.start();
 		Logger.info("Game started. Target frame rate: {}", gameUI.targetFrameratePy.get());
+*/
 	}
 
 	@Override
 	public void stop() throws Exception {
+/*
 		gameUI.stop();
 		Logger.info("Game stopped");
+*/
 	}
 }

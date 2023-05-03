@@ -41,7 +41,27 @@ import javafx.scene.media.AudioClip;
  */
 public class GameSounds {
 
-	record ClipInfo(String path, double volume, AudioClip clip) {
+	class ClipInfo {
+
+		String path; double volume; AudioClip clip;
+
+		public ClipInfo(String path, double volume, AudioClip clip) {
+			this.path = path;
+			this.volume = volume;
+			this.clip = clip;
+		}
+
+		public String path() {
+			return path;
+		}
+
+		public double volume() {
+			return volume;
+		}
+
+		public AudioClip clip() {
+			return clip;
+		}
 	}
 
 	private final Map<AudioClipID, ClipInfo> clipInfoMap = new EnumMap<>(AudioClipID.class);
@@ -63,7 +83,7 @@ public class GameSounds {
 	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
 		var clip = AppRes.Manager.audioClip(path); // TODO
 		clip.setVolume(volume);
-		Logger.info("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
+		Logger.info("Audio clip created, id={} volume={}, source={}"); //, id, clip.getVolume(), clip.getSource());
 		return clip;
 	}
 
@@ -121,13 +141,14 @@ public class GameSounds {
 
 	public void startSiren(int sirenIndex) {
 		stopSirens();
-		var siren = switch (sirenIndex) {
-		case 0 -> AudioClipID.SIREN_1;
-		case 1 -> AudioClipID.SIREN_2;
-		case 2 -> AudioClipID.SIREN_3;
-		case 3 -> AudioClipID.SIREN_4;
-		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
-		};
+		AudioClipID siren;
+		switch (sirenIndex) {
+			case 0: siren = AudioClipID.SIREN_1; break;
+			case 1: siren = AudioClipID.SIREN_2; break;
+			case 2: siren = AudioClipID.SIREN_3; break;
+			case 3: siren = AudioClipID.SIREN_4; break;
+			default: throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
+		}
 		loop(siren, Animation.INDEFINITE);
 		Logger.trace("Siren {} started", siren);
 	}

@@ -31,7 +31,27 @@ import de.amr.games.pacman.lib.math.Vector2f;
  * 
  * @author Armin Reichert
  */
-public record Vector3f(float x, float y, float z) {
+public class Vector3f {
+
+	float x; float y; float z;
+
+	public Vector3f(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public float x() {
+		return x;
+	}
+
+	public float y() {
+		return y;
+	}
+
+	public float z() {
+		return z;
+	}
 
 	public Vector3f(Vector3f v) {
 		this(v.x, v.y, v.z);

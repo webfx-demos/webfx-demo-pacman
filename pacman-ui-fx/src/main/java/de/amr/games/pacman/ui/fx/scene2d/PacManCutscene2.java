@@ -107,39 +107,48 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 110 -> {
+			case 110: {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();
+			break;
 		}
-		case 196 -> {
+			case 196: {
 			blinky.setPixelSpeed(0.17f);
 			stretchedDressAnimation.setFrameIndex(1);
+			break;
 		}
-		case 226 -> {
+			case 226: {
 			stretchedDressAnimation.setFrameIndex(2);
+			break;
 		}
-		case 248 -> {
+			case 248: {
 			blinky.setPixelSpeed(0);
 			blinky.animations().ifPresent(animations -> animations.selectedAnimation().get().stop());
 			stretchedDressAnimation.setFrameIndex(3);
+			break;
 		}
-		case 328 -> {
+			case 328: {
 			stretchedDressAnimation.setFrameIndex(4);
+			break;
 		}
-		case 329 -> {
+			case 329: {
 			blinky.animations().ifPresent(animations -> animations.select(GameModel.AK_BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
+			break;
 		}
-		case 389 -> {
+			case 389: {
 			damagedAnimation.setFrameIndex(1);
+			break;
 		}
-		case 508 -> {
+			case 508: {
 			stretchedDressAnimation = null;
+			break;
 		}
-		case 509 -> {
+			case 509: {
 			context.state().timer().expire();
+			break;
 		}
-		default -> {
+			default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
@@ -151,7 +160,8 @@ public class PacManCutscene2 extends GameScene2D {
 	@Override
 	public void drawScene(GraphicsContext g) {
 		// TODO make this work for all renderers
-		if (context.rendering2D() instanceof SpritesheetRenderer r) {
+		if (context.rendering2D() instanceof SpritesheetRenderer) {
+			SpritesheetRenderer r = (SpritesheetRenderer) context.rendering2D();
 			if (stretchedDressAnimation != null) {
 				r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), TS * (14), TS * (19) + 3.0);
 			}
@@ -167,9 +177,9 @@ public class PacManCutscene2 extends GameScene2D {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), TS * (1), TS * (5));
+				g.fillText("Wait %d"/*.formatted(initialDelay)*/, TS * (1), TS * (5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), TS * (1), TS * (5));
+				g.fillText("Frame %d"/*.formatted(frame)*/, TS * (1), TS * (5));
 			}
 		}
 	}

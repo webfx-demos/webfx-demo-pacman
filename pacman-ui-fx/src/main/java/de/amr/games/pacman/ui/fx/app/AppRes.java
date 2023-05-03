@@ -24,37 +24,33 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import java.text.MessageFormat;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.stream.IntStream;
-
-import org.tinylog.Logger;
-
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import dev.webfx.kit.util.scene.DeviceSceneUtil;
+import dev.webfx.platform.util.collection.Collections;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
+
+import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * @author Armin Reichert
  */
 public class AppRes {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",
-			AppRes.class::getResource);
+	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/"/*,
+			AppRes.class::getResource*/);
 
 	public static void load() {
 		long start = System.nanoTime();
@@ -72,7 +68,6 @@ public class AppRes {
 	}
 
 	public static class ArcadeTheme {
-
 		public static final Color RED = Color.rgb(255, 0, 0);
 		public static final Color YELLOW = Color.rgb(255, 255, 0);
 		public static final Color PINK = Color.rgb(252, 181, 255);
@@ -83,12 +78,40 @@ public class AppRes {
 		public static final Color PALE = Color.rgb(222, 222, 255);
 		public static final Color ROSE = Color.rgb(252, 187, 179);
 
+		public static final GhostColoring[] GHOST_COLORING = new GhostColoring[4];
+
 		//@formatter:off
+		static {
+			GHOST_COLORING[GameModel.RED_GHOST] = new GhostColoring(
+				RED,  PALE, BLUE, // normal
+				BLUE, ROSE, ROSE, // frightened
+				PALE, ROSE, RED   // flashing
+			);
+
+			GHOST_COLORING[GameModel.PINK_GHOST] = new GhostColoring(
+				PINK, PALE, BLUE, // normal
+				BLUE, ROSE, ROSE, // frightened
+				PALE, ROSE, RED   // flashing
+			);
+
+			GHOST_COLORING[GameModel.CYAN_GHOST] = new GhostColoring(
+				CYAN, PALE, BLUE, // normal
+				BLUE, ROSE, ROSE, // frightened
+				PALE, ROSE, RED   // flashing
+			);
+			
+			GHOST_COLORING[GameModel.ORANGE_GHOST] = new GhostColoring(
+				ORANGE, PALE, BLUE, // normal
+				BLUE,   ROSE, ROSE, // frightened
+				PALE,   ROSE, RED   // flashing
+			);
+		}
+
 		public static final MazeColoring PACMAN_MAZE_COLORS = new MazeColoring(//
-			Color.rgb(254, 189, 180), // food color
-			Color.rgb(33, 33, 255).darker(), // wall top color
-			Color.rgb(33, 33, 255).brighter(), // wall side color
-			Color.rgb(252, 181, 255) // ghosthouse door color
+				Color.rgb(254, 189, 180), // food color
+				Color.rgb(33, 33, 255).darker(), // wall top color
+				Color.rgb(33, 33, 255).brighter(), // wall side color
+				Color.rgb(252, 181, 255) // ghosthouse door color
 		);
 
 		public static final MazeColoring[] MS_PACMAN_MAZE_COLORS = {
@@ -100,42 +123,19 @@ public class AppRes {
 			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 		};
 
-		public static final PacManColoring PACMAN_COLORS = new PacManColoring(
+		public static final PacManColoring PACMAN_COLORING = new PacManColoring(
 			Color.rgb(255, 255, 0), // head
 			Color.rgb(191, 79, 61), // palate
 			Color.rgb(33, 33, 33)   // eyes
 		);
 
-		public static final MsPacManColoring MS_PACMAN_COLORS = new MsPacManColoring(
+		public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(
 			Color.rgb(255, 255, 0), // head
 			Color.rgb(191, 79, 61), // palate
 			Color.rgb(33, 33, 33),  // eyes
 			Color.rgb(255, 0, 0),   // hair bow
 			Color.rgb(33, 33, 255)  // hair bow pearls
 		);
-		
-		public static final GhostColoring[] GHOST_COLORS = {
-			new GhostColoring(
-				RED,  PALE, BLUE, // normal
-				BLUE, ROSE, ROSE, // frightened
-				PALE, ROSE, RED   // flashing
-			),
-			new GhostColoring(
-				PINK, PALE, BLUE, // normal
-				BLUE, ROSE, ROSE, // frightened
-				PALE, ROSE, RED   // flashing
-			),
-			new GhostColoring(
-				CYAN, PALE, BLUE, // normal
-				BLUE, ROSE, ROSE, // frightened
-				PALE, ROSE, RED   // flashing
-			),
-			new GhostColoring(
-				ORANGE, PALE, BLUE, // normal
-				BLUE,   ROSE, ROSE, // frightened
-				PALE,   ROSE, RED   // flashing
-			)
-		};
 		//@formatter:on
 	}
 
@@ -157,13 +157,13 @@ public class AppRes {
 
 	public static class Texts {
 
-		private static ResourceBundle messageBundle;
+		private static Map<String, String> messageBundle;
 		private static Picker<String> messagePickerCheating;
 		private static Picker<String> messagePickerLevelComplete;
 		private static Picker<String> messagePickerGameOver;
 
 		static void load() {
-			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages");
+			messageBundle = Manager.loadBundle("de.amr.games.pacman.ui.fx.assets.texts.messages");
 			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = Manager.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = Manager.createPicker(messageBundle, "game.over");
@@ -179,11 +179,12 @@ public class AppRes {
 		 */
 		public static String message(String keyPattern, Object... args) {
 			try {
-				var pattern = messageBundle.getString(keyPattern);
-				return MessageFormat.format(pattern, args);
+				var pattern = messageBundle.get(keyPattern);
+				for (int i= 0; i < args.length; i++) pattern = pattern.replaceAll("\\{" + i + "}", args[i].toString());
+				return pattern; //return MessageFormat.format(pattern, args);
 			} catch (Exception x) {
 				Logger.error("No text resource found for key '{}'", keyPattern);
-				return "missing{%s}".formatted(keyPattern);
+				return "missing{%s}"/*.formatted(keyPattern)*/;
 			}
 		}
 
@@ -196,7 +197,7 @@ public class AppRes {
 		}
 
 		public static String pickLevelCompleteMessage(int levelNumber) {
-			return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
+			return "%s%n%n%s"/*.formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber))*/;
 		}
 
 		public static String randomReadyText(GameVariant variant) {
@@ -225,9 +226,11 @@ public class AppRes {
 			}
 
 			private static Image emptyMazeFlashing(int i) {
-				return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
-						ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
-						ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
+                Color k1 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor();
+                Color k2 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor();
+                //
+                //
+                return Ufx.colorsExchanged(emptyMaze(i), Collections.mapOf(k1, Color.WHITE, k2, Color.BLACK));
 			}
 		}
 
@@ -239,9 +242,12 @@ public class AppRes {
 			PacManGame.flashingMaze = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
 			MsPacManGame.icon = Manager.image("graphics/icons/mspacman.png");
-			MsPacManGame.spritesheet = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
-			MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
-					.toArray(Image[]::new);
+			Image sprites = Manager.image("graphics/mspacman/sprites.png");
+			MsPacManGame.spritesheet = new Spritesheet(sprites, 16);
+			DeviceSceneUtil.onImagesLoaded(() ->
+				MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
+					.toArray(Image[]::new)
+					, sprites);
 			MsPacManGame.logo = Manager.image("graphics/mspacman/midway.png");
 		}
 	}
@@ -307,11 +313,11 @@ public class AppRes {
 		}
 
 		public static GameSounds gameSounds(GameVariant variant) {
-			return switch (variant) {
-			case MS_PACMAN -> gameSoundsMsPacMan;
-			case PACMAN -> gameSoundsPacMan;
-			default -> throw new IllegalGameVariantException(variant);
-			};
+			switch (variant) {
+				case MS_PACMAN: return gameSoundsMsPacMan;
+				case PACMAN: return gameSoundsPacMan;
+				default: throw new IllegalGameVariantException(variant);
+			}
 		}
 	}
 }

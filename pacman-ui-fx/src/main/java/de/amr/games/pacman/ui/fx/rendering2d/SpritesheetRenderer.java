@@ -117,12 +117,13 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		var sprite = switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
-		default -> throw new IllegalArgumentException();
-		};
+		Rectangle2D sprite;
+		switch (bonus.state()) {
+			case Bonus.STATE_INACTIVE: sprite = null; break;
+			case Bonus.STATE_EDIBLE: sprite = bonusSymbolRegion(bonus.symbol()); break;
+			case Bonus.STATE_EATEN: sprite = bonusValueRegion(bonus.symbol()); break;
+			default: throw new IllegalArgumentException();
+		}
 		drawEntitySprite(g, bonus.entity(), sprite);
 	}
 

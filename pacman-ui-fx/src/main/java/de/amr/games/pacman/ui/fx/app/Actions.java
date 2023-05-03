@@ -24,14 +24,14 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.lib.Globals.RND;
-
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
+
+import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.lib.Globals.RND;
 
 /**
  * @author Armin Reichert
@@ -68,7 +68,7 @@ public class Actions {
 	}
 
 	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		context.flashMessageView().showMessage(String.format(message, args), seconds);
+		context.flashMessageView().showMessage(message/*String.format(message, args)*/, seconds);
 	}
 
 	public static void startGame() {
@@ -145,13 +145,13 @@ public class Actions {
 		int newFramerate = context.gameLoop().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			Env.simulationSpeedPy.set(newFramerate);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+			showFlashMessageSeconds(0.75, newFramerate + "Hz");
 		}
 	}
 
 	public static void resetSimulationSpeed() {
 		Env.simulationSpeedPy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, "%dHz".formatted(Env.simulationSpeedPy.get()));
+		showFlashMessageSeconds(0.75, Env.simulationSpeedPy.get() + "Hz");
 	}
 
 	public static void selectNextGameVariant() {

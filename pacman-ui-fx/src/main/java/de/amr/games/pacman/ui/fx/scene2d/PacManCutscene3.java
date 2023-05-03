@@ -97,19 +97,22 @@ public class PacManCutscene3 extends GameScene2D {
 			return;
 		}
 		switch (++frame) {
-		case 400 -> {
+			case 400: {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAndRunAnimation(GameModel.AK_BLINKY_NAKED);
+			break;
 		}
-		case 700 -> {
+			case 700: {
 			context.state().timer().expire();
+			break;
 		}
-		default -> {
+			default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
 			blinky.animate();
+			break;
 		}
 		}
 	}
@@ -127,9 +130,9 @@ public class PacManCutscene3 extends GameScene2D {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), TS * (1), TS * (5));
+				g.fillText("Wait %d"/*.formatted(initialDelay)*/, TS * (1), TS * (5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), TS * (1), TS * (5));
+				g.fillText("Frame %d"/*.formatted(frame)*/, TS * (1), TS * (5));
 			}
 		}
 	}

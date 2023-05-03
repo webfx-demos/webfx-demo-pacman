@@ -1,33 +1,40 @@
-/*
- * MIT License
- * 
- * Copyright (c) 2021-2023 Armin Reichert
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
- * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
- * Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-module de.amr.games.pacman.ui.fx {
+// File managed by WebFX (DO NOT EDIT MANUALLY)
 
-	requires transitive de.amr.games.pacman;
-	requires transitive javafx.controls;
-	requires transitive javafx.media;
-	requires transitive org.tinylog.api;
+module pacman.ui.fx {
 
-	exports de.amr.games.pacman.ui.fx.app;
-	exports de.amr.games.pacman.ui.fx.input;
-	exports de.amr.games.pacman.ui.fx.scene;
-	exports de.amr.games.pacman.ui.fx.sound;
-	exports de.amr.games.pacman.ui.fx.util;
-	exports de.amr.games.pacman.ui.fx.rendering2d;
-	exports de.amr.games.pacman.ui.fx.scene2d;
+    // Direct dependencies modules
+    requires java.base;
+    requires javafx.base;
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.media;
+    requires pacman.core;
+    requires webfx.kit.util.scene;
+    requires webfx.platform.console;
+    requires webfx.platform.resource;
+    requires webfx.platform.util;
+
+    // Exported packages
+    exports de.amr.games.pacman.ui.fx.app;
+    exports de.amr.games.pacman.ui.fx.input;
+    exports de.amr.games.pacman.ui.fx.rendering2d;
+    exports de.amr.games.pacman.ui.fx.scene;
+    exports de.amr.games.pacman.ui.fx.scene2d;
+    exports de.amr.games.pacman.ui.fx.sound;
+    exports de.amr.games.pacman.ui.fx.util;
+
+    // Resources packages
+    opens de.amr.games.pacman.ui.fx.assets.fonts;
+    opens de.amr.games.pacman.ui.fx.assets.graphics.icons;
+    opens de.amr.games.pacman.ui.fx.assets.graphics.mspacman;
+    opens de.amr.games.pacman.ui.fx.assets.graphics.pacman;
+    opens de.amr.games.pacman.ui.fx.assets.sound.common;
+    opens de.amr.games.pacman.ui.fx.assets.sound.mspacman;
+    opens de.amr.games.pacman.ui.fx.assets.sound.pacman;
+    opens de.amr.games.pacman.ui.fx.assets.sound.voice;
+    opens de.amr.games.pacman.ui.fx.assets.texts;
+
+    // Provided services
+    provides javafx.application.Application with de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
+
 }

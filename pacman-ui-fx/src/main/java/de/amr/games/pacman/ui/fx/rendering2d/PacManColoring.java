@@ -26,8 +26,50 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 /**
  * @author Armin Reichert
  */
-public record PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
+public class PacManColoring {
+
+    Color headColor; Color palateColor; Color eyesColor;
+
+    public PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
+        this.headColor = headColor;
+        this.palateColor = palateColor;
+        this.eyesColor = eyesColor;
+    }
+
+    public Color headColor() {
+        return headColor;
+    }
+
+    public Color palateColor() {
+        return palateColor;
+    }
+
+    public Color eyesColor() {
+        return eyesColor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PacManColoring that = (PacManColoring) o;
+
+        if (!Objects.equals(headColor, that.headColor)) return false;
+        if (!Objects.equals(palateColor, that.palateColor)) return false;
+        return Objects.equals(eyesColor, that.eyesColor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = headColor != null ? headColor.hashCode() : 0;
+        result = 31 * result + (palateColor != null ? palateColor.hashCode() : 0);
+        result = 31 * result + (eyesColor != null ? eyesColor.hashCode() : 0);
+        return result;
+    }
 }

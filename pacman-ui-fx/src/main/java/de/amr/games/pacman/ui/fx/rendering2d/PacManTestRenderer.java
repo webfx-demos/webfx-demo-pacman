@@ -69,7 +69,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public GhostColoring ghostColors(int ghostID) {
-		return AppRes.ArcadeTheme.GHOST_COLORS[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	@Override
@@ -134,12 +134,13 @@ public class PacManTestRenderer implements Rendering2D {
 		float y = pac.position().y() - radius / 2;
 		int openess = (int) munching.frame();
 		int start = openess / 2;
-		int fromAngle = switch (pac.moveDir()) {
-		case RIGHT -> start;
-		case UP -> start + 90;
-		case LEFT -> start + 180;
-		case DOWN -> start + 270;
-		};
+		int fromAngle = 0;
+		switch (pac.moveDir()) {
+			case RIGHT: fromAngle = start; break;
+			case UP: fromAngle = start + 90; break;
+			case LEFT: fromAngle = start + 180; break;
+			case DOWN: fromAngle = start + 270;
+		}
 		g.setFill(Color.YELLOW);
 		g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
 	}
@@ -161,25 +162,29 @@ public class PacManTestRenderer implements Rendering2D {
 			return;
 		}
 		switch (ghost.state()) {
-		case EATEN -> {
+			case EATEN: {
 			if (ghost.killedIndex() >= 0) {
 				drawGhostBounty(g, ghost);
 			} else {
 				drawGhostEyes(g, ghost);
 			}
+			return;
 		}
-		case RETURNING_TO_HOUSE, ENTERING_HOUSE -> {
+			case RETURNING_TO_HOUSE:
+			case ENTERING_HOUSE: {
 			drawGhostEyes(g, ghost);
+			break;
 		}
-		case FRIGHTENED -> {
+			case FRIGHTENED: {
 			var color = Color.BLUE;
 			var flashing = ghost.animation();
 			if (flashing.isPresent() && (boolean) flashing.get().frame()) {
 				color = Color.WHITE;
 			}
 			drawGhostBody(g, ghost, color);
+			break;
 		}
-		default -> {
+			default: {
 			drawGhostBody(g, ghost, ghostColors(ghost.id()).dress());
 		}
 		}
@@ -193,12 +198,13 @@ public class PacManTestRenderer implements Rendering2D {
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
 		g.setStroke(AppRes.ArcadeTheme.CYAN);
 		g.setFont(Font.font("Sans", 10));
-		var text = switch (ghost.killedIndex()) {
-		case 0 -> "200";
-		case 1 -> "400";
-		case 2 -> "800";
-		case 3 -> "1600";
-		default -> "???";
+		String text;
+		switch (ghost.killedIndex()) {
+			case 0: text = "200"; break;
+			case 1: text = "400"; break;
+			case 2: text = "800"; break;
+			case 3: text = "1600"; break;
+			default: text = "???";
 		};
 		g.strokeText(text, ghost.position().x() - 4, ghost.position().y() + 6);
 	}
@@ -222,9 +228,9 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, AppRes.Fonts.arcade, x - 20, y);
-		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, AppRes.Fonts.arcade, x - 8, y);
-		default -> {
+			case Bonus.STATE_EDIBLE: Rendering2D.drawText(g, "Bonus", Color.YELLOW, AppRes.Fonts.arcade, x - 20, y); break;
+			case Bonus.STATE_EATEN: Rendering2D.drawText(g, bonus.points() + "", Color.RED, AppRes.Fonts.arcade, x - 8, y); break;
+			default: {
 		}
 		}
 	}
@@ -232,7 +238,7 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, AppRes.Fonts.arcade, 18 * TS, 36 * TS - 2);
+			Rendering2D.drawText(g, "Level " + number, Color.WHITE, AppRes.Fonts.arcade, 18 * TS, 36 * TS - 2);
 		});
 	}
 

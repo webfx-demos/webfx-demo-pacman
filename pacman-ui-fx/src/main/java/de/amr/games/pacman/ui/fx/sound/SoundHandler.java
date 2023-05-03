@@ -34,7 +34,7 @@ import javafx.scene.media.AudioClip;
  */
 public class SoundHandler {
 
-	public void onSoundEvent(SoundEvent event) {
+/*	public void onSoundEvent(SoundEvent event) {
 		var sounds = AppRes.Sounds.gameSounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(AudioClipID.BONUS_EATEN);
@@ -84,5 +84,5 @@ public class SoundHandler {
 			// ignore
 		}
 		}
-	}
+	}*/
 }

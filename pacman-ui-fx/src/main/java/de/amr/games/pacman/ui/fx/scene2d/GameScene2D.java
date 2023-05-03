@@ -27,6 +27,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
@@ -68,7 +70,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final GameSceneContext context;
 	private final StackPane container;
 	protected final Pane postItContainer;
-	protected final SubScene fxSubScene;
+	protected final BorderPane fxSubScene;
 	protected final Canvas canvas;
 	protected final Scale scale = new Scale();
 
@@ -82,7 +84,7 @@ public abstract class GameScene2D implements GameScene {
 		postItContainer = new Pane();
 		container = new StackPane(canvas, postItContainer);
 
-		fxSubScene = new SubScene(container, WIDTH, HEIGHT);
+		fxSubScene = new BorderPane(container); // new SubScene(container, WIDTH, HEIGHT);
 
 		// keep canvas always the same size as the subscene
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -100,7 +102,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SubScene fxSubScene() {
+	public Node fxSubScene() {
 		return fxSubScene;
 	}
 
@@ -131,8 +133,9 @@ public abstract class GameScene2D implements GameScene {
 		}
 		var width = ASPECT_RATIO * height;
 		var scaling = height / HEIGHT;
-		fxSubScene.setWidth(width);
-		fxSubScene.setHeight(height);
+		fxSubScene.resize(width, height);
+		//fxSubScene.setWidth(width);
+		//fxSubScene.setHeight(height);
 		scale.setX(scaling);
 		scale.setY(scaling);
 		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
@@ -152,7 +155,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawScene(g);
 		if (context.isCreditVisible()) {
-			Rendering2D.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS),
+			Rendering2D.drawText(g, "CREDIT " + context.game().credit(), ArcadeTheme.PALE, r.screenFont(TS),
 					TS * (2), TS * (36) - 1);
 		}
 		if (infoVisiblePy.get()) {
@@ -188,10 +191,12 @@ public abstract class GameScene2D implements GameScene {
 	protected Text addNote(String s, Font font, Color color, double x, double y) {
 		var text = new Text(s);
 		text.setFill(color);
+/*
 		text.fontProperty().bind(Bindings
 				.createObjectBinding(() -> Font.font(font.getFamily(), font.getSize() * scale.getY()), scale.yProperty()));
 		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * scale.getX(), scale.xProperty()));
 		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * scale.getY(), scale.yProperty()));
+*/
 		postItContainer.getChildren().add(text);
 		return text;
 	}

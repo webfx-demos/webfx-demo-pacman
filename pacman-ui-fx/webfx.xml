@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <exported-packages>
+        <source-packages/>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.fonts</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.graphics.icons</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.graphics.mspacman</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.graphics.pacman</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.sound.common</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.sound.mspacman</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.sound.pacman</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.sound.voice</resource-package>
+        <resource-package>de.amr.games.pacman.ui.fx.assets.texts</resource-package>
+    </exported-packages>
+
+    <dependencies>
+        <used-by-source-modules/>
+    </dependencies>
+
+    <providers>
+        <provider interface="javafx.application.Application">de.amr.games.pacman.ui.fx.app.PacManGameAppFX</provider>
+    </providers>
+
+</project>
