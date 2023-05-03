@@ -85,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
 		//canvas.heightProperty().bind(fxSubScene.heightProperty());
 
 		// This avoids the white vertical line left of the embedded 2D game scene
-		container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
+		//container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
 
 		infoVisiblePy.bind(Env.showDebugInfoPy);
 	}
@@ -126,7 +126,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = height / HEIGHT;
+		var scaling = 0.95 * height / HEIGHT;
 		//fxSubScene.setWidth(width);
 		//fxSubScene.setHeight(height);
 		fxSubScene.setMaxSize(width, height);
