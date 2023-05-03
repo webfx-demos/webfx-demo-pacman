@@ -44,7 +44,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -69,14 +68,12 @@ public abstract class GameScene2D implements GameScene {
 	protected final Pane postItContainer;
 	protected final BorderPane fxSubScene;
 	protected final Canvas canvas;
-	protected final Scale scale = new Scale();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
-		canvas = new Canvas();
-		canvas.getTransforms().add(scale);
+		canvas = new Canvas(WIDTH, HEIGHT);
 
 		postItContainer = new Pane();
 		container = new StackPane(canvas, postItContainer);
@@ -84,8 +81,8 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene = new BorderPane(container); // new SubScene(container, WIDTH, HEIGHT);
 
 		// keep canvas always the same size as the subscene
-		canvas.widthProperty().bind(fxSubScene.widthProperty());
-		canvas.heightProperty().bind(fxSubScene.heightProperty());
+		//canvas.widthProperty().bind(fxSubScene.widthProperty());
+		//canvas.heightProperty().bind(fxSubScene.heightProperty());
 
 		// This avoids the white vertical line left of the embedded 2D game scene
 		container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
@@ -130,11 +127,11 @@ public abstract class GameScene2D implements GameScene {
 		}
 		var width = ASPECT_RATIO * height;
 		var scaling = height / HEIGHT;
-		fxSubScene.setMaxSize(width, height);
 		//fxSubScene.setWidth(width);
 		//fxSubScene.setHeight(height);
-		scale.setX(scaling);
-		scale.setY(scaling);
+		fxSubScene.setMaxSize(width, height);
+		canvas.setScaleX(scaling);
+		canvas.setScaleY(scaling);
 		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
 				getClass().getSimpleName());
 	}
