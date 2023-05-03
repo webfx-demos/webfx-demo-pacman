@@ -252,7 +252,7 @@ public class GameUI implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		//root.getChildren().set(0, nextGameScene.fxSubScene()); // Looks like the scene peer moves the node to front and hide flash messages
+		//root.getChildren().set(0, nextGameScene.fxSubScene());
 		root.getChildren().setAll(nextGameScene.fxSubScene(), flashMessageView, root.getChildren().get(2));
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
@@ -336,44 +336,47 @@ public class GameUI implements GameEventListener {
 			case GameModel.SE_HUNTING_PHASE_STARTED_6: sounds.ensureSirenStarted(3); break;
 			case GameModel.SE_READY_TO_PLAY: sounds.play(AudioClipID.GAME_READY); break;
 			case GameModel.SE_PACMAN_DEATH: sounds.play(AudioClipID.PACMAN_DEATH); break;
-		// TODO this does not sound as in the original game
+			// TODO this does not sound as in the original game
 			case GameModel.SE_PACMAN_FOUND_FOOD: sounds.ensureLoop(AudioClipID.PACMAN_MUNCH, AudioClip.INDEFINITE); break;
 			case GameModel.SE_PACMAN_POWER_ENDS: {
-			sounds.stop(AudioClipID.PACMAN_POWER);
-			event.game.level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
-			break;
-		}
+				sounds.stop(AudioClipID.PACMAN_POWER);
+				event.game.level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
+				break;
+			}
 			case GameModel.SE_PACMAN_POWER_STARTS: {
-			sounds.stopSirens();
-			sounds.stop(AudioClipID.PACMAN_POWER);
-			sounds.loop(AudioClipID.PACMAN_POWER, AudioClip.INDEFINITE);
-			break;
-		}
+				sounds.stopSirens();
+				sounds.stop(AudioClipID.PACMAN_POWER);
+				sounds.loop(AudioClipID.PACMAN_POWER, AudioClip.INDEFINITE);
+				break;
+			}
 			case GameModel.SE_START_INTERMISSION_1: {
-			switch (event.game.variant()) {
-				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
-				case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
-				default: throw new IllegalGameVariantException(event.game.variant());
+				switch (event.game.variant()) {
+					case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
+					case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
+					default: throw new IllegalGameVariantException(event.game.variant());
+				}
+				break;
 			}
-		}
 			case GameModel.SE_START_INTERMISSION_2: {
-			switch (event.game.variant()) {
-				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_2); break;
-				case PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
-				default: throw new IllegalGameVariantException(event.game.variant());
+				switch (event.game.variant()) {
+					case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_2); break;
+					case PACMAN: sounds.play(AudioClipID.INTERMISSION_1); break;
+					default: throw new IllegalGameVariantException(event.game.variant());
+				}
+				break;
 			}
-		}
 			case GameModel.SE_START_INTERMISSION_3: {
-			switch (event.game.variant()) {
-				case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_3); break;
-				case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
-				default: throw new IllegalGameVariantException(event.game.variant());
+				switch (event.game.variant()) {
+					case MS_PACMAN: sounds.play(AudioClipID.INTERMISSION_3); break;
+					case PACMAN: sounds.loop(AudioClipID.INTERMISSION_1, 2); break;
+					default: throw new IllegalGameVariantException(event.game.variant());
+				}
+				break;
 			}
-		}
 			case GameModel.SE_STOP_ALL_SOUNDS: sounds.stopAll(); break;
 			default: {
 			// ignore
-		}
+			}
 		}
 	}
 
