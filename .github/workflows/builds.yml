@@ -79,7 +79,7 @@ jobs:
       app-parent-module-dir:     .
       app-openjfx-module-dir:    ./${{ matrix.app.module-token }}-openjfx
       app-gwt-module-dir:        ./${{ matrix.app.module-token }}-gwt
-      app-gwt-build-dir:         ./${{ matrix.app.module-token }}-gwt/target/${{ matrix.app.module-token }}-gwt-${{ matrix.app.version }}/${{ matrix.app.gwt-token }}_application_gwt
+      app-gwt-build-dir:         ./${{ matrix.app.module-token }}-gwt/target/${{ matrix.app.module-token }}-gwt-${{ matrix.app.version }}/${{ matrix.app.gwt-token }}_gwt
       app-gluon-module-dir:      ./${{ matrix.app.module-token }}-gluon
       web-push-repository-name:  'webfx-netlify'
       web-push-repository-owner: 'webfx-project'
