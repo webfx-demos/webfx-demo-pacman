@@ -9,6 +9,7 @@
 
     <modules>
         <module>pacman-ui-fx</module>
+        <module>pacman-ui-fx-gluon</module>
         <module>pacman-ui-fx-gwt</module>
         <module>pacman-ui-fx-openjfx</module>
     </modules>
