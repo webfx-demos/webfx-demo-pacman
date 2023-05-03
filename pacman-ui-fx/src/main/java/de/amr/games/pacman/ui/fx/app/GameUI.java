@@ -252,7 +252,8 @@ public class GameUI implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		root.getChildren().set(0, nextGameScene.fxSubScene());
+		//root.getChildren().set(0, nextGameScene.fxSubScene()); // Looks like the scene peer moves the node to front and hide flash messages
+		root.getChildren().setAll(nextGameScene.fxSubScene(), flashMessageView, root.getChildren().get(2));
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
 		Logger.trace("Game scene changed to {}", nextGameScene);
