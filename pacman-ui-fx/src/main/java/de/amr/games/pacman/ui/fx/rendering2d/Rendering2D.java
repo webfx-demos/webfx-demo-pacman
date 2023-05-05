@@ -109,10 +109,10 @@ public interface Rendering2D {
 
 	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
 		drawText(g, title, color, font, x, y);
-		var pointsText = "" + score.points();
+		var pointsText = " " + String.valueOf(score.points());
 		drawText(g, pointsText, color, font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "" + score.levelNumber(), color, font, x + TS * (8), y + TS + 1);
+			drawText(g, "L" + score.levelNumber(), color, font, x + TS * (8), y + TS + 1);
 		}
 	}
 
