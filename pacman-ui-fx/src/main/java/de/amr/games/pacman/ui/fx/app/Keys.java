@@ -45,39 +45,31 @@ public class Keys {
 		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
 	}
 
-	public static final KeyCodeCombination CHEAT_EAT_ALL = alt(KeyCode.E);
-	public static final KeyCodeCombination CHEAT_ADD_LIVES = alt(KeyCode.L);
-	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = alt(KeyCode.N);
-	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+	private static KeyCodeCombination altShift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN);
+	}
 
-	public static final KeyCodeCombination AUTOPILOT = alt(KeyCode.A);
-	public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
-	public static final KeyCodeCombination DEBUG_INFO = alt(KeyCode.D);
-	public static final KeyCodeCombination IMMUNITIY = alt(KeyCode.I);
-	public static final KeyCodeCombination MUTE = alt(KeyCode.M);
+	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
+	public static final KeyCodeCombination BOOT = just(KeyCode.Z); // TODO does not work with any combination?
+	public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
+	public static final KeyCodeCombination IMMUNITIY = altShift(KeyCode.I);
+	public static final KeyCodeCombination CHEAT_ADD_LIVES = altShift(KeyCode.L);
+	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
+	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = altShift(KeyCode.X);
+	public static final KeyCodeCombination TEST_LEVELS = altShift(KeyCode.T);
+	public static final KeyCodeCombination PLAY_CUTSCENES = altShift(KeyCode.C);
 
 	public static final KeyCodeCombination PAUSE = just(KeyCode.P);
 	public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
 	public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
 	public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
-	public static final KeyCodeCombination SIMULATION_FASTER = alt(KeyCode.PLUS);
-	public static final KeyCodeCombination SIMULATION_SLOWER = alt(KeyCode.MINUS);
+	public static final KeyCodeCombination SIMULATION_FASTER = alt(KeyCode.F);
+	public static final KeyCodeCombination SIMULATION_SLOWER = alt(KeyCode.G);
 	public static final KeyCodeCombination SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
 
 	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
-	public static final KeyCodeCombination TEST_LEVELS = alt(KeyCode.T);
 	public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
-	public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
 
 	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
-	public static final KeyCodeCombination USE_3D = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
-
-	public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
-	public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
-	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
-	public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
-
-	public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
-	public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 }

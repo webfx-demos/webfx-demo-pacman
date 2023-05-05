@@ -68,7 +68,7 @@ public class Actions {
 	}
 
 	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		context.flashMessageView().showMessage(message/*String.format(message, args)*/, seconds);
+		context.flashMessageView().showMessage(message/* String.format(message, args) */, seconds);
 	}
 
 	public static void startGame() {
@@ -184,14 +184,18 @@ public class Actions {
 	}
 
 	public static void cheatAddLives(int numLives) {
-		context.game().setLives(numLives + context.game().lives());
-		showFlashMessage(AppRes.Texts.message("cheat_add_lives", context.game().lives()));
+		if (context.game().isPlaying()) {
+			context.game().setLives(numLives + context.game().lives());
+			showFlashMessage(AppRes.Texts.message("cheat_add_lives", context.game().lives()));
+		}
 	}
 
 	public static void cheatEatAllPellets() {
-		context.gameController().cheatEatAllPellets();
-		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(AppRes.Texts.pickCheatingMessage());
+		if (context.game().isPlaying()) {
+			context.gameController().cheatEatAllPellets();
+			if (RND.nextDouble() < 0.1) {
+				showFlashMessage(AppRes.Texts.pickCheatingMessage());
+			}
 		}
 	}
 
