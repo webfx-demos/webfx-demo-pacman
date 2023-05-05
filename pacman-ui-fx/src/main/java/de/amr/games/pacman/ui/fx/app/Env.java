@@ -36,7 +36,7 @@ import javafx.scene.paint.Color;
  */
 public class Env {
 //@formatter:off
-	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.web("0x334bd3"));
+	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.BLACK);
 	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
 	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
