@@ -23,11 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
@@ -35,11 +37,6 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
 
 /**
  * Intro scene of the PacMan game.
@@ -54,19 +51,15 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private Text copyrightNote;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game", AppRes.Fonts.pt(AppRes.Fonts.handwriting, 10),
-				Color.gray(0.3), 1 * TS, 30 * TS);
 	}
 
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-		copyrightNote.setVisible(false);
 
 		intro = new PacManIntro(context().gameController());
 		intro.changeState(State.START);
@@ -74,12 +67,19 @@ public class PacManIntroScene extends GameScene2D {
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
 		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
 		intro.context().blinking.reset();
+
+		// use the info pane to display copyright note
+		infoVisiblePy.unbind();
+		infoVisiblePy.set(false);
 	}
 
 	@Override
 	public void update() {
 		intro.update();
 		context.setCreditVisible(intro.context().creditVisible);
+		if (intro.state() == State.CHASING_PAC) {
+			infoVisiblePy.set(true);
+		}
 	}
 
 	@Override
@@ -105,43 +105,44 @@ public class PacManIntroScene extends GameScene2D {
 		var timer = intro.state().timer();
 		drawGallery(g);
 		switch (intro.state()) {
-			case SHOWING_POINTS: {
+		case SHOWING_POINTS: {
 			drawPoints(g);
 			break;
 		}
-			case CHASING_PAC: {
+		case CHASING_PAC: {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
 			drawCopyright(g);
 			break;
 		}
-			case CHASING_GHOSTS: {
+		case CHASING_GHOSTS: {
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
 			break;
 		}
-			case READY_TO_PLAY: {
+		case READY_TO_PLAY: {
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
 			break;
 		}
-			default: { // nothing to do
+		default: { // nothing to do
 		}
 		}
 		drawLevelCounter(g);
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		copyrightNote.setVisible(true);
 		drawMidwayCopyright(g, 4, 32);
 	}
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		g.setFont(AppRes.Fonts.arcade);
+		g.setFill(Color.gray(0.75));
+		g.fillText("(Fan-made Pac-Man tribute)", 1 * TS, 29.5 * TS);
 	}
 
 	// TODO inspect in MAME what's really going on here
