@@ -30,17 +30,14 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -52,12 +49,9 @@ import javafx.scene.text.Text;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private Text copyrightNote;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game", AppRes.Fonts.pt(AppRes.Fonts.handwriting, 10),
-				Color.gray(0.3), 1 * TS, 27.5 * TS);
 	}
 
 	@Override
@@ -76,6 +70,10 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});
+
+		// use the info pane to display copyright note
+		infoVisiblePy.unbind();
+		infoVisiblePy.set(true);
 	}
 
 	@Override
@@ -103,7 +101,9 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		g.setFont(AppRes.Fonts.arcade);
+		g.setFill(Color.gray(0.75));
+		g.fillText("Fan-made Ms Pac-Man tribute", 0.5 * TS, 27.5 * TS);
 	}
 
 	@Override
@@ -137,7 +137,6 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		copyrightNote.setVisible(true);
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawMsPacManCopyright(g, 29);
 	}
