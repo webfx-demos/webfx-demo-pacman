@@ -42,7 +42,7 @@ import java.util.List;
  * The application is structured according to the MVC (model-view-controller) design pattern. The model layer consists
  * of the two game models <code> PacManGame</code> and <code> MsPacManGame</code>. The controller is a finite-state
  * machine which is triggered 60 times per second by the game loop. The user interface listens to game events sent from
- * the controller/model layer. The model and controller layers are decoupled from the user interface. This allow to
+ * the controller/model layer. The model and controller layers are decoupled from the user interface. This allows to
  * attach different user interfaces without having to change the controller or model.
  * 
  * <p>
@@ -98,8 +98,7 @@ public class PacManGameAppFX extends Application {
 		var gameController = new GameController(settings.variant);
 		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
 				createPacManScenes(gameController));
-		//gameUI.simulation().start();
-		DeviceSceneUtil.onFontsAndImagesLoaded(() -> gameUI.showGreeting(), AppRes.Manager.getLoadedImages());
+		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
 	}
 
 	@Override

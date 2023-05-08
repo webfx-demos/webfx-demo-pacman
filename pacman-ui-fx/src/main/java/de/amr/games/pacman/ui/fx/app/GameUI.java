@@ -76,9 +76,9 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
-	private static final int LAYER_GAMESCENE = 0;
+	private static final int LAYER_GAME_SCENE = 0;
 	private static final int LAYER_CONTEXT_SENSITIVE_HELP = 1;
-	private static final int LAYER_FLASHMESSAGES = 2;
+	//private static final int LAYER_FLASH_MESSAGES = 2;
 	private static final int LAYER_GREETING = 3;
 
 	public class Simulation extends GameLoop {
@@ -140,7 +140,7 @@ public class GameUI implements GameEventListener {
 		stage.setScene(mainScene);
 
 		GameEvents.addListener(this);
-		initEnv(settings);
+		initEnv();
 		Actions.init(this);
 		Actions.reboot();
 
@@ -177,22 +177,12 @@ public class GameUI implements GameEventListener {
 		return pane;
 	}
 
-	public Node showGreeting() {
-		return greetingPane;
-	}
-
-
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
 
 		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToOptimalSize();
-			}
-		});
 		layers.add(new Label("Game scene"));
 		layers.add(new Label("Context-sensitive help"));
 		layers.add(flashMessageView);
@@ -226,12 +216,6 @@ public class GameUI implements GameEventListener {
 		rebuildMainSceneLayers();
 	}
 
-	private void resizeStageToOptimalSize() {
-		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			// stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
-		}
-	}
-
 	private void updateMainView() {
 		var bg = new Background(new BackgroundImage(AppRes.Graphics.wallpaper,null,null,null,null));
 		root.setBackground(bg);
@@ -260,7 +244,7 @@ public class GameUI implements GameEventListener {
 		Keyboard.clearState();
 	}
 
-	private void initEnv(Settings settings) {
+	private void initEnv() {
 		Env.showHelpPy.addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
@@ -268,18 +252,6 @@ public class GameUI implements GameEventListener {
 		simulation.pausedPy.bind(Env.simulationPausedPy);
 		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
 		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
-	}
-
-	/**
-	 * @param dimension scene dimension (2 or 3)
-	 * @return (optional) game scene matching current game state and specified dimension
-	 */
-	public Optional<GameScene> findGameScene(int dimension) {
-		if (dimension != 2 && dimension != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d"/* .formatted(dimension) */);
-		}
-		var matching = sceneSelectionMatchingCurrentGameState();
-		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
 	}
 
 	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
@@ -338,7 +310,7 @@ public class GameUI implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		layers.set(LAYER_GAMESCENE, nextGameScene.fxSubScene());
+		layers.set(LAYER_GAME_SCENE, nextGameScene.fxSubScene());
 		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
