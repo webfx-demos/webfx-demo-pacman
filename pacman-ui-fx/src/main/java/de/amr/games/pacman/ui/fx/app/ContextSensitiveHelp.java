@@ -76,9 +76,9 @@ public class ContextSensitiveHelp {
 			table.add(new Row(left, right));
 		}
 
-		private Text text(String s, Font font) {
+		private Text text(String s, Font font, Color color) {
 			var text = new Text(s);
-			text.setFill(Color.YELLOW);
+			text.setFill(color);
 			text.setFont(font);
 			return text;
 		}
@@ -87,26 +87,27 @@ public class ContextSensitiveHelp {
 			var grid = new GridPane();
 			grid.setHgap(20);
 			grid.setVgap(10);
+			var color = Color.YELLOW;
 			for (int rowIndex = 0; rowIndex < table.size(); ++rowIndex) {
 				var row = table.get(rowIndex);
 				if (row.right != null) {
-					grid.add(text(row.left, font), 0, rowIndex);
-					grid.add(text(row.right, font), 1, rowIndex);
+					grid.add(text(row.left, font, color), 0, rowIndex);
+					grid.add(text(row.right, font, color), 1, rowIndex);
 				} else {
-					var text = text(row.left, font);
+					var text = text(row.left, font, color);
 					grid.add(text, 0, rowIndex);
 					GridPane.setColumnSpan(text, 2);
 				}
 			}
 			int rowIndex = table.size();
 			if (gameController.isAutoControlled()) {
-				var text = text("AUTOPILOT ON", font);
+				var text = text("AUTOPILOT ON", font, Color.WHITE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rowIndex);
 				++rowIndex;
 			}
 			if (gameController.game().isImmune()) {
-				var text = text("IMMUNITY ON", font);
+				var text = text("IMMUNITY ON", font, Color.WHITE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rowIndex);
 				++rowIndex;
