@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
@@ -102,8 +103,10 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	protected void drawInfo(GraphicsContext g) {
 		g.setFill(Color.gray(0.9));
+		g.setFont(Font.font("Helvetica", 9));
+		g.fillText("Remake (2023) by", 5 * TS, 34 * TS);
 		g.setFont(AppRes.Fonts.font( AppRes.Fonts.handwriting,9));
-		g.fillText("(Remake by Armin Reichert)", 5 * TS, 34 * TS);
+		g.fillText("Armin Reichert", 15 * TS, 34 * TS);
 	}
 
 	@Override
