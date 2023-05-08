@@ -76,6 +76,11 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
+	private static final int LAYER_GAMESCENE = 0;
+	private static final int LAYER_CONTEXT_SENSITIVE_HELP = 1;
+	private static final int LAYER_FLASHMESSAGES = 2;
+	private static final int LAYER_GREETING = 3;
+
 	public class Simulation extends GameLoop {
 
 		public Simulation() {
@@ -103,10 +108,9 @@ public class GameUI implements GameEventListener {
 	private final StackPane root = new StackPane();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
-
-	private Node greetingPane;
-
+	private final Node greetingPane;
 	private GameScene currentGameScene;
+	private final List<Node> layers = new ArrayList<>();
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
@@ -122,6 +126,7 @@ public class GameUI implements GameEventListener {
 		gameController.setManualPacSteering(keyboardSteering);
 
 		csHelp = new ContextSensitiveHelp(gameController);
+		greetingPane = createGreetingPane();
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
@@ -163,7 +168,8 @@ public class GameUI implements GameEventListener {
 		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
 		var pane = new StackPane(greetingText);
 		pane.setOnMouseClicked(e -> {
-			root.getChildren().remove(pane);
+			layers.remove(LAYER_GREETING);
+			rebuildMainSceneLayers();
 			simulation.start();
 			Actions.playHelpVoiceMessageAfterSeconds(4);
 		});
@@ -187,13 +193,17 @@ public class GameUI implements GameEventListener {
 				resizeStageToOptimalSize();
 			}
 		});
-		greetingPane = createGreetingPane();
-		root.getChildren().add(new Label("Game scene comes here"));
-		root.getChildren().add(new Label("Help panel comes here"));
-		root.getChildren().add(flashMessageView);
-		root.getChildren().add(greetingPane);
+		layers.add(new Label("Game scene"));
+		layers.add(new Label("Context-sensitive help"));
+		layers.add(flashMessageView);
+		layers.add(greetingPane);
+		rebuildMainSceneLayers();
 
 		return scene;
+	}
+
+	private void rebuildMainSceneLayers() {
+		root.getChildren().setAll(layers);
 	}
 
 
@@ -201,18 +211,19 @@ public class GameUI implements GameEventListener {
 		if (Env.showHelpPy.get()) {
 			var help = csHelp.current();
 			if (help.isEmpty()) {
-				root.getChildren().get(1).setVisible(false);
+				layers.get(LAYER_CONTEXT_SENSITIVE_HELP).setVisible(false);
 			} else {
 				var w = mainScene().getWidth();
 				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
 				var font = AppRes.Fonts.font(AppRes.Fonts.arcade, fontSize);
 				var panel = help.get().createPane(gameController, font);
 				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
-				root.getChildren().set(1, panel);
+				layers.set(LAYER_CONTEXT_SENSITIVE_HELP, panel);
 			}
 		} else {
-			root.getChildren().get(1).setVisible(false);
+			layers.get(LAYER_CONTEXT_SENSITIVE_HELP).setVisible(false);
 		}
+		rebuildMainSceneLayers();
 	}
 
 	private void resizeStageToOptimalSize() {
@@ -327,8 +338,8 @@ public class GameUI implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		root.getChildren().set(0, nextGameScene.fxSubScene());
-		// root.getChildren().setAll(nextGameScene.fxSubScene(), flashMessageView, root.getChildren().get(2));
+		layers.set(LAYER_GAMESCENE, nextGameScene.fxSubScene());
+		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
 		Logger.trace("Game scene changed to {}", nextGameScene);
