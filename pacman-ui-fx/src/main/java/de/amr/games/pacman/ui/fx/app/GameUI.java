@@ -156,6 +156,7 @@ public class GameUI implements GameEventListener {
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
 		var greetingText = new Text(">Click to start<");
+		greetingText.setMouseTransparent(true);
 		greetingText.setEffect(ds);
 		greetingText.setCache(true);
 		greetingText.setFill(Color.YELLOW);
