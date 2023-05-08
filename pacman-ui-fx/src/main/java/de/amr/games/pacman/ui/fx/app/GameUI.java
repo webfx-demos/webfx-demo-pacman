@@ -155,17 +155,19 @@ public class GameUI implements GameEventListener {
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
-		var greeting = new Text(">Click to start<");
-		greeting.setEffect(ds);
-		greeting.setCache(true);
-		greeting.setFill(Color.YELLOW);
-		greeting.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
-		greeting.setOnMouseClicked(e -> {
-			root.getChildren().remove(greeting);
+		var greetingText = new Text(">Click to start<");
+		greetingText.setEffect(ds);
+		greetingText.setCache(true);
+		greetingText.setFill(Color.YELLOW);
+		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
+		var pane = new StackPane(greetingText);
+		pane.setOnMouseClicked(e -> {
+			root.getChildren().remove(pane);
 			simulation.start();
 			Actions.playHelpVoiceMessageAfterSeconds(4);
 		});
-		return greeting;
+
+		return pane;
 	}
 
 	public Node showGreeting() {
