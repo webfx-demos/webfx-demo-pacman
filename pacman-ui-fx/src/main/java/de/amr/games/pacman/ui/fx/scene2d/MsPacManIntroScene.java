@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
@@ -38,6 +35,9 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -101,9 +101,9 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		g.setFont(AppRes.Fonts.arcade);
-		g.setFill(Color.gray(0.75));
-		g.fillText("Fan-made Ms Pac-Man tribute", 0.5 * TS, 27.5 * TS);
+		g.setFill(Color.gray(0.9));
+		g.setFont(AppRes.Fonts.font( AppRes.Fonts.handwriting,9));
+		g.fillText("(Remake by Armin Reichert)", 5 * TS, 34 * TS);
 	}
 
 	@Override

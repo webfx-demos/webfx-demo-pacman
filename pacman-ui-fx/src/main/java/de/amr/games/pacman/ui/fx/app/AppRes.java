@@ -149,7 +149,7 @@ public class AppRes {
 			handwriting = Manager.font("fonts/RockSalt-Regular.ttf", 8);
 		}
 
-		public static Font pt(Font font, double size) {
+		public static Font font(Font font, double size) {
 			return Font.font(font.getFamily(), size);
 		}
 

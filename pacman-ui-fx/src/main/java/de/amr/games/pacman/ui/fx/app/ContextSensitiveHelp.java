@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -85,31 +86,32 @@ public class ContextSensitiveHelp {
 
 		public Pane createPane(GameController gameController, Font font) {
 			var grid = new GridPane();
-			grid.setHgap(20);
+			grid.setHgap(30);
 			grid.setVgap(10);
-			var color = Color.YELLOW;
+			var leftColor = AppRes.ArcadeTheme.PALE;
+			var rightColor = AppRes.ArcadeTheme.YELLOW;
 			for (int rowIndex = 0; rowIndex < table.size(); ++rowIndex) {
 				var row = table.get(rowIndex);
-				if (row.right != null) {
-					grid.add(text(row.left, font, color), 0, rowIndex);
-					grid.add(text(row.right, font, color), 1, rowIndex);
-				} else {
-					var text = text(row.left, font, color);
-					grid.add(text, 0, rowIndex);
-					GridPane.setColumnSpan(text, 2);
-				}
+				var leftCol = text(row.left, font, leftColor);
+				GridPane.setHalignment(leftCol, HPos.RIGHT);
+				grid.add(leftCol, 0, rowIndex);
+				var rightCol = text(row.right, font, rightColor);
+				GridPane.setHalignment(rightCol, HPos.LEFT);
+				grid.add(rightCol, 1, rowIndex);
 			}
 			int rowIndex = table.size();
 			if (gameController.isAutoControlled()) {
-				var text = text("AUTOPILOT ON", font, Color.WHITE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
+				var col = text("(AUTOPILOT ON)", font, AppRes.ArcadeTheme.ORANGE);
+				GridPane.setColumnSpan(col, 2);
+				GridPane.setHalignment(col, HPos.CENTER);
+				grid.add(col, 0, rowIndex);
 				++rowIndex;
 			}
 			if (gameController.game().isImmune()) {
-				var text = text("IMMUNITY ON", font, Color.WHITE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
+				var col = text("(IMMUNITY ON)", font, AppRes.ArcadeTheme.ORANGE);
+				GridPane.setColumnSpan(col, 2);
+				grid.add(col, 0, rowIndex);
+				GridPane.setHalignment(col, HPos.CENTER);
 				++rowIndex;
 			}
 

@@ -170,7 +170,7 @@ public class GameUI implements GameEventListener {
 			} else {
 				var w = mainScene().getWidth();
 				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-				var font = AppRes.Fonts.pt(AppRes.Fonts.arcade, fontSize);
+				var font = AppRes.Fonts.font(AppRes.Fonts.arcade, fontSize);
 				var panel = help.get().createPane(gameController, font);
 				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
 				root.getChildren().set(1, panel);

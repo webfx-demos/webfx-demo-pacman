@@ -41,9 +41,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -182,16 +179,4 @@ public abstract class GameScene2D implements GameScene {
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
-	protected Text addNote(String s, Font font, Color color, double x, double y) {
-		var text = new Text(s);
-		text.setFill(color);
-/*
-		text.fontProperty().bind(Bindings
-				.createObjectBinding(() -> Font.font(font.getFamily(), font.getSize() * scale.getY()), scale.yProperty()));
-		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * scale.getX(), scale.xProperty()));
-		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * scale.getY(), scale.yProperty()));
-*/
-		postItContainer.getChildren().add(text);
-		return text;
-	}
 }

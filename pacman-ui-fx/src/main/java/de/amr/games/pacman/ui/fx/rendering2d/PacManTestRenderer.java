@@ -59,7 +59,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return AppRes.Fonts.pt(AppRes.Fonts.arcade, size);
+		return AppRes.Fonts.font(AppRes.Fonts.arcade, size);
 	}
 
 	@Override
