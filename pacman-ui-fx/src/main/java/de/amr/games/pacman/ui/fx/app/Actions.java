@@ -121,6 +121,10 @@ public class Actions {
 		});
 	}
 
+	public static void toggleHelp() {
+		Ufx.toggle(Env.showHelpPy);
+	}
+
 	public static void togglePaused() {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?

@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import de.amr.games.pacman.controller.PacManIntro;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import org.tinylog.Logger;
@@ -107,6 +109,7 @@ public class GameUI implements GameEventListener {
 	private final Stage stage;
 	private final StackPane root = new StackPane();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final ContextSensitiveHelp csHelp;
 
 	private GameScene currentGameScene;
 
@@ -122,6 +125,8 @@ public class GameUI implements GameEventListener {
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(keyboardSteering);
+
+		csHelp = new ContextSensitiveHelp(gameController);
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
@@ -153,6 +158,8 @@ public class GameUI implements GameEventListener {
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
+		scene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
+
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
@@ -161,10 +168,28 @@ public class GameUI implements GameEventListener {
 		});
 		var topLayer = new BorderPane();
 		root.getChildren().add(new Label("Game scene comes here"));
+		root.getChildren().add(new Label("Help panel comes here"));
 		root.getChildren().add(flashMessageView);
-		root.getChildren().add(topLayer);
 
 		return scene;
+	}
+
+	public void updateContextSensitiveHelp() {
+		if (Env.showHelpPy.get()) {
+			var help = csHelp.current();
+			if (help.isEmpty()) {
+				root.getChildren().get(1).setVisible(false);
+			} else {
+				var w = mainScene().getWidth();
+				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
+				var font = AppRes.Fonts.pt(AppRes.Fonts.arcade, fontSize);
+				var panel = help.get().createPane(gameController, font);
+				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
+				root.getChildren().set(1, panel);
+			}
+		} else {
+			root.getChildren().get(1).setVisible(false);
+		}
 	}
 
 	private void resizeStageToOptimalSize() {
@@ -202,6 +227,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
+		Env.showHelpPy.addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
@@ -268,6 +294,7 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
+		updateContextSensitiveHelp();
 		updateMainView();
 	}
 
@@ -278,15 +305,17 @@ public class GameUI implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		// root.getChildren().set(0, nextGameScene.fxSubScene());
-		root.getChildren().setAll(nextGameScene.fxSubScene(), flashMessageView, root.getChildren().get(2));
+		root.getChildren().set(0, nextGameScene.fxSubScene());
+		// root.getChildren().setAll(nextGameScene.fxSubScene(), flashMessageView, root.getChildren().get(2));
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
 		Logger.trace("Game scene changed to {}", nextGameScene);
 	}
 
 	private void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.AUTOPILOT)) {
+		if (Keyboard.pressed(Keys.HELP)) {
+			Actions.toggleHelp();
+		} else if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
 			Actions.reboot();

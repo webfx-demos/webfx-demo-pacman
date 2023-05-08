@@ -49,6 +49,7 @@ public class Keys {
 		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN);
 	}
 
+	public static final KeyCodeCombination HELP = just(KeyCode.H);
 	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
 	public static final KeyCodeCombination BOOT = just(KeyCode.Z); // TODO does not work with any combination?
 	public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
