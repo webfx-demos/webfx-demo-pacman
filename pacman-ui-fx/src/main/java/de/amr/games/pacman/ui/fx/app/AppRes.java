@@ -234,7 +234,11 @@ public class AppRes {
 			}
 		}
 
+		public static Image wallpaper;
+
 		static void load() {
+			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
+
 			PacManGame.icon = Manager.image("graphics/icons/pacman.png");
 			PacManGame.spritesheet = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
 			PacManGame.fullMaze = Manager.image("graphics/pacman/maze_full.png");

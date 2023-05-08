@@ -126,7 +126,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = 0.95 * height / HEIGHT;
+		var scaling = 1.0 * height / HEIGHT;
 		//fxSubScene.setWidth(width);
 		//fxSubScene.setHeight(height);
 		fxSubScene.setMaxSize(width, height);

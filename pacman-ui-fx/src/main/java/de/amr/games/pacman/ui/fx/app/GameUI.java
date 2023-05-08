@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
@@ -172,7 +174,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
+		var bg = new Background(new BackgroundImage(AppRes.Graphics.wallpaper,null,null,null,null));
+		root.setBackground(bg);
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN: {
