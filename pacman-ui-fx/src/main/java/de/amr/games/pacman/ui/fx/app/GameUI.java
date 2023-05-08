@@ -23,26 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-
-import de.amr.games.pacman.controller.PacManIntro;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.SoundEvent;
+import de.amr.games.pacman.event.*;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -58,13 +40,20 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
+
+import java.util.*;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -141,7 +130,7 @@ public class GameUI implements GameEventListener {
 
 		GameEvents.addListener(this);
 		initEnv(settings);
-		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
+		Actions.init(this);
 		Actions.reboot();
 
 		stage.setFullScreen(settings.fullScreen);
@@ -166,7 +155,6 @@ public class GameUI implements GameEventListener {
 				resizeStageToOptimalSize();
 			}
 		});
-		var topLayer = new BorderPane();
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(new Label("Help panel comes here"));
 		root.getChildren().add(flashMessageView);
@@ -281,7 +269,6 @@ public class GameUI implements GameEventListener {
 		default:
 			throw new IllegalArgumentException("Unknown game state: %s"/* .formatted(gameState) */);
 		}
-		;
 		return scenes.get(game.variant()).get(index);
 	}
 
@@ -472,6 +459,10 @@ public class GameUI implements GameEventListener {
 
 	public GameController gameController() {
 		return gameController;
+	}
+
+	public GameModel game() {
+		return gameController.game();
 	}
 
 	public Scene mainScene() {

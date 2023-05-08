@@ -112,10 +112,11 @@ public class ContextSensitiveHelp {
 				++rowIndex;
 			}
 
-			var pane = new BorderPane(grid);
-			pane.setMaxSize(100, 50);
-			pane.setPadding(new Insets(10));
-			pane.setBackground(AppRes.Manager.colorBackground(Color.rgb(200, 200, 200, 0.35)));
+			var pane = new BorderPane();
+			pane.setLeft(grid);
+			//pane.setMaxSize(100, 250);
+			pane.setPadding(new Insets(25));
+			//pane.setBackground(AppRes.Manager.colorBackground(Color.rgb(200, 200, 200, 0.35)));
 			return pane;
 		}
 	}
@@ -171,20 +172,20 @@ public class ContextSensitiveHelp {
 
 	private Help helpCredit() {
 		var help = new Help();
-		help.addRow("ADD CREDIT", "5");
 		if (game().credit() > 0) {
 			help.addRow("START GAME", "1");
 		}
+		help.addRow("ADD CREDIT", "5");
 		help.addRow("QUIT", "Q");
 		return help;
 	}
 
 	private Help helpPlaying() {
 		var help = new Help();
-		help.addRow("LEFT", "CURSOR LEFT");
-		help.addRow("RIGHT", "CURSOR RIGHT");
-		help.addRow("UP", "CURSOR UP");
-		help.addRow("DOWN", "CURSOR DOWN");
+		help.addRow("MOVE LEFT", "CURSOR LEFT");
+		help.addRow("MOVE RIGHT", "CURSOR RIGHT");
+		help.addRow("MOVE UP", "CURSOR UP");
+		help.addRow("MOVE DOWN", "CURSOR DOWN");
 		help.addRow("QUIT", "Q");
 		return help;
 	}
