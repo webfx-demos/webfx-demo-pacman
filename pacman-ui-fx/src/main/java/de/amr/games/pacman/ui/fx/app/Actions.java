@@ -96,7 +96,7 @@ public class Actions {
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().end();
 		}
-		playHelpVoiceMessageAfterSeconds(4);
+		//playHelpVoiceMessageAfterSeconds(4);
 		ui.gameController().restart(GameState.BOOT);
 	}
 

@@ -41,13 +41,17 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -100,6 +104,8 @@ public class GameUI implements GameEventListener {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
 
+	private Node greetingPane;
+
 	private GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
@@ -144,6 +150,29 @@ public class GameUI implements GameEventListener {
 		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
+	private Node createGreetingPane() {
+		DropShadow ds = new DropShadow();
+		ds.setOffsetY(3.0f);
+		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
+
+		var greeting = new Text(">Click to start<");
+		greeting.setEffect(ds);
+		greeting.setCache(true);
+		greeting.setFill(Color.YELLOW);
+		greeting.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
+		greeting.setOnMouseClicked(e -> {
+			root.getChildren().remove(greeting);
+			simulation.start();
+			Actions.playHelpVoiceMessageAfterSeconds(4);
+		});
+		return greeting;
+	}
+
+	public Node showGreeting() {
+		return greetingPane;
+	}
+
+
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
@@ -155,12 +184,15 @@ public class GameUI implements GameEventListener {
 				resizeStageToOptimalSize();
 			}
 		});
+		greetingPane = createGreetingPane();
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(new Label("Help panel comes here"));
 		root.getChildren().add(flashMessageView);
+		root.getChildren().add(greetingPane);
 
 		return scene;
 	}
+
 
 	public void updateContextSensitiveHelp() {
 		if (Env.showHelpPy.get()) {

@@ -99,8 +99,7 @@ public class PacManGameAppFX extends Application {
 		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
 				createPacManScenes(gameController));
 		//gameUI.simulation().start();
-		DeviceSceneUtil.onFontsAndImagesLoaded(() -> gameUI.simulation().start(), AppRes.Manager.getLoadedImages());
-		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());
+		DeviceSceneUtil.onFontsAndImagesLoaded(() -> gameUI.showGreeting(), AppRes.Manager.getLoadedImages());
 	}
 
 	@Override
