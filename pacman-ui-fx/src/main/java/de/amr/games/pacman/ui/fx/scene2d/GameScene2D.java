@@ -41,7 +41,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -123,14 +122,10 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = 1.0 * height / HEIGHT;
-		//fxSubScene.setWidth(width);
-		//fxSubScene.setHeight(height);
+		var scaling = 0.85 * height / HEIGHT;
 		fxSubScene.setMaxSize(width, height);
 		canvas.setScaleX(scaling);
 		canvas.setScaleY(scaling);
-		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
-				getClass().getSimpleName());
 	}
 
 	@Override
