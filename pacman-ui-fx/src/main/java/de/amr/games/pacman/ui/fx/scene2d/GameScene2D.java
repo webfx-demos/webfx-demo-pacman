@@ -32,6 +32,9 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
@@ -42,6 +45,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -64,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final BorderPane fxSubScene;
 	private final StackPane root = new StackPane();
 	protected final Canvas canvas = new Canvas();
-	protected final Pane overlay = new Pane();
+	protected final Pane overlay = new BorderPane();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -74,6 +82,12 @@ public abstract class GameScene2D implements GameScene {
 		canvas.setHeight(HEIGHT);
 		root.getChildren().addAll(canvas, overlay);
 		infoVisiblePy.bind(Env.showDebugInfoPy);
+		fxSubScene.heightProperty().addListener((py,ov,nv) -> {
+			double scaling = nv.doubleValue() / HEIGHT;
+			canvas.setScaleX(scaling);
+			canvas.setScaleY(scaling);
+			overlay.getTransforms().setAll(new Scale(scaling,scaling));
+		});
 	}
 
 	@Override
@@ -114,8 +128,6 @@ public abstract class GameScene2D implements GameScene {
 		var width = ASPECT_RATIO * height;
 		var scaling = height / HEIGHT;
 		fxSubScene.setMaxSize(width, height);
-		canvas.setScaleX(scaling);
-		canvas.setScaleY(scaling);
 	}
 
 	@Override
@@ -130,17 +142,16 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, w, h, 20, 20);
 
+		var color = ArcadeTheme.PALE;
+		var font = r.screenFont(TS);
 		if (context.isScoreVisible()) {
-			context.game().score()
-					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, TS * (1), TS * (1)));
-			context.game().highScore().ifPresent(
-					score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, TS * (16), TS * (1)));
+			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
+			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
+			if (context.isCreditVisible()) {
+				Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);
+			}
 		}
 		drawScene(g);
-		if (context.isCreditVisible()) {
-			Rendering2D.drawText(g, "CREDIT " + context.game().credit(), ArcadeTheme.PALE, r.screenFont(TS),
-					TS * (2), TS * (36) - 1);
-		}
 		if (infoVisiblePy.get()) {
 			drawInfo(g);
 		}
@@ -168,7 +179,34 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
 		var r = context.rendering2D();
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
+		drawText(g, "© 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
+	protected TextFlow addSignature(double x, double y) {
+		var t1 = new Text("Remake (2023) by ");
+		t1.setFill(Color.gray(0.75));
+		t1.setFont(Font.font("Helvetica", 9));
+
+		var t2 = new Text("Armin Reichert");
+		t2.setFill(Color.gray(0.75));
+		t2.setFont(AppRes.Fonts.font(AppRes.Fonts.handwriting, 9));
+
+		var signature = new TextFlow(t1, t2);
+		signature.setTranslateX(x);
+		signature.setTranslateY(y);
+
+		overlay.getChildren().add(signature);
+		return signature;
+	}
+	protected void showSignature(Node signature) {
+		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+		fadeIn.setInterpolator(Interpolator.EASE_IN);
+		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+		var fade = new SequentialTransition(fadeIn, fadeOut);
+		fade.play();
+	}
 }

@@ -33,8 +33,7 @@ import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.text.TextFlow;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
@@ -52,9 +51,11 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
+	private TextFlow signature;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
+		signature = addSignature(5.5 * TS, 32.0 * TS);
 	}
 
 	@Override
@@ -63,6 +64,13 @@ public class PacManIntroScene extends GameScene2D {
 		context.setScoreVisible(true);
 
 		intro = new PacManIntro(context().gameController());
+		intro.addStateChangeListener((oldState, newState) -> {
+			if (oldState == State.SHOWING_POINTS) {
+				showSignature(signature);
+			}
+		});
+		signature.setOpacity(0); // invisible on start
+
 		intro.changeState(State.START);
 
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
@@ -137,15 +145,6 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawCopyright(GraphicsContext g) {
 		drawMidwayCopyright(g, 4, 32);
-	}
-
-	@Override
-	protected void drawInfo(GraphicsContext g) {
-		g.setFill(Color.gray(0.9));
-		g.setFont(Font.font("Helvetica", 9));
-		g.fillText("Remake (2023) by", 5 * TS, 34 * TS);
-		g.setFont(AppRes.Fonts.font( AppRes.Fonts.handwriting,9));
-		g.fillText("Armin Reichert", 15 * TS, 34 * TS);
 	}
 
 	// TODO inspect in MAME what's really going on here
