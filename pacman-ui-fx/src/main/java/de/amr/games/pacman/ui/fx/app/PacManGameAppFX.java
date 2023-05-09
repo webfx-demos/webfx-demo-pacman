@@ -103,7 +103,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.simulation().stop();
+		gameUI.stop();
 		Logger.info("Game stopped");
 	}
 }

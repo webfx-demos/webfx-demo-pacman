@@ -53,7 +53,7 @@ public class Keys {
 	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
 	public static final KeyCodeCombination BOOT = just(KeyCode.Z); // TODO does not work with any combination?
 	public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
-	public static final KeyCodeCombination IMMUNITIY = altShift(KeyCode.I);
+	public static final KeyCodeCombination IMMUNITY = altShift(KeyCode.I);
 	public static final KeyCodeCombination CHEAT_ADD_LIVES = altShift(KeyCode.L);
 	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
 	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = altShift(KeyCode.X);

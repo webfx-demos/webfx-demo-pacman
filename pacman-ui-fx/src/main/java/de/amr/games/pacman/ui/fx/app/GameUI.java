@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -57,6 +56,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -66,7 +66,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * 
  * @author Armin Reichert
  */
-public class GameUI implements GameEventListener {
+public class GameUI extends GameLoop implements GameEventListener {
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
@@ -81,39 +81,22 @@ public class GameUI implements GameEventListener {
 	//private static final int LAYER_FLASH_MESSAGES = 2;
 	private static final int LAYER_GREETING = 3;
 
-	public class Simulation extends GameLoop {
-
-		public Simulation() {
-			super(GameModel.FPS);
-		}
-
-		@Override
-		public void doUpdate() {
-			gameController.update();
-			currentGameScene.update();
-		}
-
-		@Override
-		public void doRender() {
-			flashMessageView.update();
-			currentGameScene.render();
-		}
-	}
 
 	private final GameController gameController;
-	private final Simulation simulation = new Simulation();
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
 	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
 	private final StackPane root = new StackPane();
+	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
 	private final Node greetingPane;
 	private GameScene currentGameScene;
-	private final List<Node> layers = new ArrayList<>();
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+
+		super(GameModel.FPS);
 
 		checkNotNull(stage);
 		checkNotNull(settings);
@@ -132,10 +115,10 @@ public class GameUI implements GameEventListener {
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
 
-		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		renderers.put(GameVariant.PACMAN, new PacManGameRenderer());
 		scenes.put(GameVariant.PACMAN, pacManScenes);
 
-		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
+		var mainScene = createMainScene(TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
 
@@ -155,6 +138,18 @@ public class GameUI implements GameEventListener {
 		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
+	@Override
+	public void doUpdate() {
+		gameController.update();
+		currentGameScene.update();
+	}
+
+	@Override
+	public void doRender() {
+		flashMessageView.update();
+		currentGameScene.render();
+	}
+
 	private Node createGreetingPane() {
 		DropShadow ds = new DropShadow();
 		ds.setOffsetY(3.0f);
@@ -170,7 +165,7 @@ public class GameUI implements GameEventListener {
 		pane.setOnMouseClicked(e -> {
 			layers.remove(LAYER_GREETING);
 			rebuildMainSceneLayers();
-			simulation.start();
+			start();
 			Actions.playHelpVoiceMessageAfterSeconds(4);
 		});
 
@@ -249,9 +244,9 @@ public class GameUI implements GameEventListener {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		simulation.pausedPy.bind(Env.simulationPausedPy);
-		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
-		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
+		pausedPy.bind(Env.simulationPausedPy);
+		targetFrameratePy.bind(Env.simulationSpeedPy);
+		measuredPy.bind(Env.simulationTimeMeasuredPy);
 	}
 
 	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
@@ -324,7 +319,7 @@ public class GameUI implements GameEventListener {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
 			Actions.reboot();
-		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
+		} else if (Keyboard.pressed(Keys.IMMUNITY)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
 			Actions.togglePaused();
@@ -489,10 +484,6 @@ public class GameUI implements GameEventListener {
 
 	public GameScene currentGameScene() {
 		return currentGameScene;
-	}
-
-	public Simulation simulation() {
-		return simulation;
 	}
 
 	public FlashMessageView flashMessageView() {

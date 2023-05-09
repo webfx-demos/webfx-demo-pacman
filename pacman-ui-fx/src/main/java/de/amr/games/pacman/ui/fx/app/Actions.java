@@ -105,22 +105,6 @@ public class Actions {
 		ui.gameController().addCredit();
 	}
 
-	public static void enterLevel(int newLevelNumber) {
-		if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
-			return;
-		}
-		ui.game().level().ifPresent(level -> {
-			if (newLevelNumber > level.number()) {
-				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-					ui.game().nextLevel();
-				}
-				ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
-			} else if (newLevelNumber < level.number()) {
-				// not implemented
-			}
-		});
-	}
-
 	public static void toggleHelp() {
 		Ufx.toggle(Env.showHelpPy);
 	}
@@ -135,18 +119,18 @@ public class Actions {
 
 	public static void oneSimulationStep() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSingleStep(true);
+			ui.executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSteps(10, true);
+			ui.executeSteps(10, true);
 		}
 	}
 
 	public static void changeSimulationSpeed(int delta) {
-		int newFramerate = ui.simulation().targetFrameratePy.get() + delta;
+		int newFramerate = ui.targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			Env.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, newFramerate + "Hz");
