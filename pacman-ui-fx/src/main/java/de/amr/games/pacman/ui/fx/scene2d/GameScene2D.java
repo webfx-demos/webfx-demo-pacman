@@ -41,6 +41,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -60,29 +61,18 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final GameSceneContext context;
-	private final StackPane container;
-	protected final Pane postItContainer;
 	protected final BorderPane fxSubScene;
-	protected final Canvas canvas;
+	private final StackPane root = new StackPane();
+	protected final Canvas canvas = new Canvas();
+	protected final Pane overlay = new Pane();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
-
-		canvas = new Canvas(WIDTH, HEIGHT);
-
-		postItContainer = new Pane();
-		container = new StackPane(canvas, postItContainer);
-
-		fxSubScene = new BorderPane(container); // new SubScene(container, WIDTH, HEIGHT);
-
-		// keep canvas always the same size as the subscene
-		//canvas.widthProperty().bind(fxSubScene.widthProperty());
-		//canvas.heightProperty().bind(fxSubScene.heightProperty());
-
-		// This avoids the white vertical line left of the embedded 2D game scene
-		//container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
-
+		fxSubScene = new BorderPane(root); // new SubScene(container, WIDTH, HEIGHT);
+		canvas.setWidth(WIDTH);
+		canvas.setHeight(HEIGHT);
+		root.getChildren().addAll(canvas, overlay);
 		infoVisiblePy.bind(Env.showDebugInfoPy);
 	}
 
@@ -122,7 +112,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = 0.85 * height / HEIGHT;
+		var scaling = height / HEIGHT;
 		fxSubScene.setMaxSize(width, height);
 		canvas.setScaleX(scaling);
 		canvas.setScaleY(scaling);
@@ -132,7 +122,14 @@ public abstract class GameScene2D implements GameScene {
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		var r = context.rendering2D();
-		r.fillCanvas(g, ArcadeTheme.BLACK);
+
+		double w = canvas.getWidth();
+		double h = canvas.getHeight();
+		g.setFill(Color.GRAY);
+		g.fillRect(0, 0, w, h);
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(0, 0, w, h, 20, 20);
+
 		if (context.isScoreVisible()) {
 			context.game().score()
 					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, TS * (1), TS * (1)));
