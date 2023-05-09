@@ -195,9 +195,11 @@ public abstract class GameScene2D implements GameScene {
 		t2.setTranslateX(x+80);
 		t2.setTranslateY(y);
 
-		var signature = List.of(t1, t2);
+		var signature = new ArrayList<Text>();
+		signature.add(t1);
+		signature.add(t2);
 
-		overlay.getChildren().addAll(signature);
+		overlay.getChildren().addAll(t1,t2);
 		return signature;
 	}
 	protected void showSignature(List<Text> signature) {
