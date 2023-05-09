@@ -34,7 +34,9 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.Text;
+
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
@@ -49,11 +51,11 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private TextFlow signature;
+	private List<Text> signature;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = addSignature(5.5 * TS, 32.0 * TS);
+		signature = addSignature(3.5 * TS, 34.0 * TS);
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				showSignature(signature);
 			}
 		});
-		signature.setOpacity(0); // invisible on start
+		signature.forEach(text->text.setOpacity(0)); // invisible on start
 
 		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);

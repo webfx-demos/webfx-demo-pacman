@@ -32,9 +32,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.SequentialTransition;
+import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
@@ -47,9 +45,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -182,31 +182,36 @@ public abstract class GameScene2D implements GameScene {
 		drawText(g, "© 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
-	protected TextFlow addSignature(double x, double y) {
+	protected List<Text> addSignature(double x, double y) {
 		var t1 = new Text("Remake (2023) by ");
 		t1.setFill(Color.gray(0.75));
 		t1.setFont(Font.font("Helvetica", 9));
+		t1.setTranslateX(x);
+		t1.setTranslateY(y);
 
 		var t2 = new Text("Armin Reichert");
 		t2.setFill(Color.gray(0.75));
 		t2.setFont(AppRes.Fonts.font(AppRes.Fonts.handwriting, 9));
+		t2.setTranslateX(x+80);
+		t2.setTranslateY(y);
 
-		var signature = new TextFlow(t1, t2);
-		signature.setTranslateX(x);
-		signature.setTranslateY(y);
+		var signature = List.of(t1, t2);
 
-		overlay.getChildren().add(signature);
+		overlay.getChildren().addAll(signature);
 		return signature;
 	}
-	protected void showSignature(Node signature) {
-		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-		fadeIn.setInterpolator(Interpolator.EASE_IN);
-		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
-		fadeOut.setFromValue(1);
-		fadeOut.setToValue(0);
-		var fade = new SequentialTransition(fadeIn, fadeOut);
-		fade.play();
+	protected void showSignature(List<Text> signature) {
+		List<Animation> animations  = new ArrayList<>();
+		signature.forEach(text -> {
+			var fadeIn = new FadeTransition(Duration.seconds(5), text);
+			fadeIn.setFromValue(0);
+			fadeIn.setToValue(1);
+			fadeIn.setInterpolator(Interpolator.EASE_IN);
+			var fadeOut = new FadeTransition(Duration.seconds(1), text);
+			fadeOut.setFromValue(1);
+			fadeOut.setToValue(0);
+			animations.add( new SequentialTransition(fadeIn, fadeOut));
+		});
+		new ParallelTransition(animations.toArray(Animation[]::new)).play();
 	}
 }
