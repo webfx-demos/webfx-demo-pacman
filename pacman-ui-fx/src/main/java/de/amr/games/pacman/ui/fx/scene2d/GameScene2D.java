@@ -70,7 +70,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected final GameSceneContext context;
 	protected final BorderPane fxSubScene;
-	private final StackPane root = new StackPane();
+	protected final StackPane root = new StackPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
 
@@ -126,7 +126,6 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = height / HEIGHT;
 		fxSubScene.setMaxSize(width, height);
 	}
 
@@ -203,17 +202,23 @@ public abstract class GameScene2D implements GameScene {
 		return signature;
 	}
 	protected void showSignature(List<Text> signature) {
-		List<Animation> animations  = new ArrayList<>();
-		signature.forEach(text -> {
-			var fadeIn = new FadeTransition(Duration.seconds(5), text);
+		List<Transition> partTransitions = new ArrayList<>();
+		for (Text part : signature) {
+			var fadeIn = new FadeTransition(Duration.seconds(5), part);
 			fadeIn.setFromValue(0);
 			fadeIn.setToValue(1);
 			fadeIn.setInterpolator(Interpolator.EASE_IN);
-			var fadeOut = new FadeTransition(Duration.seconds(1), text);
+
+			var fadeOut = new FadeTransition(Duration.seconds(1), part);
 			fadeOut.setFromValue(1);
 			fadeOut.setToValue(0);
-			animations.add( new SequentialTransition(fadeIn, fadeOut));
-		});
-		new ParallelTransition(animations.toArray(Animation[]::new)).play();
+
+			partTransitions.add(new SequentialTransition(fadeIn, fadeOut));
+		}
+		var animation = new ParallelTransition();
+		for (Transition part : partTransitions) {
+			animation.getChildren().add(part);
+		}
+		animation.play();
 	}
 }
