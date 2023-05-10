@@ -27,8 +27,12 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.scene.media.AudioClip;
+import javafx.util.Duration;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -39,11 +43,34 @@ import static de.amr.games.pacman.lib.Globals.RND;
 public class Actions {
 
 	private static GameUI ui;
-	private static AudioClip currentVoiceMessage;
+	private static AudioClip currentVoiceMessage; //TODO move elsewhere
+	private static FadeTransition helpFadingAway; //TODO move elsewhere
 
 	public static void init(GameUI ui) {
 		Actions.ui = ui;
 	}
+
+	public static void toggleHelp() {
+		boolean fadingAway = helpFadingAway != null && helpFadingAway.getStatus() == Animation.Status.RUNNING;
+		if (ui.currentGameScene().is3D() || fadingAway) {
+			return;
+		}
+		var gameScene = (GameScene2D) ui.currentGameScene();
+		if (Env.showHelpPy.get()) {
+			Env.showHelpPy.set(false);
+		} else {
+			Env.showHelpPy.set(true);
+			ui.updateContextSensitiveHelp();
+			gameScene.helpRoot().setOpacity(1);
+			helpFadingAway = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
+			helpFadingAway.setFromValue(1);
+			helpFadingAway.setToValue(0);
+			helpFadingAway.setOnFinished(e -> Env.showHelpPy.set(false));
+			helpFadingAway.setDelay(Duration.seconds(3));
+			helpFadingAway.play();
+		}
+	}
+
 
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
 		Ufx.afterSeconds(seconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();
@@ -103,10 +130,6 @@ public class Actions {
 	public static void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
 		ui.gameController().addCredit();
-	}
-
-	public static void toggleHelp() {
-		Ufx.toggle(Env.showHelpPy);
 	}
 
 	public static void togglePaused() {

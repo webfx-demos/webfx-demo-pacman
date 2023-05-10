@@ -106,7 +106,7 @@ public class ResourceMgr {
 		return image;
 	}
 
-	public Background colorBackground(Color color) {
+	public static Background colorBackground(Color color) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, null, null));
 	}
@@ -122,7 +122,7 @@ public class ResourceMgr {
 		return material;
 	}*/
 
-	public Color color(Color color, double opacity) {
+	public static Color color(Color color, double opacity) {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}

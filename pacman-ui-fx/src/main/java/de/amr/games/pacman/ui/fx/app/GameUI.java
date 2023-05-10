@@ -36,10 +36,10 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -77,9 +77,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private static final byte INDEX_PLAY_SCENE = 3;
 
 	private static final int LAYER_GAME_SCENE = 0;
-	private static final int LAYER_CONTEXT_SENSITIVE_HELP = 1;
-	//private static final int LAYER_FLASH_MESSAGES = 2;
-	private static final int LAYER_GREETING = 3;
+	//private static final int LAYER_FLASH_MESSAGES = 1;
+	//private static final int LAYER_GREETING = 2;
 
 
 	private final GameController gameController;
@@ -109,6 +108,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		gameController.setManualPacSteering(keyboardSteering);
 
 		csHelp = new ContextSensitiveHelp(gameController);
+		csHelp.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade,8));
 		greetingPane = createGreetingPane();
 
 		// renderers must be created before game scenes
@@ -163,7 +163,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
 		var pane = new StackPane(greetingText);
 		pane.setOnMouseClicked(e -> {
-			layers.remove(LAYER_GREETING);
+			layers.remove(greetingPane);
 			rebuildMainSceneLayers();
 			start();
 			Actions.playHelpVoiceMessageAfterSeconds(4);
@@ -179,7 +179,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		layers.add(new Label("Game scene"));
-		layers.add(new Label("Context-sensitive help"));
 		layers.add(flashMessageView);
 		layers.add(greetingPane);
 		rebuildMainSceneLayers();
@@ -193,22 +192,20 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 
 	public void updateContextSensitiveHelp() {
-		if (Env.showHelpPy.get()) {
-			var help = csHelp.current();
-			if (help.isEmpty()) {
-				layers.get(LAYER_CONTEXT_SENSITIVE_HELP).setVisible(false);
+		if (currentGameScene instanceof GameScene2D) {
+			GameScene2D scene2D = (GameScene2D) currentGameScene;
+			if (Env.showHelpPy.get()) {
+				var help = csHelp.current();
+				if (help.isEmpty()) {
+					scene2D.helpRoot().getChildren().clear();
+				} else {
+					var panel = help.get();
+					scene2D.helpRoot().getChildren().setAll(panel);
+				}
 			} else {
-				var w = mainScene().getWidth();
-				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-				var font = AppRes.Fonts.font(AppRes.Fonts.arcade, fontSize);
-				var panel = help.get().createPane(gameController, font);
-				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
-				layers.set(LAYER_CONTEXT_SENSITIVE_HELP, panel);
+				scene2D.helpRoot().getChildren().clear();
 			}
-		} else {
-			layers.get(LAYER_CONTEXT_SENSITIVE_HELP).setVisible(false);
 		}
-		rebuildMainSceneLayers();
 	}
 
 	private void updateMainView() {

@@ -42,6 +42,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -69,25 +70,34 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final GameSceneContext context;
-	protected final BorderPane fxSubScene;
-	protected final StackPane root = new StackPane();
+	protected final BorderPane root;
+	protected final StackPane layout = new StackPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
+	protected final VBox helpRoot = new VBox();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
-		fxSubScene = new BorderPane(root); // new SubScene(container, WIDTH, HEIGHT);
-		canvas.setWidth(WIDTH);
-		canvas.setHeight(HEIGHT);
-		root.getChildren().addAll(canvas, overlay);
-		infoVisiblePy.bind(Env.showDebugInfoPy);
-		fxSubScene.heightProperty().addListener((py,ov,nv) -> {
+
+		root = new BorderPane(layout);
+		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
 			canvas.setScaleX(scaling);
 			canvas.setScaleY(scaling);
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
+
+		canvas.setWidth(WIDTH);
+		canvas.setHeight(HEIGHT);
+
+		overlay.getChildren().add(helpRoot);
+		helpRoot.setTranslateX(10);
+		helpRoot.setTranslateY(HEIGHT * 0.2);
+
+		layout.getChildren().addAll(canvas, overlay);
+
+		infoVisiblePy.bind(Env.showDebugInfoPy);
 	}
 
 	@Override
@@ -97,7 +107,11 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public Node fxSubScene() {
-		return fxSubScene;
+		return root;
+	}
+
+	public VBox helpRoot() {
+		return helpRoot;
 	}
 
 	@Override
@@ -126,7 +140,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		fxSubScene.setMaxSize(width, height);
+		root.setMaxSize(width, height);
 	}
 
 	@Override
