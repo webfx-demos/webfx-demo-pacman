@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.*;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
@@ -40,24 +41,27 @@ import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -79,7 +83,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private static final int LAYER_GAME_SCENE = 0;
 	//private static final int LAYER_FLASH_MESSAGES = 1;
 	//private static final int LAYER_GREETING = 2;
-
 
 	private final GameController gameController;
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
@@ -125,7 +128,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 		GameEvents.addListener(this);
 		initEnv();
 		Actions.init(this);
-		Actions.reboot();
+
+		updateMainView();
 
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
@@ -133,9 +137,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-
-		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
-		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
 	@Override
@@ -155,19 +156,26 @@ public class GameUI extends GameLoop implements GameEventListener {
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
-		var greetingText = new Text(">Click to start<");
+		var greetingText = new Text("Click to start!");
 		greetingText.setMouseTransparent(true);
 		greetingText.setEffect(ds);
 		greetingText.setCache(true);
 		greetingText.setFill(Color.YELLOW);
-		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
-		var pane = new StackPane(greetingText);
+		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 20));
+
+		var pane = new BorderPane();
+		pane.setCenter(greetingText);
+
+		BorderPane.setAlignment(greetingText, Pos.CENTER);
+		greetingText.setTranslateY(20);
+
 		pane.setOnMouseClicked(e -> {
+			gameController().restart(GameState.BOOT);
 			layers.remove(greetingPane);
 			rebuildMainSceneLayers();
-			start();
+			root.setBackground(new Background(new BackgroundImage(AppRes.Graphics.wallpaper,null,null,null,null)));
 			Actions.playHelpVoiceMessageAfterSeconds(4);
-			Actions.showFlashMessage("Press 'H' for help");
+			start();
 		});
 
 		return pane;
@@ -175,14 +183,26 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
-		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
+		scene.heightProperty().addListener((py, ov, nv) -> {
+			if (currentGameScene != null) {
+				currentGameScene.onParentSceneResize(scene);
+			}
+		});
 		scene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
 
 		scene.setOnKeyPressed(this::handleKeyPressed);
-		layers.add(new Label("Game scene"));
+		layers.add(new Label(""));
 		layers.add(flashMessageView);
 		layers.add(greetingPane);
 		rebuildMainSceneLayers();
+
+		var bgImage = new BackgroundImage(
+				AppRes.Graphics.msPacManCabinet,
+				BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER,
+				new BackgroundSize(AUTO, AUTO, false, false, false, true));
+		root.setBackground(new Background(bgImage));
 
 		return scene;
 	}
@@ -210,8 +230,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		var bg = new Background(new BackgroundImage(AppRes.Graphics.wallpaper,null,null,null,null));
-		root.setBackground(bg);
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN: {

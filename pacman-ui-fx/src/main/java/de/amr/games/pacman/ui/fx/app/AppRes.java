@@ -234,9 +234,11 @@ public class AppRes {
 			}
 		}
 
+		public static Image msPacManCabinet;
 		public static Image wallpaper;
 
 		static void load() {
+			msPacManCabinet = Manager.image("graphics/mspacman/cabinet.jpg");
 			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
 			PacManGame.icon = Manager.image("graphics/icons/pacman.png");

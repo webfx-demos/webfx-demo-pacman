@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
@@ -94,8 +95,8 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
-		var gameController = new GameController(settings.variant);
+		var settings = new Settings(Collections.emptyMap()); // no settings used in this application
+		var gameController = new GameController(GameVariant.MS_PACMAN);
 		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
 				createPacManScenes(gameController));
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
