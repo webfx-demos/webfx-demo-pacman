@@ -167,6 +167,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 			rebuildMainSceneLayers();
 			start();
 			Actions.playHelpVoiceMessageAfterSeconds(4);
+			Actions.showFlashMessage("Press 'H' for help");
 		});
 
 		return pane;

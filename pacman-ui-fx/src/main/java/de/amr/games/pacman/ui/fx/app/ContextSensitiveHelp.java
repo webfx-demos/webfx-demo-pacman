@@ -31,8 +31,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -107,7 +107,7 @@ public class ContextSensitiveHelp {
 				grid.add(text, 0, rows.size() + 1);
 			}
 
-			var pane = new BorderPane(grid);
+			var pane = new HBox(grid);
 			pane.setPadding(new Insets(10));
 			pane.setBackground(ResourceMgr.colorBackground(Color.rgb(200, 200, 200, 0.66)));
 			return pane;
