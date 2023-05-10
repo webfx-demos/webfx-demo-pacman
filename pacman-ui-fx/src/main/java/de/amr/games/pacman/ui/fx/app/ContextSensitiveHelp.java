@@ -39,6 +39,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class ContextSensitiveHelp {
 		private final List<List<Node>> rows = new ArrayList<>();
 
 		public void addRow(Node left, String key) {
-			rows.add(List.of(left, key(key)));
+			rows.add(Arrays.asList(left, key(key)));
 		}
 
 		public Pane createPane() {
