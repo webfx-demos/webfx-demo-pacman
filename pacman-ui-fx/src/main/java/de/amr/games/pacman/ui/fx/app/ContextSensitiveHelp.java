@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -56,6 +57,7 @@ public class ContextSensitiveHelp {
 		var label = new Text(s);
 		label.setFill(Color.gray(0.9));
 		label.setFont(font);
+		label.setTextOrigin(VPos.TOP); // workaround for GWT issue
 		return label;
 	}
 
@@ -63,6 +65,7 @@ public class ContextSensitiveHelp {
 		var text = new Text(s);
 		text.setFill(color);
 		text.setFont(font);
+		text.setTextOrigin(VPos.TOP); // workaround for GWT issue
 		return text;
 	}
 
