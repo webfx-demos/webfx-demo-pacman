@@ -71,7 +71,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected final GameSceneContext context;
 	protected final BorderPane root;
-	protected final StackPane layout = new StackPane();
+	protected final StackPane layers = new StackPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
 	protected final VBox helpRoot = new VBox();
@@ -80,22 +80,25 @@ public abstract class GameScene2D implements GameScene {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
-		root = new BorderPane(layout);
+		root = new BorderPane();
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
 			canvas.setScaleX(scaling);
 			canvas.setScaleY(scaling);
+			// don't ask me why this works but setScaleX/Y doesn't
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
 
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
+		// help panel appears in overlay layer at left border, 10% from top
 		overlay.getChildren().add(helpRoot);
-		helpRoot.setTranslateX(10);
-		helpRoot.setTranslateY(HEIGHT * 0.2);
+		helpRoot.setTranslateX(5);
+		helpRoot.setTranslateY(HEIGHT * 0.1);
 
-		layout.getChildren().addAll(canvas, overlay);
+		layers.getChildren().addAll(canvas, overlay);
+		root.setCenter(layers);
 
 		infoVisiblePy.bind(Env.showDebugInfoPy);
 	}
@@ -106,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public Node fxSubScene() {
+	public Node root() {
 		return root;
 	}
 
@@ -130,8 +133,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	/**
-	 * Resizes the game scene to the given height, keeping the aspect ratio. The scaling of the canvas is adapted such
-	 * that the canvas content is stretched to the new scene size.
+	 * Resizes the game scene to the given height, keeping the aspect ratio.
 	 * 
 	 * @param height new game scene height
 	 */
@@ -140,6 +142,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
+		root.setMinSize(width, height);
 		root.setMaxSize(width, height);
 	}
 

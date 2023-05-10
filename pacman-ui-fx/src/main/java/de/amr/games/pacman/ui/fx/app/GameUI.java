@@ -303,7 +303,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		layers.set(LAYER_GAME_SCENE, nextGameScene.fxSubScene());
+		layers.set(LAYER_GAME_SCENE, nextGameScene.root());
 		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;

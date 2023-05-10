@@ -51,6 +51,7 @@ public class ContextSensitiveHelp {
 
 	private final GameController gameController;
 	private Font font = Font.font("Helvetica", 8);
+	private Color backgroundColor = Color.rgb(33, 33, 255, 0.8);
 
 	private Text label(String s) {
 		// TODO if I use class Label, the label text shows "..." (the containing grid is not stretched)
@@ -112,7 +113,7 @@ public class ContextSensitiveHelp {
 
 			var pane = new HBox(grid);
 			pane.setPadding(new Insets(10));
-			pane.setBackground(ResourceMgr.colorBackground(Color.rgb(200, 200, 200, 0.66)));
+			pane.setBackground(ResourceMgr.colorBackground(backgroundColor));
 			return pane;
 		}
 	}

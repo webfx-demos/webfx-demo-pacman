@@ -29,8 +29,6 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 /**
@@ -72,9 +70,9 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * @return the JavaFX subscene associated with this game scene
+	 * @return the JavaFX root node of this game scene
 	 */
-	Node fxSubScene();
+	Node root();
 
 	/**
 	 * @return if this is a scene with 3D content
