@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -39,6 +40,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -75,6 +77,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
 	protected final VBox helpRoot = new VBox();
+	protected ImageView helpIcon;
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -94,8 +97,16 @@ public abstract class GameScene2D implements GameScene {
 
 		// help panel appears in overlay layer at left border, 10% from top
 		overlay.getChildren().add(helpRoot);
-		helpRoot.setTranslateX(5);
+		helpRoot.setTranslateX(8);
 		helpRoot.setTranslateY(HEIGHT * 0.1);
+
+		helpIcon = new ImageView(AppRes.Graphics.iconHelp);
+		helpIcon.setPreserveRatio(true);
+		helpIcon.setFitHeight(24);
+		helpIcon.setTranslateX(-28);
+		helpIcon.setTranslateY(helpRoot.getTranslateY()-24);
+		helpIcon.setOnMouseEntered(e -> Actions.toggleHelp());
+		overlay.getChildren().add(helpIcon);
 
 		layers.getChildren().addAll(canvas, overlay);
 		root.setCenter(layers);

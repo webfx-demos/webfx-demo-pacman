@@ -23,11 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -44,6 +39,11 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
 
 /**
  * 2D scene displaying the maze and the game play.
