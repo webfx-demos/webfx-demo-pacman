@@ -29,9 +29,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import dev.webfx.platform.useragent.UserAgent;
 import dev.webfx.platform.util.Arrays;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -114,8 +114,6 @@ public class ContextSensitiveHelp {
 		var text = new Text(s);
 		text.setFill(color);
 		text.setFont(font);
-		// workaround for GWT issue:
-		text.setTextOrigin(VPos.BASELINE);
 		return text;
 	}
 
@@ -158,6 +156,11 @@ public class ContextSensitiveHelp {
 			var pane = new BorderPane(grid);
 			pane.setPadding(new Insets(10));
 			pane.setBackground(ResourceManager.colorBackground(backgroundColor));
+
+			//TODO this is a workaround for GWT layout issues
+			if (UserAgent.isBrowser()) {
+				grid.setTranslateY(6);
+			}
 			return pane;
 		}
 	}

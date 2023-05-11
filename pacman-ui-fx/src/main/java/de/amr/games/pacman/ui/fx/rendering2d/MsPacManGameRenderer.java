@@ -23,34 +23,25 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import de.amr.games.pacman.lib.anim.Animated;
-import de.amr.games.pacman.lib.anim.AnimationByDirection;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.FrameSequence;
-import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
+import de.amr.games.pacman.lib.anim.*;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Clapperboard;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
 public class MsPacManGameRenderer extends SpritesheetRenderer {
 
-	private static final Order<Direction> DIR_ORDER = new Order<>(//
+	private static final Order<Direction> DIR_ORDER = new Order<>(
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private static final int MAZE_IMAGE_WIDTH = 226;
@@ -59,7 +50,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	public MsPacManGameRenderer() {
-		super(AppRes.Graphics.MsPacManGame.spritesheet);
+		super(AppRes.Graphics.spritesheetMsPacManGame);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
@@ -95,7 +86,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			case Bonus.STATE_EDIBLE: sprite = bonusSymbolRegion(bonus.symbol()); break;
 			case Bonus.STATE_EATEN: sprite = bonusValueRegion(bonus.symbol()); break;
 			default: throw new IllegalArgumentException("Illegal bonus state: '%s'"/*.formatted(bonus.state())*/);
-		};
+		}
 		if (bonus instanceof MovingBonus) {
 			MovingBonus movingBonus = (MovingBonus) bonus;
 			g.save();
@@ -122,7 +113,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(AppRes.Graphics.MsPacManGame.emptyFlashingMaze[mazeNumber - 1], x, y);
+				g.drawImage(AppRes.Graphics.flashingMazesMsPacManGame[mazeNumber - 1], x, y);
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
@@ -145,7 +136,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(AppRes.Graphics.MsPacManGame.logo, x, y + 2, TS * (4) - 2, TS * (4));
+		g.drawImage(AppRes.Graphics.logoMsPacManGame, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(AppRes.ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol

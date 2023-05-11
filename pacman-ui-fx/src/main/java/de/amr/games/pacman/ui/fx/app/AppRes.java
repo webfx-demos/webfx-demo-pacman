@@ -192,57 +192,50 @@ public class AppRes {
 
 	public static class Graphics {
 
-		public static class PacManGame {
-			public static Image icon;
-			public static Spritesheet spritesheet;
-			public static Image fullMaze;
-			public static Image emptyMaze;
-			public static Image flashingMaze;
-		}
-
-		public static class MsPacManGame {
-			public static Image icon;
-			public static Spritesheet spritesheet;
-			public static Image logo;
-			public static Image[] emptyFlashingMaze;
-
-			private static Image emptyMaze(int i) {
-				return spritesheet.subImage(228, 248 * i, 226, 248);
-			}
-
-			private static Image emptyMazeFlashing(int i) {
-                Color k1 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor();
-                Color k2 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor();
-                //
-                //
-                return Ufx.colorsExchanged(emptyMaze(i), Collections.mapOf(k1, Color.WHITE, k2, Color.BLACK));
-			}
-		}
-
 		public static Image msPacManCabinet;
 		public static Image wallpaper;
 		public static Image iconHelp;
+
+		public static Image iconPacManGame;
+		public static Spritesheet spritesheetPacManGame;
+		public static Image fullMazePacManGame;
+		public static Image emptyMazePacManGame;
+		public static Image flashingMazePacManGame;
+
+		public static Image iconMsPacManGame;
+		public static Spritesheet spritesheetMsPacManGame;
+		public static Image logoMsPacManGame;
+		public static Image[] flashingMazesMsPacManGame;
+
+		private static Image emptyMazeMsPacManGame(int i) {
+			return spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
+		}
+
+		private static Image makeFlashingMazeFromEmptyMaze(int i) {
+			Color k1 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor();
+			Color k2 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor();
+			return Ufx.colorsExchanged(emptyMazeMsPacManGame(i), Collections.mapOf(k1, Color.WHITE, k2, Color.BLACK));
+		}
 
 		static void load() {
 			msPacManCabinet = Manager.image("graphics/mspacman/cabinet.jpg");
 			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 			iconHelp = Manager.image("graphics/icons/ghost-help-icon.png");
 
-			PacManGame.icon = Manager.image("graphics/icons/pacman.png");
-			PacManGame.spritesheet = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
-			PacManGame.fullMaze = Manager.image("graphics/pacman/maze_full.png");
-			PacManGame.emptyMaze = Manager.image("graphics/pacman/maze_empty.png");
-			PacManGame.flashingMaze = Manager.image("graphics/pacman/maze_empty_flashing.png");
+			iconPacManGame = Manager.image("graphics/icons/pacman.png");
+			spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
+			fullMazePacManGame = Manager.image("graphics/pacman/maze_full.png");
+			emptyMazePacManGame = Manager.image("graphics/pacman/maze_empty.png");
+			flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
-			MsPacManGame.icon = Manager.image("graphics/icons/mspacman.png");
+			iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
 			Image sprites = Manager.image("graphics/mspacman/sprites.png");
-			MsPacManGame.spritesheet = new Spritesheet(sprites, 16);
+			spritesheetMsPacManGame = new Spritesheet(sprites, 16);
 			//TODO check if this works
-			DeviceSceneUtil.onImagesLoaded(() ->
-				MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
+			DeviceSceneUtil.onImagesLoaded(() -> flashingMazesMsPacManGame = IntStream.range(0, 6).mapToObj(Graphics::makeFlashingMazeFromEmptyMaze)
 					.toArray(Image[]::new)
 					, sprites);
-			MsPacManGame.logo = Manager.image("graphics/mspacman/midway.png");
+			logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");
 		}
 	}
 

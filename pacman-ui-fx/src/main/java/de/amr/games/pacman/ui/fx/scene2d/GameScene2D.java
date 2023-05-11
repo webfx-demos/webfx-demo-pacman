@@ -229,6 +229,7 @@ public abstract class GameScene2D implements GameScene {
 		overlay.getChildren().addAll(t1,t2);
 		return signature;
 	}
+
 	protected void showSignature(List<Text> signature) {
 		List<Transition> partTransitions = new ArrayList<>();
 		for (Text part : signature) {
