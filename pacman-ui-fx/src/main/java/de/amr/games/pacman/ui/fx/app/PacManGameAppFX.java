@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx.scene2d.*;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -97,14 +96,15 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(Collections.emptyMap()); // no settings used in this application
 		var gameController = new GameController(GameVariant.MS_PACMAN);
-		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
-				createPacManScenes(gameController));
+		gameUI = new GameUI(primaryStage, settings, gameController,
+			createMsPacManScenes(gameController),
+			createPacManScenes(gameController)
+		);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
 	}
 
 	@Override
 	public void stop() throws Exception {
 		gameUI.stop();
-		Logger.info("Game stopped");
 	}
 }

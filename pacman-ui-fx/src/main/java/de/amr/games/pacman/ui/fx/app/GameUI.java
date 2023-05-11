@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -65,9 +66,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
- * <p>
- * The play scene is available in 2D and 3D. All others scenes are 2D only.
- * 
+ *
  * @author Armin Reichert
  */
 public class GameUI extends GameLoop implements GameEventListener {
@@ -91,7 +90,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
-	private final Node greetingPane;
+	private BorderPane greetingPane;
 	private GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
@@ -104,14 +103,29 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = gameController;
-		var keyboardSteering = new KeyboardSteering(//
-				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+
+		var keyboardSteering = new KeyboardSteering(
+			settings.keyMap.get(Direction.UP),
+			settings.keyMap.get(Direction.DOWN),
+			settings.keyMap.get(Direction.LEFT),
+			settings.keyMap.get(Direction.RIGHT)
+		);
 		gameController.setManualPacSteering(keyboardSteering);
 
 		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
 		csHelp.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade,6.5));
-		greetingPane = createGreetingPane();
+
+		createGreetingPane();
+		//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
+		greetingPane.setOnMouseClicked(e -> {
+			layers.remove(greetingPane);
+			rebuildMainSceneLayers();
+			root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
+			Actions.playHelpVoiceMessageAfterSeconds(4);
+			gameController().restart(GameState.BOOT);
+			start();
+		});
+
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
@@ -130,7 +144,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		updateMainView();
 
-		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.centerOnScreen();
@@ -150,57 +163,45 @@ public class GameUI extends GameLoop implements GameEventListener {
 		currentGameScene.render();
 	}
 
-	private Node createGreetingPane() {
-		DropShadow ds = new DropShadow();
+	private void createGreetingPane() {
+		var ds = new DropShadow();
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
-		var greetingText = new Text("Click to start!");
-		greetingText.setMouseTransparent(true);
-		greetingText.setEffect(ds);
-		greetingText.setCache(true);
-		greetingText.setFill(Color.YELLOW);
-		greetingText.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 20));
+		var text = new Text("Click to start!");
+		text.setMouseTransparent(true);
+		text.setEffect(ds);
+		text.setCache(true);
+		text.setFill(Color.YELLOW);
+		text.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 20));
 
-		var pane = new BorderPane();
-		pane.setCenter(greetingText);
+		greetingPane = new BorderPane();
+		greetingPane.setCenter(text);
 
-		BorderPane.setAlignment(greetingText, Pos.CENTER);
-		greetingText.setTranslateY(20);
-
-		pane.setOnMouseClicked(e -> {
-			gameController().restart(GameState.BOOT);
-			layers.remove(greetingPane);
-			rebuildMainSceneLayers();
-			root.setBackground(new Background(new BackgroundImage(AppRes.Graphics.wallpaper,null,null,null,null)));
-			Actions.playHelpVoiceMessageAfterSeconds(4);
-			start();
-		});
-
-		return pane;
+		BorderPane.setAlignment(text, Pos.CENTER);
+		text.setTranslateY(20);
 	}
 
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
+		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentGameScene != null) {
 				currentGameScene.onParentSceneResize(scene);
 			}
 		});
-		scene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
 
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		layers.add(new Label(""));
+		layers.add(new Label("")); // game scene layer
 		layers.add(flashMessageView);
 		layers.add(greetingPane);
 		rebuildMainSceneLayers();
 
 		var bgImage = new BackgroundImage(
-				AppRes.Graphics.msPacManCabinet,
-				BackgroundRepeat.NO_REPEAT,
-				BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER,
-				new BackgroundSize(AUTO, AUTO, false, false, false, true));
+			AppRes.Graphics.msPacManCabinet,
+			BackgroundRepeat.NO_REPEAT,
+			BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.CENTER,
+			new BackgroundSize(AUTO, AUTO, false, false, false, true));
 		root.setBackground(new Background(bgImage));
 
 		return scene;
@@ -212,15 +213,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 
 	public void updateContextSensitiveHelp() {
-		if (currentGameScene instanceof GameScene2D) {
+		if (currentGameScene instanceof GameScene2D) { // will always be true in this app
 			GameScene2D scene2D = (GameScene2D) currentGameScene;
 			if (Env.showHelpPy.get()) {
-				var help = csHelp.current();
-				if (help.isEmpty()) {
+				var helpPanel = csHelp.current();
+				if (helpPanel.isEmpty()) {
 					scene2D.helpRoot().getChildren().clear();
 				} else {
-					var panel = help.get();
-					scene2D.helpRoot().getChildren().setAll(panel);
+					scene2D.helpRoot().getChildren().setAll(helpPanel.get());
 				}
 			} else {
 				scene2D.helpRoot().getChildren().clear();
@@ -229,18 +229,13 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN: {
-			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			// stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
+			stage.setTitle("Ms. Pac-Man (WebFX)");
 			break;
 		}
 		case PACMAN: {
-			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			// stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
+			stage.setTitle("Pac-Man (WebFX)");
 			break;
 		}
 		default:
@@ -257,7 +252,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private void initEnv() {
 		Env.showHelpPy.addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
-
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		pausedPy.bind(Env.simulationPausedPy);
 		targetFrameratePy.bind(Env.simulationSpeedPy);
@@ -304,7 +298,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		var matching = sceneSelectionMatchingCurrentGameState();
 		var nextGameScene = matching.scene2D();
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state %s."/* .formatted(gameController.state()) */);
+			throw new IllegalStateException("No game scene found for game state " + gameController.state());
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
@@ -324,7 +318,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
-		Logger.trace("Game scene changed to {}", nextGameScene);
 	}
 
 	private void handleKeyboardInput() {
@@ -333,7 +326,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
-			Actions.reboot();
+			Actions.reboot(); //TODO this does not work. Why?
 		} else if (Keyboard.pressed(Keys.IMMUNITY)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
@@ -358,8 +351,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent e) {
-		Logger.trace("Event received: {}", e);
-		// call event specific handler
 		GameEventListener.super.onGameEvent(e);
 		if (currentGameScene != null) {
 			currentGameScene.onGameEvent(e);

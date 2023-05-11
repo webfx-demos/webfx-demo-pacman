@@ -74,7 +74,7 @@ public class ContextSensitiveHelp {
 				break;
 			default:
 				break;
-		};
+		}
 		return Optional.ofNullable(pane);
 	}
 
