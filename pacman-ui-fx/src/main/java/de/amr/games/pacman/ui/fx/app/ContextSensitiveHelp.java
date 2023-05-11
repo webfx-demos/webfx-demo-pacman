@@ -25,23 +25,24 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import dev.webfx.platform.util.Arrays;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,16 +50,63 @@ import java.util.Optional;
  */
 public class ContextSensitiveHelp {
 
+	private final Map<String, String> translations;
 	private final GameController gameController;
+	private Color backgroundColor = Color.WHITE;
 	private Font font = Font.font("Helvetica", 8);
-	private Color backgroundColor = Color.rgb(33, 33, 255, 0.8);
+
+	public ContextSensitiveHelp(GameController gameController, Map<String, String> translations) {
+		this.gameController = gameController;
+		this.translations = translations;
+	}
+
+	public Optional<Pane> current() {
+		Pane pane = null;
+		switch (gameController.state()) {
+			case CREDIT:
+				pane = helpCredit();
+				break;
+			case INTRO:
+				pane = helpIntro();
+				break;
+			case READY: case HUNTING: case PACMAN_DYING: case GHOST_DYING:
+				pane = attractMode() ? helpDemoLevel() : helpPlaying();
+				break;
+			default:
+				break;
+		};
+		return Optional.ofNullable(pane);
+	}
+
+	public void setGameVariant(GameVariant variant) {
+		switch (variant) {
+			case MS_PACMAN:
+				setBackgroundColor(Color.rgb(255, 0, 0, 0.9));
+				break;
+			case PACMAN:
+				setBackgroundColor(Color.rgb(33, 33, 255, 0.9));
+				break;
+			default:
+				throw new IllegalGameVariantException(variant);
+		}
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	private String tt(String key) {
+		return translations.get(key);
+	}
 
 	private Text label(String s) {
-		// TODO if I use class Label, the label text shows "..." (the containing grid is not stretched)
 		var label = new Text(s);
 		label.setFill(Color.gray(0.9));
 		label.setFont(font);
-		label.setTextOrigin(VPos.TOP); // workaround for GWT issue
 		return label;
 	}
 
@@ -66,7 +114,8 @@ public class ContextSensitiveHelp {
 		var text = new Text(s);
 		text.setFill(color);
 		text.setFont(font);
-		text.setTextOrigin(VPos.TOP); // workaround for GWT issue
+		// workaround for GWT issue:
+		text.setTextOrigin(VPos.BASELINE);
 		return text;
 	}
 
@@ -82,111 +131,90 @@ public class ContextSensitiveHelp {
 
 		private final List<List<Node>> rows = new ArrayList<>();
 
-		public void addRow(Node left, String key) {
-			rows.add(Arrays.asList(left, key(key)));
+		public void addRow(String labelText, String keySpec) {
+			rows.add(Arrays.asList(label(labelText), key(keySpec)));
 		}
 
 		public Pane createPane() {
 			var grid = new GridPane();
-			grid.setHgap(20);
+			grid.setHgap(10);
 			grid.setVgap(10);
 			for (int rowIndex = 0; rowIndex < rows.size(); ++rowIndex) {
 				var row = rows.get(rowIndex);
-				if (row.get(1) != null) {
-					grid.add(row.get(0), 0, rowIndex);
-					grid.add(row.get(1), 1, rowIndex);
-				} else {
-					grid.add(row.get(0), 0, rowIndex);
-					GridPane.setColumnSpan(row.get(0), 2);
-				}
+				grid.add(row.get(0), 0, rowIndex);
+				grid.add(row.get(1), 1, rowIndex);
 			}
 			if (gameController.isAutoControlled()) {
-				var text = text("AUTOPILOT ON", Color.ORANGE);
+				var text = text(tt("help.autopilot_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rows.size());
 			}
 			if (gameController.game().isImmune()) {
-				var text = text("IMMUNITY ON", Color.ORANGE);
+				var text = text(tt("help.immunity_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rows.size() + 1);
 			}
 
-			var pane = new HBox(grid);
+			var pane = new BorderPane(grid);
 			pane.setPadding(new Insets(10));
-			pane.setBackground(ResourceMgr.colorBackground(backgroundColor));
+			pane.setBackground(ResourceManager.colorBackground(backgroundColor));
 			return pane;
 		}
-	}
-
-	public ContextSensitiveHelp(GameController gameController) {
-		this.gameController = gameController;
-	}
-
-	public void setFont(Font font) {
-		this.font = font;
 	}
 
 	private GameModel game() {
 		return gameController.game();
 	}
 
-	private GameVariant variant() {
-		return game().variant();
-	}
-
 	private boolean attractMode() {
-		return game().level().isPresent() && game().level().get().isDemoLevel();
-	}
-
-	public Optional<Pane> current() {
-		var state = gameController.state();
-		Pane pane;
-		if (state == GameState.CREDIT) {
-			pane = helpCredit();
-		} else if (state == GameState.INTRO) {
-			pane = helpIntro();
-		} else if (state == GameState.READY || state==GameState.PACMAN_DYING || state==GameState.HUNTING || state==GameState.GHOST_DYING) {
-			pane = attractMode() ? helpDemoLevel() : helpPlaying();
-		} else {
-			pane = null;
-		}
-		return Optional.ofNullable(pane);
+		var gameLevel = game().level();
+		return gameLevel.isPresent() && gameLevel.get().isDemoLevel();
 	}
 
 	private Pane helpIntro() {
 		var help = new Help();
 		if (game().credit() > 0) {
-			help.addRow(label("START GAME"), "1");
+			help.addRow(tt("help.start_game"), "1");
 		}
-		help.addRow(label("ADD CREDIT"), "5");
-		help.addRow(variant() == GameVariant.MS_PACMAN ? label("PAC-MAN") : label("MS.PAC-MAN"), "V");
+		help.addRow(tt("help.add_credit"), "5");
+		help.addRow(tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
 		return help.createPane();
 	}
 
 	private Pane helpCredit() {
 		var help = new Help();
 		if (game().credit() > 0) {
-			help.addRow(label("START GAME"), "1");
+			help.addRow(tt("help.start_game"), "1");
 		}
-		help.addRow(label("ADD CREDIT"), "5");
-		help.addRow(label("INTRO"), "Q");
+		help.addRow(tt("help.add_credit"), "5");
+		help.addRow(tt("help.show_intro"), "Q");
 		return help.createPane();
 	}
+
+	private Help helpPlaying;
 
 	private Pane helpPlaying() {
-		var help = new Help();
-		help.addRow(label("LEFT"), "CURSOR LEFT");
-		help.addRow(label("RIGHT"), "CURSOR RIGHT");
-		help.addRow(label("UP"), "CURSOR UP");
-		help.addRow(label("DOWN"), "CURSOR DOWN");
-		help.addRow(label("INTRO"), "Q");
-		return help.createPane();
+		if (helpPlaying == null) {
+			var help = new Help();
+			help.addRow(tt("help.move_left"), tt("help.cursor_left"));
+			help.addRow(tt("help.move_right"), tt("help.cursor_right"));
+			help.addRow(tt("help.move_up"), tt("help.cursor_up"));
+			help.addRow(tt("help.move_down"), tt("help.cursor_down"));
+			help.addRow(tt("help.show_intro"), "Q");
+			helpPlaying = help;
+		}
+		return helpPlaying.createPane();
 	}
 
+	private Help helpDemoLevel;
+
 	private Pane helpDemoLevel() {
-		var help = new Help();
-		help.addRow(label("ADD CREDIT"), "5");
-		help.addRow(label("INTRO"), "Q");
-		return help.createPane();
+		if (helpDemoLevel == null) {
+			var help = new Help();
+			help.addRow(tt("help.start_game"), "5");
+			help.addRow(tt("help.show_intro"), "Q");
+			helpDemoLevel = help;
+		}
+		return helpDemoLevel.createPane();
 	}
 }

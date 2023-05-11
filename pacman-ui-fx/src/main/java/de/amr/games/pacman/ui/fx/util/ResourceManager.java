@@ -42,12 +42,12 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class ResourceMgr {
+public class ResourceManager {
 
 	//private final Function<String, URL> urlComputation;
 	private final String rootDir;
 
-	public ResourceMgr(String rootDir/*, Function<String, URL> urlComputation*/) {
+	public ResourceManager(String rootDir/*, Function<String, URL> urlComputation*/) {
 		checkNotNull(rootDir);
 		//checkNotNull(urlComputation);
 		this.rootDir = rootDir;
@@ -60,7 +60,7 @@ public class ResourceMgr {
 	 */
 	public String urlFromRelPath(String relPath) {
 		checkNotNull(relPath);
-		return dev.webfx.platform.resource.Resource.toUrl(rootDir + relPath, ResourceMgr.class);
+		return dev.webfx.platform.resource.Resource.toUrl(rootDir + relPath, ResourceManager.class);
 		//return urlComputation.apply(rootDir + relPath);
 	}
 
@@ -136,12 +136,30 @@ public class ResourceMgr {
 				.toArray(String[]::new));
 	}
 
-	public Map<String, String> loadBundle(String relPath) {
+	// TODO: doesn't webfx support resource bundles at all?
+	public Map<String, String> loadBundle() {
 		Map<String, String> map = new HashMap<>();
 		map.put("app.title.ms_pacman", "Ms. Pac-Man {0}");
 		map.put("app.title.ms_pacman.paused", "Ms. Pac-Man {0} (paused)");
 		map.put("app.title.pacman", "Pac-Man {0}");
 		map.put("app.title.pacman.paused", "Pac-Man {0} (paused)");
+		// help panels
+		map.put("help.add_credit"   , "ADD CREDIT");
+		map.put("help.autopilot_on" , "AUTOPILOT ON");
+		map.put("help.cursor_left"  , "CURSOR LEFT");
+		map.put("help.cursor_right" , "CURSOR RIGHT");
+		map.put("help.cursor_up"    , "CURSOR UP");
+		map.put("help.cursor_down"  , "CURSOR DOWN");
+		map.put("help.immunity_on"  , "IMMUNITY ON");
+		map.put("help.move_left"    , "MOVE LEFT");
+		map.put("help.move_right"   , "MOVE RIGHT");
+		map.put("help.move_up"      , "MOVE UP");
+		map.put("help.move_down"    , "MOVE DOWN");
+		map.put("help.ms_pacman"    , "MS. PAC-MAN");
+		map.put("help.pacman"       , "PAC-MAN");
+		map.put("help.show_intro"   , "SHOW INTRO");
+		map.put("help.start_game"   , "START GAME");
+		// others
 		map.put("twoD", "2D");
 		map.put("threeD", "3D");
 		map.put("pip_on", "Picture-In-Picture ON");

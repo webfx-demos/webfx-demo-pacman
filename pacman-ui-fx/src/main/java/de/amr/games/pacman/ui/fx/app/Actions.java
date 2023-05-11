@@ -44,33 +44,33 @@ public class Actions {
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage; //TODO move elsewhere
-	private static FadeTransition helpFadingAway; //TODO move elsewhere
+	private static FadeTransition helpFadingTransition; //TODO move elsewhere
 
 	public static void init(GameUI ui) {
 		Actions.ui = ui;
 	}
 
 	public static void toggleHelp() {
-		boolean fadingAway = helpFadingAway != null && helpFadingAway.getStatus() == Animation.Status.RUNNING;
-		if (ui.currentGameScene().is3D() || fadingAway) {
+		boolean fading = helpFadingTransition != null && helpFadingTransition.getStatus() == Animation.Status.RUNNING;
+		if (fading) {
 			return;
 		}
-		var gameScene = (GameScene2D) ui.currentGameScene();
 		if (Env.showHelpPy.get()) {
 			Env.showHelpPy.set(false);
-		} else {
-			Env.showHelpPy.set(true);
-			ui.updateContextSensitiveHelp();
-			gameScene.helpRoot().setOpacity(1);
-			helpFadingAway = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
-			helpFadingAway.setFromValue(1);
-			helpFadingAway.setToValue(0);
-			helpFadingAway.setOnFinished(e -> Env.showHelpPy.set(false));
-			helpFadingAway.setDelay(Duration.seconds(3));
-			helpFadingAway.play();
+			return;
 		}
+		Env.showHelpPy.set(true);
+		ui.csHelp().setGameVariant(ui.gameController().game().variant());
+		ui.updateContextSensitiveHelp();
+		var gameScene = (GameScene2D) ui.currentGameScene();
+		gameScene.helpRoot().setOpacity(1);
+		helpFadingTransition = new FadeTransition(Duration.seconds(0.5), gameScene.helpRoot());
+		helpFadingTransition.setFromValue(1);
+		helpFadingTransition.setToValue(0);
+		helpFadingTransition.setOnFinished(e -> Env.showHelpPy.set(false));
+		helpFadingTransition.setDelay(Duration.seconds(2.0));
+		helpFadingTransition.play();
 	}
-
 
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
 		Ufx.afterSeconds(seconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();

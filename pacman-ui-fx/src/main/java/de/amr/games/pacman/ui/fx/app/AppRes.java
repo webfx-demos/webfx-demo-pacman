@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import dev.webfx.platform.util.collection.Collections;
@@ -49,7 +49,7 @@ import java.util.stream.IntStream;
  */
 public class AppRes {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/"/*,
+	public static final ResourceManager Manager = new ResourceManager("/de/amr/games/pacman/ui/fx/assets/"/*,
 			AppRes.class::getResource*/);
 
 	public static void load() {
@@ -157,16 +157,13 @@ public class AppRes {
 
 	public static class Texts {
 
-		private static Map<String, String> messageBundle;
+		public static Map<String, String> messageBundle;
 		private static Picker<String> messagePickerCheating;
-		private static Picker<String> messagePickerLevelComplete;
-		private static Picker<String> messagePickerGameOver;
 
 		static void load() {
-			messageBundle = Manager.loadBundle("de.amr.games.pacman.ui.fx.assets.texts.messages");
+			// ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages")
+			messageBundle = Manager.loadBundle();
 			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
-			messagePickerLevelComplete = Manager.createPicker(messageBundle, "level.complete");
-			messagePickerGameOver = Manager.createPicker(messageBundle, "game.over");
 		}
 
 		/**
@@ -190,18 +187,6 @@ public class AppRes {
 
 		public static String pickCheatingMessage() {
 			return messagePickerCheating.next();
-		}
-
-		public static String pickGameOverMessage() {
-			return messagePickerGameOver.next();
-		}
-
-		public static String pickLevelCompleteMessage(int levelNumber) {
-			return "%s%n%n%s"/*.formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber))*/;
-		}
-
-		public static String randomReadyText(GameVariant variant) {
-			return "READY!";
 		}
 	}
 
@@ -250,6 +235,7 @@ public class AppRes {
 			MsPacManGame.icon = Manager.image("graphics/icons/mspacman.png");
 			Image sprites = Manager.image("graphics/mspacman/sprites.png");
 			MsPacManGame.spritesheet = new Spritesheet(sprites, 16);
+			//TODO check if this works
 			DeviceSceneUtil.onImagesLoaded(() ->
 				MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
 					.toArray(Image[]::new)

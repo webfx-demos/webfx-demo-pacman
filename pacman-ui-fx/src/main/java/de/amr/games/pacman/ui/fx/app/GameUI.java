@@ -81,8 +81,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private static final byte INDEX_PLAY_SCENE = 3;
 
 	private static final int LAYER_GAME_SCENE = 0;
-	//private static final int LAYER_FLASH_MESSAGES = 1;
-	//private static final int LAYER_GREETING = 2;
+	// LAYER_FLASH_MESSAGES = 1, LAYER_GREETING = 2;
 
 	private final GameController gameController;
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
@@ -110,8 +109,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(keyboardSteering);
 
-		csHelp = new ContextSensitiveHelp(gameController);
-		csHelp.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade,8));
+		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
+		csHelp.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade,6.5));
 		greetingPane = createGreetingPane();
 
 		// renderers must be created before game scenes
@@ -504,5 +503,9 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
+	}
+
+	public ContextSensitiveHelp csHelp() {
+		return csHelp;
 	}
 }
