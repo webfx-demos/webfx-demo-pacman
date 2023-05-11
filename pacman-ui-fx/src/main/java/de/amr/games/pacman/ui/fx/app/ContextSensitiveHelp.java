@@ -214,7 +214,7 @@ public class ContextSensitiveHelp {
 	private Pane helpDemoLevel() {
 		if (helpDemoLevel == null) {
 			var help = new Help();
-			help.addRow(tt("help.start_game"), "5");
+			help.addRow(tt("help.add_credit"), "5");
 			help.addRow(tt("help.show_intro"), "Q");
 			helpDemoLevel = help;
 		}
