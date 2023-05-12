@@ -105,7 +105,7 @@ public abstract class GameScene2D implements GameScene {
 		helpIcon.setFitHeight(24);
 		helpIcon.setTranslateX(-28);
 		helpIcon.setTranslateY(helpRoot.getTranslateY()-24);
-		helpIcon.setOnMouseEntered(e -> Actions.toggleHelp());
+		helpIcon.setOnMousePressed (e -> Actions.showHelp());
 		overlay.getChildren().add(helpIcon);
 
 		layers.getChildren().addAll(canvas, overlay);

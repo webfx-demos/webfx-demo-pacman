@@ -53,6 +53,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -113,7 +114,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		gameController.setManualPacSteering(keyboardSteering);
 
 		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
-		csHelp.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade,6.5));
 
 		createGreetingPane();
 		//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
@@ -212,18 +212,22 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 
-	public void updateContextSensitiveHelp() {
-		if (currentGameScene instanceof GameScene2D) { // will always be true in this app
-			GameScene2D scene2D = (GameScene2D) currentGameScene;
-			if (Env.showHelpPy.get()) {
-				var helpPanel = csHelp.current();
-				if (helpPanel.isEmpty()) {
-					scene2D.helpRoot().getChildren().clear();
-				} else {
-					scene2D.helpRoot().getChildren().setAll(helpPanel.get());
-				}
+	public void showHelp() {
+		if (currentGameScene instanceof GameScene2D) {
+			GameScene2D gameScene2d = (GameScene2D) currentGameScene;
+			updateHelpContent();
+			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
+		}
+	}
+
+	public void updateHelpContent() {
+		if (currentGameScene instanceof GameScene2D) {
+			GameScene2D gameScene2d = (GameScene2D) currentGameScene;
+			var help = csHelp.current();
+			if (help.isEmpty()) {
+				gameScene2d.helpRoot().getChildren().clear();
 			} else {
-				scene2D.helpRoot().getChildren().clear();
+				gameScene2d.helpRoot().getChildren().setAll(help.get());
 			}
 		}
 	}
@@ -250,7 +254,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	private void initEnv() {
-		Env.showHelpPy.addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		pausedPy.bind(Env.simulationPausedPy);
@@ -303,7 +306,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateContextSensitiveHelp();
 		updateMainView();
 	}
 
@@ -322,7 +324,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	private void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.HELP)) {
-			Actions.toggleHelp();
+			showHelp();
 		} else if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {

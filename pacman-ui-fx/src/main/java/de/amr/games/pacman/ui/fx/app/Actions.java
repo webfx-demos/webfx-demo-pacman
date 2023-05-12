@@ -27,12 +27,8 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
 import javafx.scene.media.AudioClip;
-import javafx.util.Duration;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -44,32 +40,13 @@ public class Actions {
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage; //TODO move elsewhere
-	private static FadeTransition helpFadingTransition; //TODO move elsewhere
 
 	public static void init(GameUI ui) {
 		Actions.ui = ui;
 	}
 
-	public static void toggleHelp() {
-		boolean fading = helpFadingTransition != null && helpFadingTransition.getStatus() == Animation.Status.RUNNING;
-		if (fading) {
-			return;
-		}
-		if (Env.showHelpPy.get()) {
-			Env.showHelpPy.set(false);
-			return;
-		}
-		Env.showHelpPy.set(true);
-		ui.csHelp().setGameVariant(ui.gameController().game().variant());
-		ui.updateContextSensitiveHelp();
-		var gameScene = (GameScene2D) ui.currentGameScene();
-		gameScene.helpRoot().setOpacity(1);
-		helpFadingTransition = new FadeTransition(Duration.seconds(0.5), gameScene.helpRoot());
-		helpFadingTransition.setFromValue(1);
-		helpFadingTransition.setToValue(0);
-		helpFadingTransition.setOnFinished(e -> Env.showHelpPy.set(false));
-		helpFadingTransition.setDelay(Duration.seconds(2.0));
-		helpFadingTransition.play();
+	public static void showHelp() {
+		ui.showHelp();
 	}
 
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
@@ -177,7 +154,8 @@ public class Actions {
 		String message = AppRes.Texts.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(auto ? AppRes.Sounds.VOICE_AUTOPILOT_ON : AppRes.Sounds.VOICE_AUTOPILOT_OFF);
-		ui.updateContextSensitiveHelp();	}
+		ui.updateHelpContent();
+	}
 
 	public static void toggleImmunity() {
 		ui.game().setImmune(!ui.game().isImmune());
@@ -185,7 +163,8 @@ public class Actions {
 		String message = AppRes.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(immune ? AppRes.Sounds.VOICE_IMMUNITY_ON : AppRes.Sounds.VOICE_IMMUNITY_OFF);
-		ui.updateContextSensitiveHelp();	}
+		ui.updateHelpContent();
+	}
 
 	public static void startLevelTestMode() {
 		if (ui.gameController().state() == GameState.INTRO) {

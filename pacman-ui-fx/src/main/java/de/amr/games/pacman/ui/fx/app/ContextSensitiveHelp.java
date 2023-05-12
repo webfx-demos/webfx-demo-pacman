@@ -30,7 +30,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import dev.webfx.platform.useragent.UserAgent;
-import dev.webfx.platform.util.Arrays;
+import javafx.animation.Animation.Status;
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
@@ -39,6 +40,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,49 +52,99 @@ import java.util.Optional;
  */
 public class ContextSensitiveHelp {
 
+	private static class Menu {
+		private final List<Node> column0 = new ArrayList<>();
+		private final List<Node> column1 = new ArrayList<>();
+
+		public void addRow(Node node0, Node node1) {
+			column0.add(node0);
+			column1.add(node1);
+		}
+
+		public int size() {
+			return column0.size();
+		}
+	}
+
 	private final Map<String, String> translations;
 	private final GameController gameController;
-	private Color backgroundColor = Color.WHITE;
-	private Font font = Font.font("Helvetica", 8);
+	private final FadeTransition closeAnimation;
+	private Font font = Font.font("Helvetica", 10);
 
 	public ContextSensitiveHelp(GameController gameController, Map<String, String> translations) {
 		this.gameController = gameController;
 		this.translations = translations;
+		closeAnimation = new FadeTransition(Duration.seconds(0.5));
+		closeAnimation.setFromValue(1);
+		closeAnimation.setToValue(0);
+	}
+
+	public void show(Node helpRoot, Duration openDuration) {
+		helpRoot.setOpacity(1);
+		if (closeAnimation.getStatus() == Status.RUNNING) {
+			closeAnimation.playFromStart();
+		}
+		closeAnimation.setNode(helpRoot);
+		closeAnimation.setDelay(openDuration);
+		closeAnimation.play();
+	}
+
+	private Pane createPane(Menu menu) {
+		var grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		for (int row = 0; row < menu.column0.size(); ++row) {
+			grid.add(menu.column0.get(row), 0, row);
+			grid.add(menu.column1.get(row), 1, row);
+		}
+		int rowIndex = menu.size();
+		if (gameController.isAutoControlled()) {
+			var text = text(tt("help.autopilot_on"), Color.ORANGE);
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, rowIndex++);
+		}
+		if (gameController.game().isImmune()) {
+			var text = text(tt("help.immunity_on"), Color.ORANGE);
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, rowIndex++);
+		}
+
+		var pane = new BorderPane(grid);
+		pane.setPadding(new Insets(10));
+		switch (gameController.game().variant()) {
+			case MS_PACMAN:
+				pane.setBackground(ResourceManager.colorBackground(Color.rgb(255, 0, 0, 0.9)));
+				break;
+			case PACMAN:
+				pane.setBackground(ResourceManager.colorBackground(Color.rgb(33, 33, 255, 0.9)));
+				break;
+			default: throw new IllegalGameVariantException(gameController.game().variant());
+		}
+
+		//TODO workaround for GWT layout issues
+		if (UserAgent.isBrowser()) {
+			grid.setTranslateY(6);
+		}
+
+		return pane;
 	}
 
 	public Optional<Pane> current() {
 		Pane pane = null;
 		switch (gameController.state()) {
 			case CREDIT:
-				pane = helpCredit();
+				pane = menuCredit();
 				break;
 			case INTRO:
-				pane = helpIntro();
+				pane = menuIntro();
 				break;
 			case READY: case HUNTING: case PACMAN_DYING: case GHOST_DYING:
-				pane = attractMode() ? helpDemoLevel() : helpPlaying();
+				pane = attractMode() ? menuDemoLevel() : menuPlaying();
 				break;
 			default:
 				break;
 		}
 		return Optional.ofNullable(pane);
-	}
-
-	public void setGameVariant(GameVariant variant) {
-		switch (variant) {
-			case MS_PACMAN:
-				setBackgroundColor(Color.rgb(255, 0, 0, 0.9));
-				break;
-			case PACMAN:
-				setBackgroundColor(Color.rgb(33, 33, 255, 0.9));
-				break;
-			default:
-				throw new IllegalGameVariantException(variant);
-		}
-	}
-
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
 	}
 
 	public void setFont(Font font) {
@@ -103,11 +155,13 @@ public class ContextSensitiveHelp {
 		return translations.get(key);
 	}
 
-	private Text label(String s) {
-		var label = new Text(s);
-		label.setFill(Color.gray(0.9));
+	private Node label(String s) {
+		// TODO In JavaFX 11, I get ellipsis for label texts and don't know how to avoid that
+/*		var label = new Label(s);
+		label.setTextFill(Color.gray(0.9));
 		label.setFont(font);
-		return label;
+		return label;*/
+		return text(s, Color.gray(0.9));
 	}
 
 	private Text text(String s, Color color) {
@@ -121,50 +175,6 @@ public class ContextSensitiveHelp {
 		return text(s, Color.YELLOW);
 	}
 
-	private Text key(String key) {
-		return text("[" + key + "]");
-	}
-
-	private class Help {
-
-		private final List<List<Node>> rows = new ArrayList<>();
-
-		public void addRow(String labelText, String keySpec) {
-			rows.add(Arrays.asList(label(labelText), key(keySpec)));
-		}
-
-		public Pane createPane() {
-			var grid = new GridPane();
-			grid.setHgap(10);
-			grid.setVgap(10);
-			for (int rowIndex = 0; rowIndex < rows.size(); ++rowIndex) {
-				var row = rows.get(rowIndex);
-				grid.add(row.get(0), 0, rowIndex);
-				grid.add(row.get(1), 1, rowIndex);
-			}
-			if (gameController.isAutoControlled()) {
-				var text = text(tt("help.autopilot_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rows.size());
-			}
-			if (gameController.game().isImmune()) {
-				var text = text(tt("help.immunity_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rows.size() + 1);
-			}
-
-			var pane = new BorderPane(grid);
-			pane.setPadding(new Insets(10));
-			pane.setBackground(ResourceManager.colorBackground(backgroundColor));
-
-			//TODO this is a workaround for GWT layout issues
-			if (UserAgent.isBrowser()) {
-				grid.setTranslateY(6);
-			}
-			return pane;
-		}
-	}
-
 	private GameModel game() {
 		return gameController.game();
 	}
@@ -174,50 +184,44 @@ public class ContextSensitiveHelp {
 		return gameLevel.isPresent() && gameLevel.get().isDemoLevel();
 	}
 
-	private Pane helpIntro() {
-		var help = new Help();
+	private void addEntry(Menu menu, String rbKey, String kbKey) {
+		menu.addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
+	}
+
+	private Pane menuIntro() {
+		var menu = new Menu();
 		if (game().credit() > 0) {
-			help.addRow(tt("help.start_game"), "1");
+			addEntry(menu, "help.start_game", "1");
 		}
-		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
-		return help.createPane();
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		return createPane(menu);
 	}
 
-	private Pane helpCredit() {
-		var help = new Help();
+	private Pane menuCredit() {
+		var menu = new Menu();
 		if (game().credit() > 0) {
-			help.addRow(tt("help.start_game"), "1");
+			addEntry(menu, "help.start_game", "1");
 		}
-		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt("help.show_intro"), "Q");
-		return help.createPane();
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
 	}
 
-	private Help helpPlaying;
-
-	private Pane helpPlaying() {
-		if (helpPlaying == null) {
-			var help = new Help();
-			help.addRow(tt("help.move_left"), tt("help.cursor_left"));
-			help.addRow(tt("help.move_right"), tt("help.cursor_right"));
-			help.addRow(tt("help.move_up"), tt("help.cursor_up"));
-			help.addRow(tt("help.move_down"), tt("help.cursor_down"));
-			help.addRow(tt("help.show_intro"), "Q");
-			helpPlaying = help;
-		}
-		return helpPlaying.createPane();
+	private Pane menuPlaying() {
+		var menu = new Menu();
+		addEntry(menu, "help.move_left", tt("help.cursor_left"));
+		addEntry(menu, "help.move_right", tt("help.cursor_right"));
+		addEntry(menu, "help.move_up", tt("help.cursor_up"));
+		addEntry(menu, "help.move_down", tt("help.cursor_down"));
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
 	}
 
-	private Help helpDemoLevel;
-
-	private Pane helpDemoLevel() {
-		if (helpDemoLevel == null) {
-			var help = new Help();
-			help.addRow(tt("help.add_credit"), "5");
-			help.addRow(tt("help.show_intro"), "Q");
-			helpDemoLevel = help;
-		}
-		return helpDemoLevel.createPane();
+	private Pane menuDemoLevel() {
+		var menu = new Menu();
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
 	}
 }
