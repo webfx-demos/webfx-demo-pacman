@@ -77,7 +77,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
 	protected final VBox helpRoot = new VBox();
-	protected ImageView helpIcon;
+	protected ImageView friendlyGhostImage;
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -95,18 +95,18 @@ public abstract class GameScene2D implements GameScene {
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
-		// help panel appears in overlay layer at left border, 10% from top
-		overlay.getChildren().add(helpRoot);
+		// help appears in overlay layer at left scene border, 10% from top
 		helpRoot.setTranslateX(8);
 		helpRoot.setTranslateY(HEIGHT * 0.1);
 
-		helpIcon = new ImageView(AppRes.Graphics.iconHelp);
-		helpIcon.setPreserveRatio(true);
-		helpIcon.setFitHeight(24);
-		helpIcon.setTranslateX(-28);
-		helpIcon.setTranslateY(helpRoot.getTranslateY()-24);
-		helpIcon.setOnMousePressed (e -> Actions.showHelp());
-		overlay.getChildren().add(helpIcon);
+		friendlyGhostImage = new ImageView(AppRes.Graphics.friendlyGhostIcon);
+		friendlyGhostImage.setPreserveRatio(true);
+		friendlyGhostImage.setFitHeight(20);
+		friendlyGhostImage.setTranslateX(-20);
+		friendlyGhostImage.setTranslateY(helpRoot.getTranslateY());
+		friendlyGhostImage.setOnMousePressed (e -> Actions.showHelp());
+
+		overlay.getChildren().addAll(helpRoot, friendlyGhostImage);
 
 		layers.getChildren().addAll(canvas, overlay);
 		root.setCenter(layers);

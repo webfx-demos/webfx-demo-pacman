@@ -28,9 +28,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import dev.webfx.platform.useragent.UserAgent;
-import javafx.animation.Animation.Status;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -45,7 +46,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Armin Reichert
@@ -79,16 +79,44 @@ public class ContextSensitiveHelp {
 		closeAnimation.setToValue(0);
 	}
 
-	public void show(Node helpRoot, Duration openDuration) {
-		helpRoot.setOpacity(1);
-		if (closeAnimation.getStatus() == Status.RUNNING) {
-			closeAnimation.playFromStart();
+	public void show(GameScene2D scene2d, Duration openDuration) {
+		if (closeAnimation.getStatus() == Animation.Status.RUNNING) {
+			closeAnimation.stop();
 		}
-		closeAnimation.setNode(helpRoot);
+		var pane = currentPane();
+		if (pane == null) {
+			scene2d.helpRoot().getChildren().clear();
+		} else {
+			scene2d.helpRoot().getChildren().setAll(pane);
+		}
+		scene2d.helpRoot().setOpacity(1);
+		closeAnimation.setNode(scene2d.helpRoot());
 		closeAnimation.setDelay(openDuration);
 		closeAnimation.play();
 	}
 
+	public void clear(GameScene2D scene2d) {
+		closeAnimation.stop();
+		scene2d.helpRoot().getChildren().clear();
+	}
+
+	private Pane currentPane() {
+		Pane pane = null;
+		switch (gameController.state()) {
+			case CREDIT:
+				pane = menuCredit();
+				break;
+			case INTRO:
+				pane = menuIntro();
+				break;
+			case READY: case HUNTING: case PACMAN_DYING: case GHOST_DYING:
+				pane = attractMode() ? menuDemoLevel() : menuPlaying();
+				break;
+			default:
+				break;
+		}
+		return pane;
+	}
 	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
 		grid.setHgap(10);
@@ -129,23 +157,7 @@ public class ContextSensitiveHelp {
 		return pane;
 	}
 
-	public Optional<Pane> current() {
-		Pane pane = null;
-		switch (gameController.state()) {
-			case CREDIT:
-				pane = menuCredit();
-				break;
-			case INTRO:
-				pane = menuIntro();
-				break;
-			case READY: case HUNTING: case PACMAN_DYING: case GHOST_DYING:
-				pane = attractMode() ? menuDemoLevel() : menuPlaying();
-				break;
-			default:
-				break;
-		}
-		return Optional.ofNullable(pane);
-	}
+
 
 	public void setFont(Font font) {
 		this.font = font;

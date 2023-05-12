@@ -215,22 +215,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D) {
 			GameScene2D gameScene2d = (GameScene2D) currentGameScene;
-			updateHelpContent();
-			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
+			csHelp.show(gameScene2d, Duration.seconds(2));
 		}
 	}
 
-	public void updateHelpContent() {
-		if (currentGameScene instanceof GameScene2D) {
-			GameScene2D gameScene2d = (GameScene2D) currentGameScene;
-			var help = csHelp.current();
-			if (help.isEmpty()) {
-				gameScene2d.helpRoot().getChildren().clear();
-			} else {
-				gameScene2d.helpRoot().getChildren().setAll(help.get());
-			}
-		}
-	}
 
 	private void updateMainView() {
 		switch (gameController.game().variant()) {
@@ -319,6 +307,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 		layers.set(LAYER_GAME_SCENE, nextGameScene.root());
 		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
+		if (nextGameScene instanceof  GameScene2D) {
+			var scene2d = (GameScene2D) nextGameScene;
+			csHelp.clear(scene2d);
+		}
 		currentGameScene = nextGameScene;
 	}
 
@@ -348,7 +340,9 @@ public class GameUI extends GameLoop implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
 			Actions.startLevelTestMode();
 		}
-		currentGameScene.handleKeyboardInput();
+		if (currentGameScene != null) {
+			currentGameScene.handleKeyboardInput();
+		}
 	}
 
 	@Override

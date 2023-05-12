@@ -154,7 +154,6 @@ public class Actions {
 		String message = AppRes.Texts.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(auto ? AppRes.Sounds.VOICE_AUTOPILOT_ON : AppRes.Sounds.VOICE_AUTOPILOT_OFF);
-		ui.updateHelpContent();
 	}
 
 	public static void toggleImmunity() {
@@ -163,7 +162,6 @@ public class Actions {
 		String message = AppRes.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(immune ? AppRes.Sounds.VOICE_IMMUNITY_ON : AppRes.Sounds.VOICE_IMMUNITY_OFF);
-		ui.updateHelpContent();
 	}
 
 	public static void startLevelTestMode() {
