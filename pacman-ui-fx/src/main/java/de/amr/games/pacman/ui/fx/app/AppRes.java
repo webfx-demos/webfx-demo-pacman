@@ -144,7 +144,7 @@ public class AppRes {
 		public static Font arcade;
 		public static Font handwriting;
 
-		static void load() {
+		private static void load() {
 			arcade = Manager.font("fonts/emulogic.ttf", 8);
 			handwriting = Manager.font("fonts/RockSalt-Regular.ttf", 8);
 		}
@@ -160,7 +160,7 @@ public class AppRes {
 		public static Map<String, String> messageBundle;
 		private static Picker<String> messagePickerCheating;
 
-		static void load() {
+		private static void load() {
 			// ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages")
 			messageBundle = Manager.loadBundle();
 			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
@@ -205,19 +205,13 @@ public class AppRes {
 		public static Image iconMsPacManGame;
 		public static Spritesheet spritesheetMsPacManGame;
 		public static Image logoMsPacManGame;
-		public static Image[] flashingMazesMsPacManGame;
+		public static Image flashingMazesMsPacManGame;
 
 		private static Image emptyMazeMsPacManGame(int i) {
 			return spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
 		}
 
-		private static Image makeFlashingMazeFromEmptyMaze(int i) {
-			Color k1 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor();
-			Color k2 = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor();
-			return Ufx.colorsExchanged(emptyMazeMsPacManGame(i), Collections.mapOf(k1, Color.WHITE, k2, Color.BLACK));
-		}
-
-		static void load() {
+		private static void load() {
 			msPacManCabinet = Manager.image("graphics/mspacman/cabinet.jpg");
 			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 			friendlyGhostIcon = Manager.image("graphics/icons/ghost-help-icon.png");
@@ -229,12 +223,8 @@ public class AppRes {
 			flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
 			iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
-			Image sprites = Manager.image("graphics/mspacman/sprites.png");
-			spritesheetMsPacManGame = new Spritesheet(sprites, 16);
-			//TODO check if this works
-			DeviceSceneUtil.onImagesLoaded(() -> flashingMazesMsPacManGame = IntStream.range(0, 6).mapToObj(Graphics::makeFlashingMazeFromEmptyMaze)
-					.toArray(Image[]::new)
-					, sprites);
+			spritesheetMsPacManGame = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
+			flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
 			logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");
 		}
 	}
@@ -294,7 +284,7 @@ public class AppRes {
 		private static GameSounds gameSoundsMsPacMan;
 		private static GameSounds gameSoundsPacMan;
 
-		static void load() {
+		private static void load() {
 			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
 			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
 		}

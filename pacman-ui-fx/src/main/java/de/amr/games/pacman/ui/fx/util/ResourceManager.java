@@ -115,21 +115,6 @@ public class ResourceManager {
 		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
 
-/*
-	public Background imageBackground(String relPath) {
-		return imageBackground(image(relPath));
-	}
-*/
-
-/*
-	public PhongMaterial coloredMaterial(Color color) {
-		checkNotNull(color);
-		var material = new PhongMaterial(color);
-		material.setSpecularColor(color.brighter());
-		return material;
-	}
-*/
-
 	public static Color color(Color color, double opacity) {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
