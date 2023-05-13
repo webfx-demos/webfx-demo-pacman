@@ -188,7 +188,7 @@ public class AppRes {
 
 	public static class Graphics {
 
-		public static Image msPacManCabinet;
+		public static Image greetingPaneWallpaper;
 		public static Image wallpaper;
 
 		public static Image iconPacManGame;
@@ -209,7 +209,7 @@ public class AppRes {
 		}
 
 		private static void load() {
-			msPacManCabinet = Manager.image("graphics/mspacman/cabinet.jpg");
+			greetingPaneWallpaper = Manager.image("graphics/mspacman/wallpaper-midway.png");
 			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
 			iconPacManGame = Manager.image("graphics/icons/pacman.png");

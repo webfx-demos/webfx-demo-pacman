@@ -42,13 +42,13 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -122,12 +122,14 @@ public class GameUI extends GameClock implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
-		if (UserAgent.isBrowser()) {
+		boolean showGreeting = true;// UserAgent.isBrowser();
+		if (showGreeting) {
 			greetingPane = new GreetingPane();
 			//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
 			greetingPane.setOnMouseClicked(e -> {
 				layers.remove(greetingPane);
 				rebuildMainSceneLayers();
+				root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
 				Actions.playHelpVoiceMessageAfterSeconds(4);
 				gameController().restart(GameState.BOOT);
 				startUI();
@@ -192,7 +194,7 @@ public class GameUI extends GameClock implements GameEventListener {
 		layers.add(flashMessageView);
 		rebuildMainSceneLayers();
 
-		root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
+		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
 
 		return scene;
 	}

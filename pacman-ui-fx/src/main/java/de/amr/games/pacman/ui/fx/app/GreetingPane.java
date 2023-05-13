@@ -1,5 +1,8 @@
 package de.amr.games.pacman.ui.fx.app;
 
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import dev.webfx.platform.useragent.UserAgent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
@@ -21,23 +24,37 @@ public class GreetingPane extends BorderPane {
         ds.setOffsetY(3.0f);
         ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
+
         var text = new Text("Click to start!");
         text.setMouseTransparent(true);
         text.setEffect(ds);
         text.setCache(true);
-        text.setFill(Color.YELLOW);
-        text.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 20));
+        text.setFill(Color.WHITE);
+        text.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
         BorderPane.setAlignment(text, Pos.CENTER);
-        text.setTranslateY(20); //TODO
-        setCenter(text);
+
+        var box = new StackPane(text);
+        box.setMaxHeight(100);
+        box.setMaxWidth(400);
+        box.setPadding(new Insets(30));
+        box.setBackground(ResourceManager.colorBackground(
+                ResourceManager.color(Color.CORNFLOWERBLUE, 0.8)));
+
+        setBottom(box);
+        box.setTranslateY(-20);
+        BorderPane.setAlignment(box, Pos.CENTER);
+
+        if (UserAgent.isBrowser()) {
+            text.setTranslateY(20); //TODO fixme
+        }
 
         var bgImage = new BackgroundImage(
-            AppRes.Graphics.msPacManCabinet,
+            AppRes.Graphics.greetingPaneWallpaper,
             BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,
             new BackgroundSize(AUTO, AUTO,false, false,
-                false, true)
+                true, false)
         );
         setBackground(new Background(bgImage));
     }
