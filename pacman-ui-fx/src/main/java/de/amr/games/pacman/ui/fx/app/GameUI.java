@@ -42,16 +42,13 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import javafx.geometry.Pos;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -63,7 +60,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -85,7 +81,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
-	private BorderPane greetingPane;
+	private boolean showGreetingPane = UserAgent.isBrowser();
+	private GreetingPane greetingPane;
 	private GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
@@ -107,22 +104,12 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
 
-		createGreetingPane();
-		//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
-		greetingPane.setOnMouseClicked(e -> {
-			layers.remove(greetingPane);
-			rebuildMainSceneLayers();
-			root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
-			Actions.playHelpVoiceMessageAfterSeconds(4);
-			gameController().restart(GameState.BOOT);
-			start();
-		});
-
 		createSceneConfiguration();
 
 		var mainScene = createMainScene(TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
+
 
 		GameEvents.addListener(this);
 		initEnv();
@@ -135,28 +122,50 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
+
+		if (showGreetingPane) {
+			greetingPane = new GreetingPane();
+			//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
+			greetingPane.setOnMouseClicked(e -> {
+				layers.remove(greetingPane);
+				rebuildMainSceneLayers();
+				Actions.playHelpVoiceMessageAfterSeconds(4);
+				gameController().restart(GameState.BOOT);
+				start();
+			});
+			layers.add(greetingPane);
+			rebuildMainSceneLayers();
+		} else {
+			start();
+		}
+	}
+
+	public void start() {
+		Actions.playHelpVoiceMessageAfterSeconds(4);
+		gameController().restart(GameState.BOOT);
+		super.start();
 	}
 
 	private void createSceneConfiguration() {
 		sceneConfig.put(GameVariant.MS_PACMAN,
-				new GameSceneConfiguration(new MsPacManGameRenderer(),
-					new BootScene(gameController),
-					new MsPacManIntroScene(gameController),
-					new MsPacManCreditScene(gameController),
-					new PlayScene2D(gameController),
-					new MsPacManIntermissionScene1(gameController),
-					new MsPacManIntermissionScene2(gameController),
-					new MsPacManIntermissionScene3(gameController)));
+			new GameSceneConfiguration(new MsPacManGameRenderer(),
+				new BootScene(gameController),
+				new MsPacManIntroScene(gameController),
+				new MsPacManCreditScene(gameController),
+				new PlayScene2D(gameController),
+				new MsPacManIntermissionScene1(gameController),
+				new MsPacManIntermissionScene2(gameController),
+				new MsPacManIntermissionScene3(gameController)));
 
 		sceneConfig.put(GameVariant.PACMAN,
-				new GameSceneConfiguration(new PacManGameRenderer(),
-					new BootScene(gameController),
-					new PacManIntroScene(gameController),
-					new PacManCreditScene(gameController),
-					new PlayScene2D(gameController),
-					new PacManCutscene1(gameController),
-					new PacManCutscene2(gameController),
-					new PacManCutscene3(gameController)));
+			new GameSceneConfiguration(new PacManGameRenderer(),
+				new BootScene(gameController),
+				new PacManIntroScene(gameController),
+				new PacManCreditScene(gameController),
+				new PlayScene2D(gameController),
+				new PacManCutscene1(gameController),
+				new PacManCutscene2(gameController),
+				new PacManCutscene3(gameController)));
 	}
 
 	@Override
@@ -171,25 +180,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		currentGameScene.render();
 	}
 
-	private void createGreetingPane() {
-		var ds = new DropShadow();
-		ds.setOffsetY(3.0f);
-		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
-
-		var text = new Text("Click to start!");
-		text.setMouseTransparent(true);
-		text.setEffect(ds);
-		text.setCache(true);
-		text.setFill(Color.YELLOW);
-		text.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 20));
-
-		greetingPane = new BorderPane();
-		greetingPane.setCenter(text);
-
-		BorderPane.setAlignment(text, Pos.CENTER);
-		text.setTranslateY(20);
-	}
-
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.setOnKeyPressed(this::handleKeyPressed);
@@ -201,16 +191,9 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		layers.add(new Label("")); // game scene layer
 		layers.add(flashMessageView);
-		layers.add(greetingPane);
 		rebuildMainSceneLayers();
 
-		var bgImage = new BackgroundImage(
-			AppRes.Graphics.msPacManCabinet,
-			BackgroundRepeat.NO_REPEAT,
-			BackgroundRepeat.NO_REPEAT,
-			BackgroundPosition.CENTER,
-			new BackgroundSize(AUTO, AUTO, false, false, false, true));
-		root.setBackground(new Background(bgImage));
+		root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
 
 		return scene;
 	}
