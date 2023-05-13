@@ -46,7 +46,7 @@ public abstract class GameClock {
 		@Override
 		protected void invalidated() {
 			createFrameGenerator(get());
-		};
+		}
 	};
 
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);

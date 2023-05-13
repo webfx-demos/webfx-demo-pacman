@@ -81,7 +81,6 @@ public class GameUI extends GameClock implements GameEventListener {
 	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final ContextSensitiveHelp csHelp;
-	private boolean showGreetingPane = UserAgent.isBrowser();
 	private GreetingPane greetingPane;
 	private GameScene currentGameScene;
 
@@ -123,7 +122,7 @@ public class GameUI extends GameClock implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
-		if (showGreetingPane) {
+		if (UserAgent.isBrowser()) {
 			greetingPane = new GreetingPane();
 			//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
 			greetingPane.setOnMouseClicked(e -> {

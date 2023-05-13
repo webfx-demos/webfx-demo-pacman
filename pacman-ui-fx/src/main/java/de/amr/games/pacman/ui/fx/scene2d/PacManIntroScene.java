@@ -53,7 +53,7 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private List<Text> signature;
+	private final List<Text> signature;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
