@@ -36,7 +36,7 @@ public class GreetingPane extends BorderPane {
         var box = new StackPane(text);
         box.setMaxHeight(100);
         box.setMaxWidth(400);
-        box.setPadding(new Insets(30));
+        box.setPadding(new Insets(10));
         box.setBackground(ResourceManager.colorBackground(
                 ResourceManager.color(Color.CORNFLOWERBLUE, 0.8)));
 
