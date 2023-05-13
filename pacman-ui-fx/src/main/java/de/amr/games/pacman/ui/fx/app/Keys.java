@@ -64,9 +64,9 @@ public class Keys {
 	public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
 	public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
 	public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
-	public static final KeyCodeCombination SIMULATION_FASTER = alt(KeyCode.F);
-	public static final KeyCodeCombination SIMULATION_SLOWER = alt(KeyCode.G);
-	public static final KeyCodeCombination SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
+	public static final KeyCodeCombination SIMULATION_FASTER = altShift(KeyCode.F);
+	public static final KeyCodeCombination SIMULATION_SLOWER = altShift(KeyCode.G);
+	public static final KeyCodeCombination SIMULATION_NORMAL = altShift(KeyCode.DIGIT0);
 
 	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
 	public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);

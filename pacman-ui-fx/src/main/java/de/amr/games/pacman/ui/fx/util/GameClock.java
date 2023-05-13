@@ -36,11 +36,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 /**
- * Game loop with modifiable frame rate.
+ * Game clock with modifiable frame rate.
  * 
  * @author Armin Reichert
  */
-public abstract class GameLoop {
+public abstract class GameClock {
 
 	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
 		@Override
@@ -60,7 +60,7 @@ public abstract class GameLoop {
 	private long fpsCountStartTime;
 	private long frames;
 
-	protected GameLoop(int targetFramerate) {
+	protected GameClock(int targetFramerate) {
 		targetFrameratePy.set(targetFramerate);
 	}
 
@@ -87,11 +87,11 @@ public abstract class GameLoop {
 	 */
 	public abstract void doRender();
 
-	public void start() {
+	public final void start() {
 		frameGenerator.play();
 	}
 
-	public void stop() {
+	public final void stop() {
 		frameGenerator.stop();
 	}
 

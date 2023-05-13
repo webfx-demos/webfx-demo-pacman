@@ -40,7 +40,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
-import de.amr.games.pacman.ui.fx.util.GameLoop;
+import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.Node;
@@ -66,7 +66,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  *
  * @author Armin Reichert
  */
-public class GameUI extends GameLoop implements GameEventListener {
+public class GameUI extends GameClock implements GameEventListener {
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
@@ -131,19 +131,19 @@ public class GameUI extends GameLoop implements GameEventListener {
 				rebuildMainSceneLayers();
 				Actions.playHelpVoiceMessageAfterSeconds(4);
 				gameController().restart(GameState.BOOT);
-				start();
+				startUI();
 			});
 			layers.add(greetingPane);
 			rebuildMainSceneLayers();
 		} else {
-			start();
+			startUI();
 		}
 	}
 
-	public void start() {
+	public void startUI() {
 		Actions.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
-		super.start();
+		start();
 	}
 
 	private void createSceneConfiguration() {
