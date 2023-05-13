@@ -151,7 +151,7 @@ public class ContextSensitiveHelp {
 
 		//TODO workaround for GWT layout issues
 		if (UserAgent.isBrowser()) {
-			grid.setTranslateY(6);
+			//grid.setTranslateY(6);
 		}
 
 		return pane;
