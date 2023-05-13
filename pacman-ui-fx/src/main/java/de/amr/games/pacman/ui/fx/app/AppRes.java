@@ -190,6 +190,7 @@ public class AppRes {
 
 		public static Image greetingPaneWallpaper;
 		public static Image wallpaper;
+		public static Color wallpaperColor = Color.rgb(0, 76, 149);
 
 		public static Image iconPacManGame;
 		public static Image helpIconPacManGame;

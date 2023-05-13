@@ -180,7 +180,7 @@ public abstract class GameScene2D implements GameScene {
 
 		double w = canvas.getWidth();
 		double h = canvas.getHeight();
-		g.setFill(Color.GRAY);
+		g.setFill(AppRes.Graphics.wallpaperColor);
 		g.fillRect(0, 0, w, h);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, w, h, 20, 20);
