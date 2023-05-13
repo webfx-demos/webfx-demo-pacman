@@ -25,15 +25,12 @@ package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.*;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * This is the entry point of the Pac-Man and Ms. Pac-Man games.
@@ -53,34 +50,6 @@ import java.util.List;
  */
 public class PacManGameAppFX extends Application {
 
-	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
-		return dev.webfx.platform.util.collection.Collections.listOf(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new PacManIntroScene(gc)),
-			new GameSceneChoice(new PacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc)), 
-			new GameSceneChoice(new PacManCutscene2(gc)),
-			new GameSceneChoice(new PacManCutscene3(gc))
-		//@formatter:on
-		);
-	}
-
-	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		return dev.webfx.platform.util.collection.Collections.listOf(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new MsPacManIntroScene(gc)), 
-			new GameSceneChoice(new MsPacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
-		//@formatter:on
-		);
-	}
-
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -96,10 +65,7 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(Collections.emptyMap()); // no settings used in this application
 		var gameController = new GameController(GameVariant.MS_PACMAN);
-		gameUI = new GameUI(primaryStage, settings, gameController,
-			createMsPacManScenes(gameController),
-			createPacManScenes(gameController)
-		);
+		gameUI = new GameUI(primaryStage, settings, gameController);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
 	}
 

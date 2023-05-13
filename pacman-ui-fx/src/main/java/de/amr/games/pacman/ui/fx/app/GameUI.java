@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.*;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -34,10 +35,9 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
@@ -75,17 +75,11 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
 
-	private static final byte INDEX_BOOT_SCENE = 0;
-	private static final byte INDEX_INTRO_SCENE = 1;
-	private static final byte INDEX_CREDIT_SCENE = 2;
-	private static final byte INDEX_PLAY_SCENE = 3;
-
 	private static final int LAYER_GAME_SCENE = 0;
 	// LAYER_FLASH_MESSAGES = 1, LAYER_GREETING = 2;
 
 	private final GameController gameController;
-	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
+	private final Map<GameVariant, GameSceneConfiguration> sceneConfig = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
 	private final StackPane root = new StackPane();
 	private final List<Node> layers = new ArrayList<>();
@@ -94,9 +88,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	private BorderPane greetingPane;
 	private GameScene currentGameScene;
 
-	public GameUI(final Stage stage, final Settings settings, GameController gameController,
-			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
-
+	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
 		super(GameModel.FPS);
 
 		checkNotNull(stage);
@@ -126,13 +118,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 			start();
 		});
 
-
-		// renderers must be created before game scenes
-		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
-
-		renderers.put(GameVariant.PACMAN, new PacManGameRenderer());
-		scenes.put(GameVariant.PACMAN, pacManScenes);
+		createSceneConfiguration();
 
 		var mainScene = createMainScene(TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
@@ -149,6 +135,28 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
+	}
+
+	private void createSceneConfiguration() {
+		sceneConfig.put(GameVariant.MS_PACMAN,
+				new GameSceneConfiguration(new MsPacManGameRenderer(),
+					new BootScene(gameController),
+					new MsPacManIntroScene(gameController),
+					new MsPacManCreditScene(gameController),
+					new PlayScene2D(gameController),
+					new MsPacManIntermissionScene1(gameController),
+					new MsPacManIntermissionScene2(gameController),
+					new MsPacManIntermissionScene3(gameController)));
+
+		sceneConfig.put(GameVariant.PACMAN,
+				new GameSceneConfiguration(new PacManGameRenderer(),
+					new BootScene(gameController),
+					new PacManIntroScene(gameController),
+					new PacManCreditScene(gameController),
+					new PlayScene2D(gameController),
+					new PacManCutscene1(gameController),
+					new PacManCutscene2(gameController),
+					new PacManCutscene3(gameController)));
 	}
 
 	@Override
@@ -249,20 +257,16 @@ public class GameUI extends GameLoop implements GameEventListener {
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
 	}
 
-	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
-		var game = gameController.game();
+	private GameScene2D sceneMatchingCurrentGameState() {
 		var gameState = gameController.state();
-		int index;
+		var scenes = sceneConfig.get(game().variant());
 		switch (gameState) {
 		case BOOT:
-			index = INDEX_BOOT_SCENE;
-			break;
+			return scenes.bootScene();
 		case CREDIT:
-			index = INDEX_CREDIT_SCENE;
-			break;
+			return scenes.creditScene();
 		case INTRO:
-			index = INDEX_INTRO_SCENE;
-			break;
+			return scenes.introScene();
 		case GAME_OVER:
 		case GHOST_DYING:
 		case HUNTING:
@@ -271,23 +275,19 @@ public class GameUI extends GameLoop implements GameEventListener {
 		case CHANGING_TO_NEXT_LEVEL:
 		case PACMAN_DYING:
 		case READY:
-			index = INDEX_PLAY_SCENE;
-			break;
+			return scenes.playScene();
 		case INTERMISSION:
-			index = INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
-			break;
+			GameLevel level =  game().level().orElseThrow(IllegalStateException::new);
+			return scenes.cutScene(level.intermissionNumber);
 		case INTERMISSION_TEST:
-			index = INDEX_PLAY_SCENE + game.intermissionTestNumber;
-			break;
+			return scenes.cutScene(game().intermissionTestNumber);
 		default:
-			throw new IllegalArgumentException("Unknown game state: %s"/* .formatted(gameState) */);
+			throw new IllegalArgumentException("Unknown game state: " + gameState);
 		}
-		return scenes.get(game.variant()).get(index);
 	}
 
 	public void updateGameScene(boolean reload) {
-		var matching = sceneSelectionMatchingCurrentGameState();
-		var nextGameScene = matching.scene2D();
+		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state " + gameController.state());
 		}
@@ -301,8 +301,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var renderer = renderers.get(gameController.game().variant());
-		nextGameScene.context().setRendering2D(renderer);
+		var scenes = sceneConfig.get(game().variant());
+		nextGameScene.context().setRendering2D(scenes.renderer());
 		nextGameScene.init();
 		layers.set(LAYER_GAME_SCENE, nextGameScene.root());
 		rebuildMainSceneLayers();
@@ -490,9 +490,5 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
-	}
-
-	public ContextSensitiveHelp csHelp() {
-		return csHelp;
 	}
 }
