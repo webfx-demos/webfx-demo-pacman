@@ -92,6 +92,8 @@ public abstract class GameScene2D implements GameScene {
 			// don't ask me why this works but setScaleX/Y doesn't
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
+		root.setScaleX(0.98);
+		root.setScaleY(0.98);
 
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);

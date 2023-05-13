@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -150,14 +149,14 @@ public class ContextSensitiveHelp {
 		}
 
 		//TODO workaround for GWT layout issues
+/*
 		if (UserAgent.isBrowser()) {
 			grid.setTranslateY(6);
 		}
+*/
 
 		return pane;
 	}
-
-
 
 	public void setFont(Font font) {
 		this.font = font;

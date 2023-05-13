@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import dev.webfx.platform.useragent.UserAgent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
@@ -44,9 +43,11 @@ public class GreetingPane extends BorderPane {
         box.setTranslateY(-20);
         BorderPane.setAlignment(box, Pos.CENTER);
 
+/*
         if (UserAgent.isBrowser()) {
             text.setTranslateY(20); //TODO fixme
         }
+*/
 
         var bgImage = new BackgroundImage(
             AppRes.Graphics.greetingPaneWallpaper,
