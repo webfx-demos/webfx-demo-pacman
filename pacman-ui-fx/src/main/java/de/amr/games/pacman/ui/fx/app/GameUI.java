@@ -278,9 +278,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 			changeGameScene(nextGameScene);
 		}
 		updateMainView();
+		var scenes = sceneConfig.get(game().variant());
+		nextGameScene.setHelpButtonStyle(game().variant());
+		boolean visible = nextGameScene != scenes.bootScene();
+		nextGameScene.helpButton().setVisible(visible);
+		Logger.info("Help visible: " + visible);
 	}
 
-	private void changeGameScene(GameScene nextGameScene) {
+	private void changeGameScene(GameScene2D nextGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
@@ -290,10 +295,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		layers.set(LAYER_GAME_SCENE, nextGameScene.root());
 		rebuildMainSceneLayers();
 		nextGameScene.onEmbedIntoParentScene(mainScene());
-		if (nextGameScene instanceof  GameScene2D) {
-			var scene2d = (GameScene2D) nextGameScene;
-			csHelp.clear(scene2d);
-		}
+		csHelp.clear(nextGameScene);
 		currentGameScene = nextGameScene;
 	}
 

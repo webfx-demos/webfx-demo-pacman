@@ -148,8 +148,9 @@ public class ResourceManager {
 		map.put("help.move_right"   , "MOVE RIGHT");
 		map.put("help.move_up"      , "MOVE UP");
 		map.put("help.move_down"    , "MOVE DOWN");
-		map.put("help.ms_pacman"    , "MS. PAC-MAN");
-		map.put("help.pacman"       , "PAC-MAN");
+		map.put("help.ms_pacman"    , "PLAY MS. PAC-MAN");
+		map.put("help.pacman"       , "PLAY PAC-MAN");
+		map.put("help.show_help"    , "SHOW HELP");
 		map.put("help.show_intro"   , "SHOW INTRO");
 		map.put("help.start_game"   , "START GAME");
 		// others

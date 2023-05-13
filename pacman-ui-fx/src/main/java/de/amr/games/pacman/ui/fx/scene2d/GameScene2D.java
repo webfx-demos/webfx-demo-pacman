@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
@@ -77,7 +78,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new BorderPane();
 	protected final VBox helpRoot = new VBox();
-	protected ImageView friendlyGhostImage;
+	protected ImageView helpButton;
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -95,18 +96,13 @@ public abstract class GameScene2D implements GameScene {
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
-		// help appears in overlay layer at left scene border, 10% from top
-		helpRoot.setTranslateX(8);
-		helpRoot.setTranslateY(HEIGHT * 0.1);
+		helpRoot.setTranslateX(16);
+		helpRoot.setTranslateY(16);
 
-		friendlyGhostImage = new ImageView(AppRes.Graphics.friendlyGhostIcon);
-		friendlyGhostImage.setPreserveRatio(true);
-		friendlyGhostImage.setFitHeight(20);
-		friendlyGhostImage.setTranslateX(-20);
-		friendlyGhostImage.setTranslateY(helpRoot.getTranslateY());
-		friendlyGhostImage.setOnMousePressed (e -> Actions.showHelp());
+		// TODO: Graphic button rendering is broken in GWT
+		setHelpButtonStyle(GameVariant.PACMAN);
 
-		overlay.getChildren().addAll(helpRoot, friendlyGhostImage);
+		overlay.getChildren().add(helpRoot);
 
 		layers.getChildren().addAll(canvas, overlay);
 		root.setCenter(layers);
@@ -126,6 +122,26 @@ public abstract class GameScene2D implements GameScene {
 
 	public VBox helpRoot() {
 		return helpRoot;
+	}
+
+	public ImageView helpButton() {
+		return helpButton;
+	}
+
+	public void setHelpButtonStyle(GameVariant variant) {
+		if (helpButton != null) {
+			overlay.getChildren().remove(helpButton);
+		}
+		helpButton = new ImageView(variant == GameVariant.MS_PACMAN
+			? AppRes.Graphics.helpIconMsPacManGame
+			: AppRes.Graphics.helpIconPacManGame);
+		helpButton.setTranslateX(4);
+		helpButton.setTranslateY(4);
+		helpButton.setFitHeight(12);
+		helpButton.setFitWidth(12);
+		//TODO seems like mouse click is ignored over transparent color pixels?
+		helpButton.setOnMouseClicked(e -> Actions.showHelp());
+		overlay.getChildren().add(helpButton);
 	}
 
 	@Override
@@ -172,7 +188,7 @@ public abstract class GameScene2D implements GameScene {
 		var color = ArcadeTheme.PALE;
 		var font = r.screenFont(TS);
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
+			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS*3, TS));
 			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
 			if (context.isCreditVisible()) {
 				Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);

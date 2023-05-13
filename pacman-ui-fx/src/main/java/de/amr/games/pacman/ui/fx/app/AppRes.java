@@ -32,9 +32,6 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Ufx;
-import dev.webfx.kit.util.scene.DeviceSceneUtil;
-import dev.webfx.platform.util.collection.Collections;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -42,7 +39,6 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Map;
-import java.util.stream.IntStream;
 
 /**
  * @author Armin Reichert
@@ -194,15 +190,16 @@ public class AppRes {
 
 		public static Image msPacManCabinet;
 		public static Image wallpaper;
-		public static Image friendlyGhostIcon;
 
 		public static Image iconPacManGame;
+		public static Image helpIconPacManGame;
 		public static Spritesheet spritesheetPacManGame;
 		public static Image fullMazePacManGame;
 		public static Image emptyMazePacManGame;
 		public static Image flashingMazePacManGame;
 
 		public static Image iconMsPacManGame;
+		public static Image helpIconMsPacManGame;
 		public static Spritesheet spritesheetMsPacManGame;
 		public static Image logoMsPacManGame;
 		public static Image flashingMazesMsPacManGame;
@@ -214,15 +211,16 @@ public class AppRes {
 		private static void load() {
 			msPacManCabinet = Manager.image("graphics/mspacman/cabinet.jpg");
 			wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
-			friendlyGhostIcon = Manager.image("graphics/icons/ghost-help-icon.png");
 
 			iconPacManGame = Manager.image("graphics/icons/pacman.png");
+			helpIconPacManGame = Manager.image("graphics/icons/help-blue-64.png");
 			spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
 			fullMazePacManGame = Manager.image("graphics/pacman/maze_full.png");
 			emptyMazePacManGame = Manager.image("graphics/pacman/maze_empty.png");
 			flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
 			iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
+			helpIconMsPacManGame = Manager.image("graphics/icons/help-red-64.png");
 			spritesheetMsPacManGame = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
 			flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
 			logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");

@@ -206,6 +206,7 @@ public class ContextSensitiveHelp {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_help", "H");
 		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
 		return createPane(menu);
 	}
@@ -216,6 +217,7 @@ public class ContextSensitiveHelp {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_help", "H");
 		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
@@ -226,6 +228,7 @@ public class ContextSensitiveHelp {
 		addEntry(menu, "help.move_right", tt("help.cursor_right"));
 		addEntry(menu, "help.move_up", tt("help.cursor_up"));
 		addEntry(menu, "help.move_down", tt("help.cursor_down"));
+		addEntry(menu, "help.show_help", "H");
 		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
@@ -233,6 +236,7 @@ public class ContextSensitiveHelp {
 	private Pane menuDemoLevel() {
 		var menu = new Menu();
 		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_help", "H");
 		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
