@@ -55,10 +55,9 @@ import java.util.Collections;
 public class PacManGameAppFX extends Application {
 
 	//@formatter:off
-	public static final BooleanProperty simulationPausedPy       = new SimpleBooleanProperty(false);
-	public static final IntegerProperty simulationSpeedPy        = new SimpleIntegerProperty(60);
+	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
+	public static final IntegerProperty simulationSpeedPy  = new SimpleIntegerProperty(60);
 	//@formatter:on
-
 
 	public static void main(String[] args) {
 		launch(args);
@@ -73,7 +72,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(Collections.emptyMap()); // no settings used in this application
+		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
 		gameUI = new GameUI(primaryStage, settings, gameController);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
@@ -81,6 +80,6 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.stop();
+		gameUI.clock().stop();
 	}
 }

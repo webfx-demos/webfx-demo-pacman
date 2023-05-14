@@ -162,18 +162,18 @@ public class Actions {
 
 	public static void oneSimulationStep() {
 		if (PacManGameAppFX.simulationPausedPy.get()) {
-			ui.executeSingleStep(true);
+			ui.clock().executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (PacManGameAppFX.simulationPausedPy.get()) {
-			ui.executeSteps(10, true);
+			ui.clock().executeSteps(10, true);
 		}
 	}
 
 	public static void changeSimulationSpeed(int delta) {
-		int newFramerate = ui.targetFrameratePy.get() + delta;
+		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			PacManGameAppFX.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, newFramerate + "Hz");

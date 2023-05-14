@@ -66,7 +66,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  *
  * @author Armin Reichert
  */
-public class GameUI extends GameClock implements GameEventListener {
+public class GameUI implements GameEventListener {
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
@@ -74,6 +74,7 @@ public class GameUI extends GameClock implements GameEventListener {
 	private static final int LAYER_GAME_SCENE = 0;
 	// LAYER_FLASH_MESSAGES = 1, LAYER_GREETING = 2;
 
+	private final GameClock clock;
 	private final GameController gameController;
 	private final Map<GameVariant, GameSceneConfiguration> sceneConfig = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
@@ -85,13 +86,24 @@ public class GameUI extends GameClock implements GameEventListener {
 	private GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
-		super(GameModel.FPS);
-
 		checkNotNull(stage);
 		checkNotNull(settings);
 
 		this.stage = stage;
 		this.gameController = gameController;
+		clock = new GameClock(GameModel.FPS) {
+			@Override
+			public void doUpdate() {
+				gameController.update();
+				currentGameScene.update();
+			}
+
+			@Override
+			public void doRender() {
+				flashMessageView.update();
+				currentGameScene.render();
+			}
+		};
 
 		var keyboardSteering = new KeyboardSteering(
 			settings.keyMap.get(Direction.UP),
@@ -144,7 +156,7 @@ public class GameUI extends GameClock implements GameEventListener {
 	public void startUI() {
 		Actions.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
-		start();
+		clock.start();
 	}
 
 	private void createSceneConfiguration() {
@@ -169,17 +181,6 @@ public class GameUI extends GameClock implements GameEventListener {
 				new PacManCutscene3(gameController)));
 	}
 
-	@Override
-	public void doUpdate() {
-		gameController.update();
-		currentGameScene.update();
-	}
-
-	@Override
-	public void doRender() {
-		flashMessageView.update();
-		currentGameScene.render();
-	}
 
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
@@ -235,8 +236,8 @@ public class GameUI extends GameClock implements GameEventListener {
 
 	private void initEnv() {
 		PacManGameAppFX.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		pausedPy.bind(PacManGameAppFX.simulationPausedPy);
-		targetFrameratePy.bind(PacManGameAppFX.simulationSpeedPy);
+		clock.pausedPy.bind(PacManGameAppFX.simulationPausedPy);
+		clock.targetFrameratePy.bind(PacManGameAppFX.simulationSpeedPy);
 	}
 
 	private GameScene2D sceneMatchingCurrentGameState() {
@@ -450,10 +451,13 @@ public class GameUI extends GameClock implements GameEventListener {
 		case GameModel.SE_STOP_ALL_SOUNDS:
 			sounds.stopAll();
 			break;
-		default: {
-			// ignore
+		default:
+			break;
 		}
-		}
+	}
+
+	public GameClock clock() {
+		return clock;
 	}
 
 	public GameController gameController() {
