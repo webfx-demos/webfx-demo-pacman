@@ -52,8 +52,7 @@ public class GameApp extends Application {
 
 	public static GameActions actions;
 	public static GameAssets assets = new GameAssets();
-
-	private GameUI gameUI;
+	public static GameUI ui;
 
 	@Override
 	public void init() throws Exception {
@@ -64,13 +63,13 @@ public class GameApp extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
-		gameUI = new GameUI(primaryStage, settings, gameController);
-		GameApp.actions = new GameActions(gameUI);
+		GameApp.ui = new GameUI(primaryStage, settings, gameController);
+		GameApp.actions = new GameActions(GameApp.ui);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
 	}
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.clock().stop();
+		GameApp.ui.clock().stop();
 	}
 }

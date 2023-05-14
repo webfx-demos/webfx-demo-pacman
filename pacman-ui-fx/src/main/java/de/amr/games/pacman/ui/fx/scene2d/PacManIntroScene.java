@@ -92,7 +92,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		GameApp.actions.stopVoiceMessage();
+		GameApp.ui.stopVoiceMessage();
 	}
 
 	@Override

@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.media.AudioClip;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 
@@ -81,7 +80,6 @@ public class GameActions {
     public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
     public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
 
-    private static AudioClip currentVoiceMessage; //TODO move elsewhere
 
     private final GameUI ui;
 
@@ -94,21 +92,7 @@ public class GameActions {
     }
 
     public void playHelpVoiceMessageAfterSeconds(int seconds) {
-        Ufx.afterSeconds(seconds, () -> playVoiceMessage(GameApp.assets.voiceHelp)).play();
-    }
-
-    public void playVoiceMessage(AudioClip voiceMessage) {
-        if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
-            return; // don't interrupt voice message still playing, maybe enqueue?
-        }
-        currentVoiceMessage = voiceMessage;
-        currentVoiceMessage.play();
-    }
-
-    public void stopVoiceMessage() {
-        if (currentVoiceMessage != null) {
-            currentVoiceMessage.stop();
-        }
+        Ufx.afterSeconds(seconds, () -> ui.playVoiceMessage(GameApp.assets.voiceHelp)).play();
     }
 
     public void showFlashMessage(String message, Object... args) {
@@ -121,7 +105,7 @@ public class GameActions {
 
     public void startGame() {
         if (ui.game().hasCredit()) {
-            stopVoiceMessage();
+            ui.stopVoiceMessage();
             ui.gameController().startPlaying();
         }
     }
@@ -197,7 +181,7 @@ public class GameActions {
         var autoPilotOn = ui.gameController().isAutoControlled();
         String message = GameApp.assets.message(autoPilotOn ? "autopilot_on" : "autopilot_off");
         showFlashMessage(message);
-        playVoiceMessage(autoPilotOn ? GameApp.assets.voiceAutopilotOn : GameApp.assets.voiceAutoPilotOff);
+        ui.playVoiceMessage(autoPilotOn ? GameApp.assets.voiceAutopilotOn : GameApp.assets.voiceAutoPilotOff);
     }
 
     public void toggleImmunity() {
@@ -205,7 +189,7 @@ public class GameActions {
         var immune = ui.game().isImmune();
         String message = GameApp.assets.message(immune ? "player_immunity_on" : "player_immunity_off");
         showFlashMessage(message);
-        playVoiceMessage(immune ? GameApp.assets.voiceImmunityOn : GameApp.assets.voiceImmunityOff);
+        ui.playVoiceMessage(immune ? GameApp.assets.voiceImmunityOn : GameApp.assets.voiceImmunityOff);
     }
 
     public void startLevelTestMode() {

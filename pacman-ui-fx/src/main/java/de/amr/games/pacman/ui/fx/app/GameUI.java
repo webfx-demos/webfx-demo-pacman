@@ -83,6 +83,7 @@ public class GameUI implements GameEventListener {
 	private final GameHelp csHelp;
 	private GreetingPane greetingPane;
 	private GameScene currentGameScene;
+	private AudioClip currentVoiceMessage;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
 		checkNotNull(stage);
@@ -456,6 +457,21 @@ public class GameUI implements GameEventListener {
 			break;
 		}
 	}
+
+	public void playVoiceMessage(AudioClip voiceMessage) {
+		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
+			return; // don't interrupt voice message still playing, maybe enqueue?
+		}
+		currentVoiceMessage = voiceMessage;
+		currentVoiceMessage.play();
+	}
+
+	public void stopVoiceMessage() {
+		if (currentVoiceMessage != null) {
+			currentVoiceMessage.stop();
+		}
+	}
+
 
 	public GameClock clock() {
 		return clock;
