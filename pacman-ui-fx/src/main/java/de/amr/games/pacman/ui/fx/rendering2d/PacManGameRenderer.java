@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.GameAssets;
 import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,7 +48,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameRenderer() {
-		super(AppRes.Graphics.spritesheetPacManGame);
+		super(GameAssets.Graphics.spritesheetPacManGame);
 	}
 
 	@Override
@@ -97,9 +97,9 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? AppRes.Graphics.flashingMazePacManGame : AppRes.Graphics.emptyMazePacManGame, x, y);
+			g.drawImage(flashing ? GameAssets.Graphics.flashingMazePacManGame : GameAssets.Graphics.emptyMazePacManGame, x, y);
 		} else {
-			g.drawImage(AppRes.Graphics.fullMazePacManGame, x, y);
+			g.drawImage(GameAssets.Graphics.fullMazePacManGame, x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();

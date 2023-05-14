@@ -23,12 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.sound;
 
-import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import javafx.scene.media.AudioClip;
-
 /**
  * @author Armin Reichert
  */

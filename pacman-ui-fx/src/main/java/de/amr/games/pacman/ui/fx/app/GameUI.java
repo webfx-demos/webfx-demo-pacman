@@ -81,7 +81,7 @@ public class GameUI implements GameEventListener {
 	private final StackPane root = new StackPane();
 	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final ContextSensitiveHelp csHelp;
+	private final GameHelp csHelp;
 	private GreetingPane greetingPane;
 	private GameScene currentGameScene;
 
@@ -113,8 +113,8 @@ public class GameUI implements GameEventListener {
 		);
 		gameController.setManualPacSteering(keyboardSteering);
 
-		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
-		csHelp.setFont(AppRes.Fonts.help);
+		csHelp = new GameHelp(gameController, GameAssets.Texts.messageBundle);
+		csHelp.setFont(GameAssets.Fonts.help);
 
 		createSceneConfiguration();
 
@@ -125,7 +125,7 @@ public class GameUI implements GameEventListener {
 
 		GameEvents.addListener(this);
 		initEnv();
-		Actions.init(this);
+		GameActions.init(this);
 
 		updateMainView();
 
@@ -141,8 +141,8 @@ public class GameUI implements GameEventListener {
 			greetingPane.onClicked(() -> {
 				layers.remove(greetingPane);
 				rebuildMainSceneLayers();
-				root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
-				Actions.playHelpVoiceMessageAfterSeconds(4);
+				root.setBackground(ResourceManager.imageBackground(GameAssets.Graphics.wallpaper));
+				GameActions.playHelpVoiceMessageAfterSeconds(4);
 				gameController().restart(GameState.BOOT);
 				startUI();
 			});
@@ -154,7 +154,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void startUI() {
-		Actions.playHelpVoiceMessageAfterSeconds(4);
+		GameActions.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
 		clock.start();
 	}
@@ -235,9 +235,9 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv() {
-		PacManGameAppFX.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		clock.pausedPy.bind(PacManGameAppFX.simulationPausedPy);
-		clock.targetFrameratePy.bind(PacManGameAppFX.simulationSpeedPy);
+		GameApp.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		clock.pausedPy.bind(GameApp.simulationPausedPy);
+		clock.targetFrameratePy.bind(GameApp.simulationSpeedPy);
 	}
 
 	private GameScene2D sceneMatchingCurrentGameState() {
@@ -300,30 +300,30 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void handleKeyboardInput() {
-		if (Keyboard.pressed(Actions.HELP)) {
+		if (Keyboard.pressed(GameActions.HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Actions.AUTOPILOT)) {
-			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Actions.BOOT)) {
-			Actions.reboot(); //TODO this does not work. Why?
-		} else if (Keyboard.pressed(Actions.IMMUNITY)) {
-			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Actions.PAUSE)) {
-			Actions.togglePaused();
-		} else if (Keyboard.pressed(Actions.PAUSE_STEP) || Keyboard.pressed(Actions.SINGLE_STEP)) {
-			Actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Actions.TEN_STEPS)) {
-			Actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Actions.SIMULATION_FASTER)) {
-			Actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Actions.SIMULATION_SLOWER)) {
-			Actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Actions.SIMULATION_NORMAL)) {
-			Actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Actions.QUIT)) {
-			Actions.restartIntro();
-		} else if (Keyboard.pressed(Actions.TEST_LEVELS)) {
-			Actions.startLevelTestMode();
+		} else if (Keyboard.pressed(GameActions.AUTOPILOT)) {
+			GameActions.toggleAutopilot();
+		} else if (Keyboard.pressed(GameActions.BOOT)) {
+			GameActions.reboot(); //TODO this does not work. Why?
+		} else if (Keyboard.pressed(GameActions.IMMUNITY)) {
+			GameActions.toggleImmunity();
+		} else if (Keyboard.pressed(GameActions.PAUSE)) {
+			GameActions.togglePaused();
+		} else if (Keyboard.pressed(GameActions.PAUSE_STEP) || Keyboard.pressed(GameActions.SINGLE_STEP)) {
+			GameActions.oneSimulationStep();
+		} else if (Keyboard.pressed(GameActions.TEN_STEPS)) {
+			GameActions.tenSimulationSteps();
+		} else if (Keyboard.pressed(GameActions.SIMULATION_FASTER)) {
+			GameActions.changeSimulationSpeed(5);
+		} else if (Keyboard.pressed(GameActions.SIMULATION_SLOWER)) {
+			GameActions.changeSimulationSpeed(-5);
+		} else if (Keyboard.pressed(GameActions.SIMULATION_NORMAL)) {
+			GameActions.resetSimulationSpeed();
+		} else if (Keyboard.pressed(GameActions.QUIT)) {
+			GameActions.restartIntro();
+		} else if (Keyboard.pressed(GameActions.TEST_LEVELS)) {
+			GameActions.startLevelTestMode();
 		}
 		if (currentGameScene != null) {
 			currentGameScene.handleKeyboardInput();
@@ -362,7 +362,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = AppRes.Sounds.gameSounds(event.game.variant());
+		var sounds = GameAssets.Sounds.gameSounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN:
 			sounds.play(AudioClipID.BONUS_EATEN);

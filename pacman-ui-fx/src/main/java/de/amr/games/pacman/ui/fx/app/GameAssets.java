@@ -24,13 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
-import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -43,7 +41,7 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class AppRes {
+public class GameAssets {
 
 	public static final ResourceManager Manager = new ResourceManager("/de/amr/games/pacman/ui/fx/assets/"/*,
 			AppRes.class::getResource*/);

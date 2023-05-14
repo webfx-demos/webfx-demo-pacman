@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.GameAssets;
 import javafx.animation.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,7 +25,7 @@ public class Signature {
 
         part2 = new Text("Armin Reichert");
         part2.setFill(Color.gray(0.66));
-        part2.setFont(AppRes.Fonts.font(AppRes.Fonts.handwriting, 9));
+        part2.setFont(GameAssets.Fonts.font(GameAssets.Fonts.handwriting, 9));
     }
 
     public void add(Pane parent, double x, double y) {

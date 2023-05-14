@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class ContextSensitiveHelp {
+public class GameHelp {
 
 	private static class Menu {
 		private final List<Text> column0 = new ArrayList<>();
@@ -71,7 +71,7 @@ public class ContextSensitiveHelp {
 	private final FadeTransition closeAnimation;
 	private Font font = Font.font("Helvetica", 10);
 
-	public ContextSensitiveHelp(GameController gameController, Map<String, String> translations) {
+	public GameHelp(GameController gameController, Map<String, String> translations) {
 		this.gameController = gameController;
 		this.translations = translations;
 		closeAnimation = new FadeTransition(Duration.seconds(0.5));

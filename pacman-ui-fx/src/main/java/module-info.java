@@ -1,5 +1,7 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 
+import de.amr.games.pacman.ui.fx.app.GameApp;
+
 module pacman.ui.fx {
 
     // Direct dependencies modules
@@ -35,6 +37,6 @@ module pacman.ui.fx {
     opens de.amr.games.pacman.ui.fx.assets.texts;
 
     // Provided services
-    provides javafx.application.Application with de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
+    provides javafx.application.Application with GameApp;
 
 }

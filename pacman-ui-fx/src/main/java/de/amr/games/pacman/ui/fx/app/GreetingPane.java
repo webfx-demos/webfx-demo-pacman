@@ -31,7 +31,7 @@ public class GreetingPane extends BorderPane {
         text.setEffect(ds);
         text.setCache(true);
         text.setFill(Color.WHITE);
-        text.setFont(AppRes.Fonts.font(AppRes.Fonts.arcade, 24));
+        text.setFont(GameAssets.Fonts.font(GameAssets.Fonts.arcade, 24));
         BorderPane.setAlignment(text, Pos.CENTER);
 
         clickPane = new StackPane(text);
@@ -52,7 +52,7 @@ public class GreetingPane extends BorderPane {
 */
 
         var bgImage = new BackgroundImage(
-            AppRes.Graphics.greetingPaneWallpaper,
+            GameAssets.Graphics.greetingPaneWallpaper,
             BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,

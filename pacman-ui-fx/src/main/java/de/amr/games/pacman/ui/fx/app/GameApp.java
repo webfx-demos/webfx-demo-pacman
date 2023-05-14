@@ -37,22 +37,9 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * This is the entry point of the Pac-Man and Ms. Pac-Man games.
- * 
- * <p>
- * The application is structured according to the MVC (model-view-controller) design pattern. The model layer consists
- * of the two game models <code> PacManGame</code> and <code> MsPacManGame</code>. The controller is a finite-state
- * machine which is triggered 60 times per second by the game loop. The user interface listens to game events sent from
- * the controller/model layer. The model and controller layers are decoupled from the user interface. This allows to
- * attach different user interfaces without having to change the controller or model.
- * 
- * <p>
- * As a proof of concept I implemented also a (simpler) Swing user interface, see repository
- * <a href="https://github.com/armin-reichert/pacman-ui-swing">Pac-Man Swing UI</a>.
- * 
  * @author Armin Reichert
  */
-public class PacManGameAppFX extends Application {
+public class GameApp extends Application {
 
 	//@formatter:off
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
@@ -67,7 +54,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		AppRes.load();
+		GameAssets.load();
 	}
 
 	@Override
@@ -75,7 +62,7 @@ public class PacManGameAppFX extends Application {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
 		gameUI = new GameUI(primaryStage, settings, gameController);
-		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , AppRes.Manager.getLoadedImages());
+		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
 	}
 
 	@Override

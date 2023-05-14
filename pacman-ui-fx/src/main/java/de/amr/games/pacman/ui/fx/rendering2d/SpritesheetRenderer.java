@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.GameAssets;
 import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -65,8 +65,8 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		var font = AppRes.Fonts.arcade;
-		return size == font.getSize() ? font : AppRes.Fonts.font(font, size);
+		var font = GameAssets.Fonts.arcade;
+		return size == font.getSize() ? font : GameAssets.Fonts.font(font, size);
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);
