@@ -41,14 +41,16 @@ import java.util.Collections;
  */
 public class GameApp extends Application {
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	//@formatter:off
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationSpeedPy  = new SimpleIntegerProperty(60);
 	//@formatter:on
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+	public static GameActions actions;
 
 	private GameUI gameUI;
 
@@ -62,6 +64,7 @@ public class GameApp extends Application {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
 		gameUI = new GameUI(primaryStage, settings, gameController);
+		GameApp.actions = new GameActions(gameUI);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
 	}
 

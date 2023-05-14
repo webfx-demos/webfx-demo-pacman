@@ -27,9 +27,9 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.GameActions;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
 import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.GameApp;
+import de.amr.games.pacman.ui.fx.app.GameAssets;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -132,7 +132,7 @@ public abstract class GameScene2D implements GameScene {
 		helpButton.setFitHeight(12);
 		helpButton.setFitWidth(12);
 		//TODO seems like mouse click is ignored over transparent color pixels?
-		helpButton.setOnMouseClicked(e -> GameActions.showHelp());
+		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
 		overlay.getChildren().add(helpButton);
 	}
 
