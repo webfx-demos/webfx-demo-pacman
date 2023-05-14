@@ -23,15 +23,14 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.Map;
-import java.util.function.Function;
-
-import dev.webfx.platform.util.collection.Collections;
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
+import dev.webfx.platform.util.collection.Collections;
 import javafx.scene.input.KeyCode;
+import org.tinylog.Logger;
+
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author Armin Reichert

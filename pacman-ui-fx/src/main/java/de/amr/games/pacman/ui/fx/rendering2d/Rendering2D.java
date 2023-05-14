@@ -23,11 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
-import java.util.List;
-import java.util.Optional;
-
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.Score;
@@ -38,6 +33,11 @@ import de.amr.games.pacman.model.world.World;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.List;
+import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * Common interface for all 2D renderers.

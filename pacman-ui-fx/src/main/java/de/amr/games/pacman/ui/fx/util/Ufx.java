@@ -23,19 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
-import java.util.Map;
-
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-//import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+
+import java.util.Map;
 
 /**
  * Useful JavaFX helper methods.

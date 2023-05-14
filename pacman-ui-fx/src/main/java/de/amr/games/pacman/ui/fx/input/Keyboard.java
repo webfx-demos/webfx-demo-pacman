@@ -24,10 +24,9 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
-import org.tinylog.Logger;
-
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert

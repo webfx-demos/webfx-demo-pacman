@@ -23,21 +23,20 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.input;
 
-import java.util.Map;
-import java.util.Optional;
-
-import dev.webfx.platform.util.collection.Collections;
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
+import dev.webfx.platform.util.collection.Collections;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import org.tinylog.Logger;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controls Pac-Man using specified keys.

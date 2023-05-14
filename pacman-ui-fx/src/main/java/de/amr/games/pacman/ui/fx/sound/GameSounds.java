@@ -24,17 +24,16 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound;
 
+import de.amr.games.pacman.ui.fx.app.GameAssets;
+import javafx.animation.Animation;
+import javafx.scene.media.AudioClip;
+import org.tinylog.Logger;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import org.tinylog.Logger;
-
-import de.amr.games.pacman.ui.fx.app.GameAssets;
-import javafx.animation.Animation;
-import javafx.scene.media.AudioClip;
 
 /**
  * @author Armin Reichert
