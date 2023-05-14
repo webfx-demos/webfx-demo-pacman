@@ -91,6 +91,7 @@ public class GameUI implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = gameController;
+
 		clock = new GameClock(GameModel.FPS) {
 			@Override
 			public void doUpdate() {
@@ -135,22 +136,24 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
-		boolean showGreeting = true;// UserAgent.isBrowser();
+		boolean showGreeting = true; // UserAgent.isBrowser();
 		if (showGreeting) {
 			greetingPane = new GreetingPane();
-			greetingPane.onClicked(() -> {
-				layers.remove(greetingPane);
-				rebuildMainSceneLayers();
-				root.setBackground(ResourceManager.imageBackground(GameAssets.Graphics.wallpaper));
-				GameActions.playHelpVoiceMessageAfterSeconds(4);
-				gameController().restart(GameState.BOOT);
-				startUI();
-			});
+			greetingPane.onClicked(this::closeGreetingAndStart);
 			layers.add(greetingPane);
 			rebuildMainSceneLayers();
 		} else {
 			startUI();
 		}
+	}
+
+	private void closeGreetingAndStart() {
+		layers.remove(greetingPane);
+		rebuildMainSceneLayers();
+		root.setBackground(ResourceManager.imageBackground(GameAssets.Graphics.wallpaper));
+		GameActions.playHelpVoiceMessageAfterSeconds(4);
+		gameController().restart(GameState.BOOT);
+		startUI();
 	}
 
 	public void startUI() {
