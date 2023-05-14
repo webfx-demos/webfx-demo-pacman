@@ -71,13 +71,13 @@ public class GameAssets {
 	private GameSounds gameSoundsMsPacMan;
 	private GameSounds gameSoundsPacMan;
 
-	public final AudioClip VOICE_HELP = Manager.audioClip("sound/voice/press-key.mp3");
-	public final AudioClip VOICE_AUTOPILOT_OFF = Manager.audioClip("sound/voice/autopilot-off.mp3");
-	public final AudioClip VOICE_AUTOPILOT_ON = Manager.audioClip("sound/voice/autopilot-on.mp3");
-	public final AudioClip VOICE_IMMUNITY_OFF = Manager.audioClip("sound/voice/immunity-off.mp3");
-	public final AudioClip VOICE_IMMUNITY_ON = Manager.audioClip("sound/voice/immunity-on.mp3");
+	public AudioClip voiceHelp;
+	public AudioClip voiceAutoPilotOff;
+	public AudioClip voiceAutopilotOn;
+	public AudioClip voiceImmunityOff;
+	public AudioClip voiceImmunityOn;
 
-	private final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = {
+	private static final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = {
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 },
 		{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 },
 		{ AudioClipID.EXTRA_LIFE,      "sound/mspacman/ExtraLife.mp3", 1.0 },
@@ -99,7 +99,7 @@ public class GameAssets {
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 },
 	};
 
-	private final Object[][] PACMAN_AUDIO_CLIP_PATHS = {
+	private static final Object[][] PACMAN_AUDIO_CLIP_PATHS = {
 		{ AudioClipID.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3", 1.0 },
 		{ AudioClipID.CREDIT,          "sound/pacman/credit.wav", 1.0 },
 		{ AudioClipID.EXTRA_LIFE,      "sound/pacman/extend.mp3", 1.0 },
@@ -144,6 +144,12 @@ public class GameAssets {
 		flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
 		logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");
 
+		voiceHelp = Manager.audioClip("sound/voice/press-key.mp3");
+		voiceAutoPilotOff = Manager.audioClip("sound/voice/autopilot-off.mp3");
+		voiceAutopilotOn = Manager.audioClip("sound/voice/autopilot-on.mp3");
+		voiceImmunityOff = Manager.audioClip("sound/voice/immunity-off.mp3");
+		voiceImmunityOn = Manager.audioClip("sound/voice/immunity-on.mp3");
+
 		gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
 		gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
 
@@ -173,18 +179,15 @@ public class GameAssets {
 		}
 	}
 
-
 	private Image emptyMazeMsPacManGame(int i) {
-			return spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
+		return spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
+	}
+
+	public GameSounds gameSounds(GameVariant variant) {
+		switch (variant) {
+			case MS_PACMAN: return gameSoundsMsPacMan;
+			case PACMAN: return gameSoundsPacMan;
+			default: throw new IllegalGameVariantException(variant);
 		}
-
-
-
-		public GameSounds gameSounds(GameVariant variant) {
-			switch (variant) {
-				case MS_PACMAN: return gameSoundsMsPacMan;
-				case PACMAN: return gameSoundsPacMan;
-				default: throw new IllegalGameVariantException(variant);
-			}
 	}
 }

@@ -94,7 +94,7 @@ public class GameActions {
     }
 
     public void playHelpVoiceMessageAfterSeconds(int seconds) {
-        Ufx.afterSeconds(seconds, () -> playVoiceMessage(GameApp.assets.VOICE_HELP)).play();
+        Ufx.afterSeconds(seconds, () -> playVoiceMessage(GameApp.assets.voiceHelp)).play();
     }
 
     public void playVoiceMessage(AudioClip voiceMessage) {
@@ -194,10 +194,10 @@ public class GameActions {
 
     public void toggleAutopilot() {
         ui.gameController().toggleAutoControlled();
-        var auto = ui.gameController().isAutoControlled();
-        String message = GameApp.assets.message(auto ? "autopilot_on" : "autopilot_off");
+        var autoPilotOn = ui.gameController().isAutoControlled();
+        String message = GameApp.assets.message(autoPilotOn ? "autopilot_on" : "autopilot_off");
         showFlashMessage(message);
-        playVoiceMessage(auto ? GameApp.assets.VOICE_AUTOPILOT_ON : GameApp.assets.VOICE_AUTOPILOT_OFF);
+        playVoiceMessage(autoPilotOn ? GameApp.assets.voiceAutopilotOn : GameApp.assets.voiceAutoPilotOff);
     }
 
     public void toggleImmunity() {
@@ -205,7 +205,7 @@ public class GameActions {
         var immune = ui.game().isImmune();
         String message = GameApp.assets.message(immune ? "player_immunity_on" : "player_immunity_off");
         showFlashMessage(message);
-        playVoiceMessage(immune ? GameApp.assets.VOICE_IMMUNITY_ON : GameApp.assets.VOICE_IMMUNITY_OFF);
+        playVoiceMessage(immune ? GameApp.assets.voiceImmunityOn : GameApp.assets.voiceImmunityOff);
     }
 
     public void startLevelTestMode() {
