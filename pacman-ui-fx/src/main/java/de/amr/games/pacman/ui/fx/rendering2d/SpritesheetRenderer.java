@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -150,7 +151,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			Rendering2D.drawText(g, "+" + excessLives, AppRes.ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
+			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
 					x + TS * (10), y + TS * (1));
 		}
 	}

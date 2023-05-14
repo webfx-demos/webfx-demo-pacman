@@ -29,8 +29,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -109,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 		layers.getChildren().addAll(canvas, overlay);
 		root.setCenter(layers);
 
-		infoVisiblePy.bind(Env.showDebugInfoPy);
+		infoVisiblePy.bind(PacManGameAppFX.showDebugInfoPy);
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
 		var r = context.rendering2D();
-		drawText(g, "© 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
+		drawText(g, "© 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
 	protected List<Text> addSignature(double x, double y) {

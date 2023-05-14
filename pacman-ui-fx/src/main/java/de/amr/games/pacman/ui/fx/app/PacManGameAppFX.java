@@ -27,6 +27,8 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import javafx.application.Application;
+import javafx.beans.property.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,6 +51,16 @@ import java.util.Collections;
  * @author Armin Reichert
  */
 public class PacManGameAppFX extends Application {
+
+	//@formatter:off
+	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.gray(0.2));
+	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
+	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
+	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
+	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(60);
+	public static final BooleanProperty       simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
+	//@formatter:on
+
 
 	public static void main(String[] args) {
 		launch(args);

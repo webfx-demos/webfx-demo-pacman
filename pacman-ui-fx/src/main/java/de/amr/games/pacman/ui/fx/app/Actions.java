@@ -110,21 +110,21 @@ public class Actions {
 	}
 
 	public static void togglePaused() {
-		Ufx.toggle(Env.simulationPausedPy);
+		Ufx.toggle(PacManGameAppFX.simulationPausedPy);
 		// TODO mute and unmute?
-		if (Env.simulationPausedPy.get()) {
+		if (PacManGameAppFX.simulationPausedPy.get()) {
 			AppRes.Sounds.gameSounds(ui.game().variant()).stopAll();
 		}
 	}
 
 	public static void oneSimulationStep() {
-		if (Env.simulationPausedPy.get()) {
+		if (PacManGameAppFX.simulationPausedPy.get()) {
 			ui.executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
-		if (Env.simulationPausedPy.get()) {
+		if (PacManGameAppFX.simulationPausedPy.get()) {
 			ui.executeSteps(10, true);
 		}
 	}
@@ -132,14 +132,14 @@ public class Actions {
 	public static void changeSimulationSpeed(int delta) {
 		int newFramerate = ui.targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			Env.simulationSpeedPy.set(newFramerate);
+			PacManGameAppFX.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, newFramerate + "Hz");
 		}
 	}
 
 	public static void resetSimulationSpeed() {
-		Env.simulationSpeedPy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, Env.simulationSpeedPy.get() + "Hz");
+		PacManGameAppFX.simulationSpeedPy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, PacManGameAppFX.simulationSpeedPy.get() + "Hz");
 	}
 
 	public static void selectNextGameVariant() {

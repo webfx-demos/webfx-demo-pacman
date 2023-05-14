@@ -235,11 +235,11 @@ public class GameUI extends GameClock implements GameEventListener {
 	}
 
 	private void initEnv() {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		pausedPy.bind(Env.simulationPausedPy);
-		targetFrameratePy.bind(Env.simulationSpeedPy);
-		measuredPy.bind(Env.simulationTimeMeasuredPy);
+		PacManGameAppFX.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+		PacManGameAppFX.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		pausedPy.bind(PacManGameAppFX.simulationPausedPy);
+		targetFrameratePy.bind(PacManGameAppFX.simulationSpeedPy);
+		measuredPy.bind(PacManGameAppFX.simulationTimeMeasuredPy);
 	}
 
 	private GameScene2D sceneMatchingCurrentGameState() {

@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -69,7 +70,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public GhostColoring ghostColors(int ghostID) {
-		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
+		return ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	@Override
@@ -196,7 +197,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
-		g.setStroke(AppRes.ArcadeTheme.CYAN);
+		g.setStroke(ArcadeTheme.CYAN);
 		g.setFont(Font.font("Sans", 10));
 		String text;
 		switch (ghost.killedIndex()) {

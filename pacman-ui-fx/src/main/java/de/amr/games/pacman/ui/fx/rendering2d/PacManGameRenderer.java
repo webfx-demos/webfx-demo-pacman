@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -52,7 +53,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return AppRes.ArcadeTheme.PACMAN_MAZE_COLORS;
+		return ArcadeTheme.PACMAN_MAZE_COLORS;
 	}
 
 	@Override

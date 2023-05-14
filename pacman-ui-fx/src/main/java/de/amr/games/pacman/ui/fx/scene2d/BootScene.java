@@ -31,17 +31,13 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
-import dev.webfx.platform.console.Console;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 
 /**
  * @author Armin Reichert
@@ -69,7 +65,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void clearImage() {
-		ctx.setFill(AppRes.ArcadeTheme.BLACK);
+		ctx.setFill(ArcadeTheme.BLACK);
 		ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
@@ -99,7 +95,7 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomHexCodesImage() {
 		clearImage();
-		ctx.setFill(AppRes.ArcadeTheme.PALE);
+		ctx.setFill(ArcadeTheme.PALE);
 		ctx.setFont(context.rendering2D().screenFont(TS));
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
@@ -142,7 +138,7 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
-		ctx.setStroke(AppRes.ArcadeTheme.PALE);
+		ctx.setStroke(ArcadeTheme.PALE);
 		ctx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
 			ctx.strokeLine(0, row * cellSize, SIZE_PX.x(), row * cellSize);
