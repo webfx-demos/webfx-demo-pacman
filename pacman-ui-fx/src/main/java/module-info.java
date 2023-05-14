@@ -10,8 +10,8 @@ module pacman.ui.fx {
     requires javafx.media;
     requires pacman.core;
     requires webfx.kit.util.scene;
-    requires webfx.platform.console;
     requires webfx.platform.resource;
+    requires webfx.platform.useragent;
     requires webfx.platform.util;
 
     // Exported packages
