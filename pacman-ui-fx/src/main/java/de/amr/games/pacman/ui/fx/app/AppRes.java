@@ -84,12 +84,10 @@ public class AppRes {
 	public static class Texts {
 
 		public static Map<String, String> messageBundle;
-		private static Picker<String> messagePickerCheating;
 
 		private static void load() {
 			// ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages")
 			messageBundle = Manager.loadBundle();
-			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
 		}
 
 		/**
@@ -109,10 +107,6 @@ public class AppRes {
 				Logger.error("No text resource found for key '{}'", keyPattern);
 				return "missing{%s}"/*.formatted(keyPattern)*/;
 			}
-		}
-
-		public static String pickCheatingMessage() {
-			return messagePickerCheating.next();
 		}
 	}
 

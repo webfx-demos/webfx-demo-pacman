@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.lib.Globals.RND;
 
 /**
  * @author Armin Reichert
@@ -181,9 +180,6 @@ public class Actions {
 	public static void cheatEatAllPellets() {
 		if (ui.game().isPlaying()) {
 			ui.gameController().cheatEatAllPellets();
-			if (RND.nextDouble() < 0.1) {
-				showFlashMessage(AppRes.Texts.pickCheatingMessage());
-			}
 		}
 	}
 
@@ -193,8 +189,5 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		ui.gameController().cheatKillAllEatableGhosts();
-		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(AppRes.Texts.pickCheatingMessage());
-		}
 	}
 }
