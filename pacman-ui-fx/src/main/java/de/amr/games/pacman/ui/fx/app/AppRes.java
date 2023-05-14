@@ -139,10 +139,12 @@ public class AppRes {
 
 		public static Font arcade;
 		public static Font handwriting;
+		public static Font help;
 
 		private static void load() {
 			arcade = Manager.font("fonts/emulogic.ttf", 8);
 			handwriting = Manager.font("fonts/RockSalt-Regular.ttf", 8);
+			help = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 10);
 		}
 
 		public static Font font(Font font, double size) {

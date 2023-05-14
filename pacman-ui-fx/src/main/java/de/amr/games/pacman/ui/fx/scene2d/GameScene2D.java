@@ -228,14 +228,16 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected List<Text> addSignature(double x, double y) {
+		var color = Color.gray(0.5);
+
 		var t1 = new Text("Remake (2023) by ");
-		t1.setFill(Color.gray(0.75));
+		t1.setFill(color);
 		t1.setFont(Font.font("Helvetica", 9));
 		t1.setTranslateX(x);
 		t1.setTranslateY(y);
 
 		var t2 = new Text("Armin Reichert");
-		t2.setFill(Color.gray(0.75));
+		t2.setFill(color);
 		t2.setFont(AppRes.Fonts.font(AppRes.Fonts.handwriting, 9));
 		t2.setTranslateX(x+80);
 		t2.setTranslateY(y);

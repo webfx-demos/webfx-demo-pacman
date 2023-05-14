@@ -102,6 +102,7 @@ public class GameUI extends GameClock implements GameEventListener {
 		gameController.setManualPacSteering(keyboardSteering);
 
 		csHelp = new ContextSensitiveHelp(gameController, AppRes.Texts.messageBundle);
+		csHelp.setFont(AppRes.Fonts.help);
 
 		createSceneConfiguration();
 
