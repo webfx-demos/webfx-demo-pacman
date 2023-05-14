@@ -301,29 +301,29 @@ public class GameUI extends GameClock implements GameEventListener {
 	}
 
 	private void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.HELP)) {
+		if (Keyboard.pressed(Actions.HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Keys.AUTOPILOT)) {
+		} else if (Keyboard.pressed(Actions.AUTOPILOT)) {
 			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Keys.BOOT)) {
+		} else if (Keyboard.pressed(Actions.BOOT)) {
 			Actions.reboot(); //TODO this does not work. Why?
-		} else if (Keyboard.pressed(Keys.IMMUNITY)) {
+		} else if (Keyboard.pressed(Actions.IMMUNITY)) {
 			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Keys.PAUSE)) {
+		} else if (Keyboard.pressed(Actions.PAUSE)) {
 			Actions.togglePaused();
-		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Actions.PAUSE_STEP) || Keyboard.pressed(Actions.SINGLE_STEP)) {
 			Actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
+		} else if (Keyboard.pressed(Actions.TEN_STEPS)) {
 			Actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(Actions.SIMULATION_FASTER)) {
 			Actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(Actions.SIMULATION_SLOWER)) {
 			Actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(Actions.SIMULATION_NORMAL)) {
 			Actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Keys.QUIT)) {
+		} else if (Keyboard.pressed(Actions.QUIT)) {
 			Actions.restartIntro();
-		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
+		} else if (Keyboard.pressed(Actions.TEST_LEVELS)) {
 			Actions.startLevelTestMode();
 		}
 		if (currentGameScene != null) {

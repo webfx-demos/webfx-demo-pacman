@@ -28,6 +28,9 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.media.AudioClip;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
@@ -36,6 +39,47 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
  * @author Armin Reichert
  */
 public class Actions {
+
+	private static KeyCodeCombination just(KeyCode code) {
+		return new KeyCodeCombination(code);
+	}
+
+	private static KeyCodeCombination alt(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+	}
+
+	private static KeyCodeCombination shift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
+	}
+
+	private static KeyCodeCombination altShift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN);
+	}
+
+	public static final KeyCodeCombination HELP = just(KeyCode.H);
+	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
+	public static final KeyCodeCombination BOOT = just(KeyCode.Z); // TODO does not work with any combination?
+	public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
+	public static final KeyCodeCombination IMMUNITY = altShift(KeyCode.I);
+	public static final KeyCodeCombination CHEAT_ADD_LIVES = altShift(KeyCode.L);
+	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
+	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = altShift(KeyCode.X);
+	public static final KeyCodeCombination TEST_LEVELS = altShift(KeyCode.T);
+	public static final KeyCodeCombination PLAY_CUTSCENES = altShift(KeyCode.C);
+
+	public static final KeyCodeCombination PAUSE = just(KeyCode.P);
+	public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
+	public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
+	public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
+	public static final KeyCodeCombination SIMULATION_FASTER = altShift(KeyCode.F);
+	public static final KeyCodeCombination SIMULATION_SLOWER = altShift(KeyCode.G);
+	public static final KeyCodeCombination SIMULATION_NORMAL = altShift(KeyCode.DIGIT0);
+
+	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
+	public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
+
+	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage; //TODO move elsewhere
