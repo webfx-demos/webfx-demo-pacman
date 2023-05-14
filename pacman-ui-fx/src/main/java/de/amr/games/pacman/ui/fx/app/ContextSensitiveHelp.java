@@ -143,12 +143,12 @@ public class ContextSensitiveHelp {
 		if (gameController.isAutoControlled()) {
 			var text = text(tt("help.autopilot_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, rowIndex++);
+			grid.add(padded(text), 0, rowIndex++);
 		}
 		if (gameController.game().isImmune()) {
 			var text = text(tt("help.immunity_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, rowIndex++);
+			grid.add(padded(text), 0, rowIndex++);
 		}
 
 		var pane = new BorderPane(grid);
