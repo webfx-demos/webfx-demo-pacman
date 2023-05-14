@@ -27,15 +27,16 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -52,12 +53,12 @@ import java.util.Map;
 public class ContextSensitiveHelp {
 
 	private static class Menu {
-		private final List<Node> column0 = new ArrayList<>();
-		private final List<Node> column1 = new ArrayList<>();
+		private final List<Text> column0 = new ArrayList<>();
+		private final List<Text> column1 = new ArrayList<>();
 
-		public void addRow(Node node0, Node node1) {
-			column0.add(node0);
-			column1.add(node1);
+		public void addRow(Text text0, Text text1) {
+			column0.add(text0);
+			column1.add(text1);
 		}
 
 		public int size() {
@@ -116,13 +117,27 @@ public class ContextSensitiveHelp {
 		}
 		return pane;
 	}
+
+	//TODO silly workaround for missing grid gaps in GWT
+	private Node padded(Text text) {
+		if (UserAgent.isBrowser()) {
+			var pane = new HBox(text);
+			pane.setPadding(new Insets(3,0,3,0));
+			return pane;
+		}
+		return text;
+	}
+
 	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
-		grid.setHgap(10);
+
+		//TODO these do not work as expected in GWT:
+		grid.setHgap(20);
 		grid.setVgap(10);
+
 		for (int row = 0; row < menu.column0.size(); ++row) {
-			grid.add(menu.column0.get(row), 0, row);
-			grid.add(menu.column1.get(row), 1, row);
+			grid.add(padded( menu.column0.get(row)), 0, row);
+			grid.add(padded(menu.column1.get(row)), 1, row);
 		}
 		int rowIndex = menu.size();
 		if (gameController.isAutoControlled()) {
@@ -138,22 +153,15 @@ public class ContextSensitiveHelp {
 
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		switch (gameController.game().variant()) {
-			case MS_PACMAN:
-				pane.setBackground(ResourceManager.colorBackground(Color.rgb(255, 0, 0, 0.9)));
-				break;
-			case PACMAN:
-				pane.setBackground(ResourceManager.colorBackground(Color.rgb(33, 33, 255, 0.9)));
-				break;
-			default: throw new IllegalGameVariantException(gameController.game().variant());
+		if (UserAgent.isBrowser()) {
+			//TODO remove this
+			grid.setTranslateY(-8);
 		}
 
-		//TODO workaround for GWT layout issues
-/*
-		if (UserAgent.isBrowser()) {
-			grid.setTranslateY(6);
-		}
-*/
+		var bgColor = game().variant() == GameVariant.MS_PACMAN
+				? Color.rgb(255, 0, 0, 0.9)
+				: Color.rgb(33, 33, 255, 0.9);
+		pane.setBackground(ResourceManager.colorBackground(bgColor));
 
 		return pane;
 	}
@@ -166,7 +174,7 @@ public class ContextSensitiveHelp {
 		return translations.get(key);
 	}
 
-	private Node label(String s) {
+	private Text label(String s) {
 		// TODO In JavaFX 11, I get ellipsis for label texts and don't know how to avoid that
 /*		var label = new Label(s);
 		label.setTextFill(Color.gray(0.9));
