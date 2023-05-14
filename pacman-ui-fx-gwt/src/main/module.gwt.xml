@@ -194,6 +194,11 @@
     <source path="dev/webfx/platform/shutdown/spi/impl"/>
     <!--==========================< webfx-platform-shutdown-gwt >===========================-->
     <source path="dev/webfx/platform/shutdown/spi/impl/gwt"/>
+    <!--=============================< webfx-platform-storage >=============================-->
+    <source path="dev/webfx/platform/storage"/>
+    <source path="dev/webfx/platform/storage/spi"/>
+    <!--===========================< webfx-platform-storage-gwt >===========================-->
+    <source path="dev/webfx/platform/storage/spi/impl/gwt"/>
     <!--===========================< webfx-platform-uischeduler >===========================-->
     <source path="dev/webfx/platform/uischeduler"/>
     <source path="dev/webfx/platform/uischeduler/spi"/>
