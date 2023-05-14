@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -101,8 +100,6 @@ public abstract class GameScene2D implements GameScene {
 
 		layers.getChildren().addAll(canvas, overlay);
 		root.setCenter(layers);
-
-		infoVisiblePy.bind(PacManGameAppFX.showDebugInfoPy);
 	}
 
 	@Override

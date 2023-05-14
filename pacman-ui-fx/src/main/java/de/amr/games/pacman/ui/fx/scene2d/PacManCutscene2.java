@@ -31,12 +31,10 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.app.PacManGameAppFX;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.v2i;
@@ -168,19 +166,6 @@ public class PacManCutscene2 extends GameScene2D {
 			r.drawGhost(g, blinky);
 			r.drawPac(g, pac);
 			drawLevelCounter(g);
-		}
-	}
-
-	@Override
-	protected void drawInfo(GraphicsContext g) {
-		if (PacManGameAppFX.showDebugInfoPy.get()) {
-			g.setFont(context.rendering2D().screenFont(TS));
-			g.setFill(Color.WHITE);
-			if (initialDelay > 0) {
-				g.fillText("Wait %d"/*.formatted(initialDelay)*/, TS * (1), TS * (5));
-			} else {
-				g.fillText("Frame %d"/*.formatted(frame)*/, TS * (1), TS * (5));
-			}
 		}
 	}
 }
