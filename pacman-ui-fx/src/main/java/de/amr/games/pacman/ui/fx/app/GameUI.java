@@ -126,8 +126,7 @@ public class GameUI extends GameClock implements GameEventListener {
 		boolean showGreeting = true;// UserAgent.isBrowser();
 		if (showGreeting) {
 			greetingPane = new GreetingPane();
-			//TODO click on greeting text somehow didn't work in browser, so let user click anywhere
-			greetingPane.setOnMouseClicked(e -> {
+			greetingPane.onClicked(() -> {
 				layers.remove(greetingPane);
 				rebuildMainSceneLayers();
 				root.setBackground(ResourceManager.imageBackground(AppRes.Graphics.wallpaper));
