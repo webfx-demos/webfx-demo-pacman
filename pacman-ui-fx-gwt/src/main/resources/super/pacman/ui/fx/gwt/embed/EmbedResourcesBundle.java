@@ -9,14 +9,18 @@ import dev.webfx.platform.resource.spi.impl.gwt.GwtResourceBundleBase;
 public interface EmbedResourcesBundle extends ClientBundle {
 
     EmbedResourcesBundle R = GWT.create(EmbedResourcesBundle.class);
-    @Source("dev/webfx/platform/meta/exe/exe.properties")
+    @Source("de/amr/games/pacman/ui/fx/assets/texts/messages.properties")
     TextResource r1();
+
+    @Source("dev/webfx/platform/meta/exe/exe.properties")
+    TextResource r2();
 
 
 
     final class ProvidedGwtResourceBundle extends GwtResourceBundleBase {
         public ProvidedGwtResourceBundle() {
-            registerResource("dev/webfx/platform/meta/exe/exe.properties", R.r1());
+            registerResource("de/amr/games/pacman/ui/fx/assets/texts/messages.properties", R.r1());
+            registerResource("dev/webfx/platform/meta/exe/exe.properties", R.r2());
 
         }
     }

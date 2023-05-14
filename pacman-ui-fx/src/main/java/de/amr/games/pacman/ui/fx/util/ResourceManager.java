@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.util;
 
+import dev.webfx.platform.resource.Resource;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -131,78 +132,13 @@ public class ResourceManager {
 
 	// TODO: doesn't webfx support resource bundles at all?
 	public Map<String, String> loadBundle() {
+		String messages = Resource.getText(urlFromRelPath("texts/messages.properties")); // Text returned immediately because embed
 		Map<String, String> map = new HashMap<>();
-		map.put("app.title.ms_pacman", "Ms. Pac-Man {0}");
-		map.put("app.title.ms_pacman.paused", "Ms. Pac-Man {0} (paused)");
-		map.put("app.title.pacman", "Pac-Man {0}");
-		map.put("app.title.pacman.paused", "Pac-Man {0} (paused)");
-		// help panels
-		map.put("help.add_credit"   , "ADD CREDIT");
-		map.put("help.autopilot_on" , "AUTOPILOT ON");
-		map.put("help.cursor_left"  , "CURSOR LEFT");
-		map.put("help.cursor_right" , "CURSOR RIGHT");
-		map.put("help.cursor_up"    , "CURSOR UP");
-		map.put("help.cursor_down"  , "CURSOR DOWN");
-		map.put("help.immunity_on"  , "IMMUNITY ON");
-		map.put("help.move_left"    , "MOVE LEFT");
-		map.put("help.move_right"   , "MOVE RIGHT");
-		map.put("help.move_up"      , "MOVE UP");
-		map.put("help.move_down"    , "MOVE DOWN");
-		map.put("help.ms_pacman"    , "PLAY MS. PAC-MAN");
-		map.put("help.pacman"       , "PLAY PAC-MAN");
-		map.put("help.show_help"    , "SHOW HELP");
-		map.put("help.show_intro"   , "SHOW INTRO");
-		map.put("help.start_game"   , "START GAME");
-		// others
-		map.put("twoD", "2D");
-		map.put("threeD", "3D");
-		map.put("pip_on", "Picture-In-Picture ON");
-		map.put("pip_off", "Picture-In-Picture OFF");
-		map.put("level_complete", "Level {0,number,integer} complete");
-		map.put("level_starting", "Starting level {0,number,integer}");
-		map.put("camera_perspective", "Perspective: {0}");
-		map.put("DRONE", "Drone");
-		map.put("FOLLOWING_PLAYER", "Following Player");
-		map.put("NEAR_PLAYER", "Near Player");
-		map.put("TOTAL", "Total");
-		map.put("extra_life", "Extra Life!");
-		map.put("autopilot_on", "Autopilot ON");
-		map.put("autopilot_off", "Autopilot OFF");
-		map.put("sound_on", "Sound ON");
-		map.put("sound_off", "Sound OFF");
-		map.put("player_immunity_on", "Player is immune");
-		map.put("player_immunity_off", "Player is vulnerable");
-		map.put("use_2D_scene", "Using 2D Scene");
-		map.put("use_3D_scene", "Using 3D Scene");
-		map.put("pacman.ready.1", "LET'S GO BRANDON!");
-		map.put("pacman.ready.2", "YELLOW MAN BAD!");
-		map.put("pacman.ready.3", "C'MON MAN!");
-		map.put("pacman.ready.4", "Asufutimaehaehfutbw");
-		map.put("pacman.ready.5", "You know,the thing");
-		map.put("mspacman.ready.1", "LET'S GO BRANDON!");
-		map.put("mspacman.ready.2", "GHOST LIVES MATTER!");
-		map.put("mspacman.ready.3", "EAT ME TOO!");
-		map.put("mspacman.ready.4", "FIGHT YELLOW PRIVILEGE!");
-		map.put("mspacman.ready.5", "CIS GHOST BY NATURE!");
-		map.put("mspacman.ready.6", "NO GHOSTSHAMING!");
-		map.put("level.complete.1", "Well done!");
-		map.put("level.complete.2", "Congratulations!");
-		map.put("level.complete.3", "Awesome!");
-		map.put("level.complete.4", "You really did it!");
-		map.put("level.complete.5", "You're the man*in!");
-		map.put("level.complete.6", "WTF!");
-		map.put("game.over.1", "You stone cold loser!");
-		map.put("game.over.2", "I would say you fucked up!");
-		map.put("game.over.3", "This game is OVER!");
-		map.put("game.over.4", "Go ahead and cry!");
-		map.put("game.over.5", "That's all you've got?");
-		map.put("cheating.1", "You old cheating bastard!");
-		map.put("cheating.2", "I told you, I will erase your hard disk!");
-		map.put("cheating.3", "Cheaters are the worst human beings!");
-		map.put("cheating.4", "Do you think I will not notice this?");
-		map.put("cheating.5", "Ah, Mr. Super-Clever again");
-		map.put("cheating.6", "STOP! CHEATING! NOW!");
-		map.put("cheat_add_lives", "You have {0,number,integer} lives now");
+		for (String line : messages.split("\n")) {
+			int p = line.indexOf('=');
+			if (p > 0 && !line.trim().startsWith("#"))
+				map.put(line.substring(0, p).trim(), line.substring(p + 1).trim());
+		}
 		return map;
 	}
 }
