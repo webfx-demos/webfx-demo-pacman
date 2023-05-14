@@ -113,8 +113,8 @@ public class GameUI implements GameEventListener {
 		);
 		gameController.setManualPacSteering(keyboardSteering);
 
-		csHelp = new GameHelp(gameController, GameAssets.Texts.messageBundle);
-		csHelp.setFont(GameAssets.Fonts.help);
+		csHelp = new GameHelp(gameController, GameApp.assets.messageBundle);
+		csHelp.setFont(GameApp.assets.helpFont);
 
 		createSceneConfiguration();
 
@@ -148,7 +148,7 @@ public class GameUI implements GameEventListener {
 	private void closeGreetingAndStart() {
 		layers.remove(greetingPane);
 		rebuildMainSceneLayers();
-		root.setBackground(ResourceManager.imageBackground(GameAssets.Graphics.wallpaper));
+		root.setBackground(ResourceManager.imageBackground(GameApp.assets.wallpaper));
 		GameApp.actions.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
 		startUI();
@@ -363,7 +363,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = GameAssets.Sounds.gameSounds(event.game.variant());
+		var sounds = GameApp.assets.gameSounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN:
 			sounds.play(AudioClipID.BONUS_EATEN);

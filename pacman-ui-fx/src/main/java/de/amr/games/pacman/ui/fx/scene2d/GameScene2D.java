@@ -27,9 +27,8 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.GameApp;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -125,8 +124,8 @@ public abstract class GameScene2D implements GameScene {
 			overlay.getChildren().remove(helpButton);
 		}
 		helpButton = new ImageView(variant == GameVariant.MS_PACMAN
-			? GameAssets.Graphics.helpIconMsPacManGame
-			: GameAssets.Graphics.helpIconPacManGame);
+			? GameApp.assets.helpIconMsPacManGame
+			: GameApp.assets.helpIconPacManGame);
 		helpButton.setTranslateX(4);
 		helpButton.setTranslateY(4);
 		helpButton.setFitHeight(12);
@@ -172,7 +171,7 @@ public abstract class GameScene2D implements GameScene {
 
 		double w = canvas.getWidth();
 		double h = canvas.getHeight();
-		g.setFill(GameAssets.Graphics.wallpaperColor);
+		g.setFill(GameApp.assets.wallpaperColor);
 		g.fillRect(0, 0, w, h);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, w, h, 20, 20);

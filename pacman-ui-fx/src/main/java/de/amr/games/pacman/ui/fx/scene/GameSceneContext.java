@@ -24,18 +24,18 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
+import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Armin Reichert
@@ -104,6 +104,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return GameAssets.Sounds.gameSounds(gameVariant());
+		return GameApp.assets.gameSounds(gameVariant());
 	}
 }

@@ -94,7 +94,7 @@ public class GameActions {
     }
 
     public void playHelpVoiceMessageAfterSeconds(int seconds) {
-        Ufx.afterSeconds(seconds, () -> playVoiceMessage(GameAssets.Sounds.VOICE_HELP)).play();
+        Ufx.afterSeconds(seconds, () -> playVoiceMessage(GameApp.assets.VOICE_HELP)).play();
     }
 
     public void playVoiceMessage(AudioClip voiceMessage) {
@@ -157,7 +157,7 @@ public class GameActions {
         Ufx.toggle(GameApp.simulationPausedPy);
         // TODO mute and unmute?
         if (GameApp.simulationPausedPy.get()) {
-            GameAssets.Sounds.gameSounds(ui.game().variant()).stopAll();
+            GameApp.assets.gameSounds(ui.game().variant()).stopAll();
         }
     }
 
@@ -195,17 +195,17 @@ public class GameActions {
     public void toggleAutopilot() {
         ui.gameController().toggleAutoControlled();
         var auto = ui.gameController().isAutoControlled();
-        String message = GameAssets.Texts.message(auto ? "autopilot_on" : "autopilot_off");
+        String message = GameApp.assets.message(auto ? "autopilot_on" : "autopilot_off");
         showFlashMessage(message);
-        playVoiceMessage(auto ? GameAssets.Sounds.VOICE_AUTOPILOT_ON : GameAssets.Sounds.VOICE_AUTOPILOT_OFF);
+        playVoiceMessage(auto ? GameApp.assets.VOICE_AUTOPILOT_ON : GameApp.assets.VOICE_AUTOPILOT_OFF);
     }
 
     public void toggleImmunity() {
         ui.game().setImmune(!ui.game().isImmune());
         var immune = ui.game().isImmune();
-        String message = GameAssets.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
+        String message = GameApp.assets.message(immune ? "player_immunity_on" : "player_immunity_off");
         showFlashMessage(message);
-        playVoiceMessage(immune ? GameAssets.Sounds.VOICE_IMMUNITY_ON : GameAssets.Sounds.VOICE_IMMUNITY_OFF);
+        playVoiceMessage(immune ? GameApp.assets.VOICE_IMMUNITY_ON : GameApp.assets.VOICE_IMMUNITY_OFF);
     }
 
     public void startLevelTestMode() {
@@ -218,7 +218,7 @@ public class GameActions {
     public void cheatAddLives(int numLives) {
         if (ui.game().isPlaying()) {
             ui.game().setLives(numLives + ui.game().lives());
-            showFlashMessage(GameAssets.Texts.message("cheat_add_lives", ui.game().lives()));
+            showFlashMessage(GameApp.assets.message("cheat_add_lives", ui.game().lives()));
         }
     }
 

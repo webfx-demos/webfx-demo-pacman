@@ -23,23 +23,23 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-
-import java.util.List;
-import java.util.Optional;
-
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
+import de.amr.games.pacman.ui.fx.app.GameApp;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.util.List;
+import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * Common rendering functionality for renderers using a spritesheet.
@@ -64,8 +64,8 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		var font = GameAssets.Fonts.arcade;
-		return size == font.getSize() ? font : GameAssets.Fonts.font(font, size);
+		var font = GameApp.assets.arcadeFont;
+		return size == font.getSize() ? font : GameApp.assets.font(font, size);
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);

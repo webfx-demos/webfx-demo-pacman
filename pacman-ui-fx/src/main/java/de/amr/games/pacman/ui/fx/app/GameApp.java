@@ -51,12 +51,13 @@ public class GameApp extends Application {
 	//@formatter:on
 
 	public static GameActions actions;
+	public static GameAssets assets = new GameAssets();
 
 	private GameUI gameUI;
 
 	@Override
 	public void init() throws Exception {
-		GameAssets.load();
+		GameApp.assets.load();
 	}
 
 	@Override

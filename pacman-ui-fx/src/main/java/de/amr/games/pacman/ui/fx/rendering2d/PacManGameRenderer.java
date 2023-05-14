@@ -23,18 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.Animated;
-import de.amr.games.pacman.lib.anim.AnimationByDirection;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.FrameSequence;
-import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
+import de.amr.games.pacman.lib.anim.*;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
+import de.amr.games.pacman.ui.fx.app.GameApp;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -47,7 +42,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameRenderer() {
-		super(GameAssets.Graphics.spritesheetPacManGame);
+		super(GameApp.assets.spritesheetPacManGame);
 	}
 
 	@Override
@@ -96,9 +91,9 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? GameAssets.Graphics.flashingMazePacManGame : GameAssets.Graphics.emptyMazePacManGame, x, y);
+			g.drawImage(flashing ? GameApp.assets.flashingMazePacManGame : GameApp.assets.emptyMazePacManGame, x, y);
 		} else {
-			g.drawImage(GameAssets.Graphics.fullMazePacManGame, x, y);
+			g.drawImage(GameApp.assets.fullMazePacManGame, x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();

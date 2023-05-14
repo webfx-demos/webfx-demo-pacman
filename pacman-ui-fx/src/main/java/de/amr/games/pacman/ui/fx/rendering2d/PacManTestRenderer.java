@@ -24,28 +24,24 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2i;
-
-import java.util.List;
-import java.util.Optional;
-
-import de.amr.games.pacman.lib.anim.Animated;
-import de.amr.games.pacman.lib.anim.AnimationByDirection;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
+import de.amr.games.pacman.lib.anim.*;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.GameAssets;
+import de.amr.games.pacman.ui.fx.app.GameApp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
+
+import java.util.List;
+import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * This test class is used to check if the Rendering2D interface is adequate.
@@ -59,7 +55,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return GameAssets.Fonts.font(GameAssets.Fonts.arcade, size);
+		return GameApp.assets.font(GameApp.assets.arcadeFont, size);
 	}
 
 	@Override
@@ -228,17 +224,21 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-			case Bonus.STATE_EDIBLE: Rendering2D.drawText(g, "Bonus", Color.YELLOW, GameAssets.Fonts.arcade, x - 20, y); break;
-			case Bonus.STATE_EATEN: Rendering2D.drawText(g, bonus.points() + "", Color.RED, GameAssets.Fonts.arcade, x - 8, y); break;
-			default: {
-		}
+			case Bonus.STATE_EDIBLE:
+				Rendering2D.drawText(g, "Bonus", Color.YELLOW, GameApp.assets.arcadeFont, x - 20, y);
+				break;
+			case Bonus.STATE_EATEN:
+				Rendering2D.drawText(g, bonus.points() + "", Color.RED, GameApp.assets.arcadeFont, x - 8, y);
+				break;
+			default:
+				break;
 		}
 	}
 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			Rendering2D.drawText(g, "Level " + number, Color.WHITE, GameAssets.Fonts.arcade, 18 * TS, 36 * TS - 2);
+			Rendering2D.drawText(g, "Level " + number, Color.WHITE, GameApp.assets.arcadeFont, 18 * TS, 36 * TS - 2);
 		});
 	}
 
