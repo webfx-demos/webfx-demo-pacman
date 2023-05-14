@@ -51,7 +51,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 			new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_DOWN),
 			new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_DOWN));
 
-	private Map<KeyCodeCombination, Direction> directionByKey;
+	private final Map<KeyCodeCombination, Direction> directionByKey;
 	private Direction dir;
 	private boolean enabled = false;
 

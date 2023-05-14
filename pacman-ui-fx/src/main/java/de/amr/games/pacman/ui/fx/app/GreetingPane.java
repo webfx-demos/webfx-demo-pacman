@@ -19,7 +19,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class GreetingPane extends BorderPane {
 
-    private StackPane clickPane;
+    private final StackPane clickPane;
 
     public GreetingPane() {
         var ds = new DropShadow();

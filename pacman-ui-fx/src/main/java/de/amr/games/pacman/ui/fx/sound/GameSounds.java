@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  */
 public class GameSounds {
 
-	class ClipInfo {
+	static class ClipInfo {
 
 		String path; double volume; AudioClip clip;
 
@@ -82,7 +82,6 @@ public class GameSounds {
 	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
 		var clip = GameAssets.Manager.audioClip(path); // TODO
 		clip.setVolume(volume);
-		Logger.info("Audio clip created, id={} volume={}, source={}"); //, id, clip.getVolume(), clip.getSource());
 		return clip;
 	}
 

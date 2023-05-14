@@ -76,7 +76,7 @@ public interface Rendering2D {
 
 	// Drawing
 
-	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
+	static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(ArcadeTheme.PALE);
@@ -90,7 +90,7 @@ public interface Rendering2D {
 		g.restore();
 	}
 
-	public static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
@@ -108,7 +108,7 @@ public interface Rendering2D {
 
 	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
 		drawText(g, title, color, font, x, y);
-		var pointsText = " " + String.valueOf(score.points());
+		var pointsText = String.valueOf(score.points());
 		drawText(g, pointsText, color, font, x, y + TS + 1);
 		if (score.points() != 0) {
 			drawText(g, "L" + score.levelNumber(), color, font, x + TS * (8), y + TS + 1);

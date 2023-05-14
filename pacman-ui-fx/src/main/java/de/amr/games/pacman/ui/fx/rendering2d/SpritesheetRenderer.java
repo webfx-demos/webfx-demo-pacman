@@ -141,7 +141,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
-		int x = TS * (2);
+		int x = TS * 2;
 		int y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
@@ -151,7 +151,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
 			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
-					x + TS * (10), y + TS * (1));
+					x + TS * 10, y + TS);
 		}
 	}
 }

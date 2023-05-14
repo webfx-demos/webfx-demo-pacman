@@ -47,7 +47,7 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private Signature signature;
+	private final Signature signature;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
