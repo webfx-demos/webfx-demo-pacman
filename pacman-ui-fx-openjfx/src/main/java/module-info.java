@@ -12,7 +12,6 @@ module pacman.ui.fx.openjfx {
     requires webfx.platform.resource.java;
     requires webfx.platform.scheduler.java;
     requires webfx.platform.shutdown.java;
-    requires webfx.platform.useragent.java.client;
 
     // Meta Resource package
     opens dev.webfx.platform.meta.exe;

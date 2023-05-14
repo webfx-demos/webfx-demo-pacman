@@ -14,6 +14,10 @@
         <resource-package>de.amr.games.pacman.ui.fx.assets.texts</resource-package>
     </exported-packages>
 
+    <embed-resources>
+        <resource>de/amr/games/pacman/ui/fx/assets/texts/messages.properties</resource>
+    </embed-resources>
+
     <dependencies>
         <used-by-source-modules/>
     </dependencies>
