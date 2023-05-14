@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;

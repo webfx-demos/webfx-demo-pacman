@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.app.GameAssets;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;

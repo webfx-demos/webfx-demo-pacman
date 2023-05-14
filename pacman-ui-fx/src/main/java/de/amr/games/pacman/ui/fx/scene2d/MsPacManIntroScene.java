@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.GameActions;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;

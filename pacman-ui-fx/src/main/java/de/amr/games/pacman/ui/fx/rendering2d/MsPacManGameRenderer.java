@@ -29,7 +29,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.GameAssets;
-import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
