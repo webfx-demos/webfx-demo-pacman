@@ -45,37 +45,9 @@ public class GameAssets {
 
 	public static final ResourceManager Manager = new ResourceManager("/de/amr/games/pacman/ui/fx/assets/");
 
-	public Font arcadeFont;
-	public Font handwritingFont;
-	public Font helpFont;
-
-	public Image greetingPaneWallpaper;
-	public Image wallpaper;
-	public Color wallpaperColor = Color.rgb(0, 76, 149);
-
-	public Image iconPacManGame;
-	public Image helpIconPacManGame;
-	public Spritesheet spritesheetPacManGame;
-	public Image fullMazePacManGame;
-	public Image emptyMazePacManGame;
-	public Image flashingMazePacManGame;
-
-	public Image iconMsPacManGame;
-	public Image helpIconMsPacManGame;
-	public Spritesheet spritesheetMsPacManGame;
-	public Image logoMsPacManGame;
-	public Image flashingMazesMsPacManGame;
-
-	public Map<String, String> messageBundle;
-
-	private GameSounds gameSoundsMsPacMan;
-	private GameSounds gameSoundsPacMan;
-
-	public AudioClip voiceHelp;
-	public AudioClip voiceAutoPilotOff;
-	public AudioClip voiceAutopilotOn;
-	public AudioClip voiceImmunityOff;
-	public AudioClip voiceImmunityOn;
+	public static Font font(Font font, double size) {
+		return Font.font(font.getFamily(), size);
+	}
 
 	private static final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = {
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 },
@@ -119,9 +91,39 @@ public class GameAssets {
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 },
 	};
 
-	public void load() {
-		long start = System.nanoTime();
+	public Font arcadeFont;
+	public Font handwritingFont;
+	public Font helpFont;
 
+	public Image greetingPaneWallpaper;
+	public Image wallpaper;
+	public Color wallpaperColor = Color.rgb(0, 76, 149);
+
+	public Image iconPacManGame;
+	public Image helpIconPacManGame;
+	public Spritesheet spritesheetPacManGame;
+	public Image fullMazePacManGame;
+	public Image emptyMazePacManGame;
+	public Image flashingMazePacManGame;
+
+	public Image iconMsPacManGame;
+	public Image helpIconMsPacManGame;
+	public Spritesheet spritesheetMsPacManGame;
+	public Image logoMsPacManGame;
+	public Image flashingMazesMsPacManGame;
+
+	public Map<String, String> messageBundle;
+
+	private GameSounds gameSoundsMsPacMan;
+	private GameSounds gameSoundsPacMan;
+
+	public AudioClip voiceHelp;
+	public AudioClip voiceAutoPilotOff;
+	public AudioClip voiceAutopilotOn;
+	public AudioClip voiceImmunityOff;
+	public AudioClip voiceImmunityOn;
+
+	public void load() {
 		arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
 		handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
 		helpFont = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 16);
@@ -152,13 +154,7 @@ public class GameAssets {
 
 		gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
 		gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
-
-		Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
-
-	public Font font(Font font, double size) {
-			return Font.font(font.getFamily(), size);
-		}
 
 	/**
 	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the

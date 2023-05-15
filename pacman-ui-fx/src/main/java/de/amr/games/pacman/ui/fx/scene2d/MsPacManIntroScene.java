@@ -104,7 +104,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			GameApp.actions.startGame();
 		} else if (Keyboard.pressed(GameActions.SELECT_VARIANT)) {
 			GameApp.actions.selectNextGameVariant();
-		} else if (Keyboard.pressed(GameActions.PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(GameActions.TEST_CUTSCENES)) {
 			GameApp.actions.startCutscenesTest();
 		}
 	}

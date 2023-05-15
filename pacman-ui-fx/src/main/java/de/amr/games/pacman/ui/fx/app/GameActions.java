@@ -43,43 +43,39 @@ public class GameActions {
         return new KeyCodeCombination(code);
     }
 
-    private static KeyCodeCombination alt(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
-    }
-
-    private static KeyCodeCombination shift(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
-    }
-
     private static KeyCodeCombination altShift(KeyCode code) {
         return new KeyCodeCombination(code, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN);
     }
 
+    // Game control
     public static final KeyCodeCombination HELP = just(KeyCode.H);
+    public static final KeyCodeCombination BOOT = just(KeyCode.F3); // does not work, why?
+    public static final KeyCodeCombination QUIT = just(KeyCode.Q);
+    public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
+    public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
+    public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+
+    // Pac-Man control
     public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
-    public static final KeyCodeCombination BOOT = just(KeyCode.Z); // TODO does not work with any combination?
-    public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
     public static final KeyCodeCombination IMMUNITY = altShift(KeyCode.I);
+
+    // Cheats (only available while game is playing)
+    public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
     public static final KeyCodeCombination CHEAT_ADD_LIVES = altShift(KeyCode.L);
     public static final KeyCodeCombination CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
     public static final KeyCodeCombination CHEAT_KILL_GHOSTS = altShift(KeyCode.X);
+
+    // Test modes (available from intro scenes)q
     public static final KeyCodeCombination TEST_LEVELS = altShift(KeyCode.T);
-    public static final KeyCodeCombination PLAY_CUTSCENES = altShift(KeyCode.C);
+    public static final KeyCodeCombination TEST_CUTSCENES = altShift(KeyCode.C);
 
+    // Game loop control keys
     public static final KeyCodeCombination PAUSE = just(KeyCode.P);
-    public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
     public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
-    public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
+    public static final KeyCodeCombination TEN_STEPS = just(KeyCode.T);
     public static final KeyCodeCombination SIMULATION_FASTER = altShift(KeyCode.F);
-    public static final KeyCodeCombination SIMULATION_SLOWER = altShift(KeyCode.G);
+    public static final KeyCodeCombination SIMULATION_SLOWER = altShift(KeyCode.S);
     public static final KeyCodeCombination SIMULATION_NORMAL = altShift(KeyCode.DIGIT0);
-
-    public static final KeyCodeCombination QUIT = just(KeyCode.Q);
-    public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
-
-    public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
-    public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
-
 
     private final GameUI ui;
 

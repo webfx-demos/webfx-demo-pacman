@@ -33,7 +33,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -45,22 +44,21 @@ public class GameApp extends Application {
 		launch(args);
 	}
 
-	//@formatter:off
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationSpeedPy  = new SimpleIntegerProperty(60);
-	//@formatter:on
 
 	public static GameActions actions;
-	public static GameAssets assets = new GameAssets();
+	public static GameAssets assets;
 	public static GameUI ui;
 
 	@Override
-	public void init() throws Exception {
+	public void init() {
+		assets = new GameAssets();
 		GameApp.assets.load();
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws IOException {
+	public void start(Stage primaryStage) {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
 		GameApp.ui = new GameUI(primaryStage, settings, gameController);
@@ -69,7 +67,7 @@ public class GameApp extends Application {
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		GameApp.ui.clock().stop();
 	}
 }

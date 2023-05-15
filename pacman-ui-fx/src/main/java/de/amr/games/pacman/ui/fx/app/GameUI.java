@@ -307,12 +307,12 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(GameActions.AUTOPILOT)) {
 			GameApp.actions.toggleAutopilot();
 		} else if (Keyboard.pressed(GameActions.BOOT)) {
-			GameApp.actions.reboot(); //TODO this does not work. Why?
+			GameApp.actions.reboot();
 		} else if (Keyboard.pressed(GameActions.IMMUNITY)) {
 			GameApp.actions.toggleImmunity();
 		} else if (Keyboard.pressed(GameActions.PAUSE)) {
 			GameApp.actions.togglePaused();
-		} else if (Keyboard.pressed(GameActions.PAUSE_STEP) || Keyboard.pressed(GameActions.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(GameActions.SINGLE_STEP)) {
 			GameApp.actions.oneSimulationStep();
 		} else if (Keyboard.pressed(GameActions.TEN_STEPS)) {
 			GameApp.actions.tenSimulationSteps();
