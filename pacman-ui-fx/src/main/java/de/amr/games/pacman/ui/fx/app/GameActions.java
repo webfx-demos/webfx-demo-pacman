@@ -51,7 +51,7 @@ public class GameActions {
     public static final KeyCodeCombination HELP = just(KeyCode.H);
     public static final KeyCodeCombination BOOT = just(KeyCode.F3); // does not work, why?
     public static final KeyCodeCombination QUIT = just(KeyCode.Q);
-    public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
+    public static final KeyCodeCombination CHANGE_GAME_VARIANT = just(KeyCode.V);
     public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
     public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
 

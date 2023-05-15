@@ -323,10 +323,7 @@ public class GameUI implements GameEventListener {
 			GameApp.actions.resetSimulationSpeed();
 		} else if (Keyboard.pressed(GameActions.QUIT)) {
 			GameApp.actions.restartIntro();
-		} else if (Keyboard.pressed(GameActions.TEST_LEVELS)) {
-			GameApp.actions.startLevelTestMode();
-		}
-		if (currentGameScene != null) {
+		} else if (currentGameScene != null) {
 			currentGameScene.handleKeyboardInput();
 		}
 	}

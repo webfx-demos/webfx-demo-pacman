@@ -39,7 +39,7 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 /**
  * Intro scene of the PacMan game.
  * <p>
- * The ghost are presented one after another, then Pac-Man is chased by the ghosts, turns the card and hunts the ghost
+ * The ghosts are presented one after another, then Pac-Man is chased by the ghosts, turns the card and hunts the ghost
  * himself.
  * 
  * @author Armin Reichert
@@ -49,11 +49,10 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private final Signature signature;
+	private final Signature signature = new Signature();
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = new Signature();
 		signature.add(overlay, 3.5 * TS, 33.5 * TS);
 	}
 
@@ -61,6 +60,7 @@ public class PacManIntroScene extends GameScene2D {
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
+		signature.setOpacity(0); // invisible on start
 
 		intro = new PacManIntro(context().gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
@@ -68,26 +68,18 @@ public class PacManIntroScene extends GameScene2D {
 				signature.show();
 			}
 		});
-		signature.setOpacity(0); // invisible on start
 
-		intro.changeState(State.START);
 
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
 		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
 		intro.context().blinking.reset();
 
-		// use the info pane to display copyright note
-		infoVisiblePy.unbind();
-		infoVisiblePy.set(false);
+		intro.changeState(State.START);
 	}
 
 	@Override
 	public void update() {
 		intro.update();
-		context.setCreditVisible(intro.context().creditVisible);
-		if (intro.state() == State.CHASING_PAC) {
-			infoVisiblePy.set(true);
-		}
 	}
 
 	@Override
@@ -101,10 +93,12 @@ public class PacManIntroScene extends GameScene2D {
 			GameApp.actions.addCredit();
 		} else if (Keyboard.pressed(GameActions.START_GAME)) {
 			GameApp.actions.startGame();
-		} else if (Keyboard.pressed(GameActions.SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(GameActions.CHANGE_GAME_VARIANT)) {
 			GameApp.actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(GameActions.TEST_CUTSCENES)) {
 			GameApp.actions.startCutscenesTest();
+		} else if (Keyboard.pressed(GameActions.TEST_LEVELS)) {
+			GameApp.actions.startLevelTestMode();
 		}
 	}
 
@@ -121,29 +115,19 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			drawCopyright(g);
+			drawMidwayCopyright(g, 4, 32);
 			break;
 		}
-		case CHASING_GHOSTS: {
+		case CHASING_GHOSTS: case READY_TO_PLAY: {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawCopyright(g);
+			drawMidwayCopyright(g, 4, 32);
 			break;
 		}
-		case READY_TO_PLAY: {
-			drawPoints(g);
-			drawGuys(g, 0);
-			drawCopyright(g);
+		default:
 			break;
-		}
-		default: { // nothing to do
-		}
 		}
 		drawLevelCounter(g);
-	}
-
-	private void drawCopyright(GraphicsContext g) {
-		drawMidwayCopyright(g, 4, 32);
 	}
 
 	// TODO inspect in MAME what's really going on here

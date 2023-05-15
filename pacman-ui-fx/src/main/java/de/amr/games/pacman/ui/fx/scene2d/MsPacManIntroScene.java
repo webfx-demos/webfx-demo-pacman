@@ -47,11 +47,10 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private final Signature signature;
+	private final Signature signature = new Signature();
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = new Signature();
 		signature.add(overlay, 3.5 * TS, 33.5 * TS);
 	}
 
@@ -59,6 +58,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
+		signature.setOpacity(0); // invisible on start
 
 		intro = new MsPacManIntro(context.gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
@@ -66,25 +66,18 @@ public class MsPacManIntroScene extends GameScene2D {
 				signature.show();
 			}
 		});
-		signature.setOpacity(0); // invisible on start
 
 		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);
-		msPacAnimations.start();
 		intro.context().ghosts.forEach(ghost -> {
 			var ghostAnimations = context.rendering2D().createGhostAnimations(ghost);
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});
 
-		// use the info pane to display copyright note
-		infoVisiblePy.unbind();
-		infoVisiblePy.set(true);
-
+		msPacAnimations.start();
 		intro.changeState(MsPacManIntro.State.START);
 	}
-
-
 
 	@Override
 	public void update() {
@@ -102,13 +95,14 @@ public class MsPacManIntroScene extends GameScene2D {
 			GameApp.actions.addCredit();
 		} else if (Keyboard.pressed(GameActions.START_GAME)) {
 			GameApp.actions.startGame();
-		} else if (Keyboard.pressed(GameActions.SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(GameActions.CHANGE_GAME_VARIANT)) {
 			GameApp.actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(GameActions.TEST_CUTSCENES)) {
 			GameApp.actions.startCutscenesTest();
+		} else if (Keyboard.pressed(GameActions.TEST_LEVELS)) {
+			GameApp.actions.startLevelTestMode();
 		}
 	}
-
 
 	@Override
 	public void drawScene(GraphicsContext g) {
@@ -136,13 +130,8 @@ public class MsPacManIntroScene extends GameScene2D {
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
-		drawCopyright(g);
-		drawLevelCounter(g);
-	}
-
-	private void drawCopyright(GraphicsContext g) {
-		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawMsPacManCopyright(g, 29);
+		drawLevelCounter(g);
 	}
 
 	private void drawMarquee(GraphicsContext g) {
