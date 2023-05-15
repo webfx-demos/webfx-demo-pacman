@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -45,14 +46,11 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class ResourceManager {
 
-	//private final Function<String, URL> urlComputation;
-	private final String rootDir;
+	private String rootDir = "/";
 
-	public ResourceManager(String rootDir/*, Function<String, URL> urlComputation*/) {
+	public ResourceManager(String rootDir) {
 		checkNotNull(rootDir);
-		//checkNotNull(urlComputation);
 		this.rootDir = rootDir;
-		//this.urlComputation = urlComputation;
 	}
 
 	/**
@@ -62,7 +60,6 @@ public class ResourceManager {
 	public String urlFromRelPath(String relPath) {
 		checkNotNull(relPath);
 		return dev.webfx.platform.resource.Resource.toUrl(rootDir + relPath, ResourceManager.class);
-		//return urlComputation.apply(rootDir + relPath);
 	}
 
 	/**
@@ -110,6 +107,11 @@ public class ResourceManager {
 	public static Background colorBackground(Color color) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static Background colorBackgroundRounded(Color color, double cornerRadius) {
+		checkNotNull(color);
+		return new Background(new BackgroundFill(color, new CornerRadii(cornerRadius), null));
 	}
 
 	public static Background imageBackground(Image image) {

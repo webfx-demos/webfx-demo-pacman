@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -19,37 +20,31 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class GreetingPane extends BorderPane {
 
-    private final StackPane clickPane;
+    private final StackPane clickArea;
 
     public GreetingPane() {
         var ds = new DropShadow();
         ds.setOffsetY(3.0f);
         ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
-        var text = new Text("Click to start!");
-        //text.setMouseTransparent(true);
+        var text = new Text("Play!");
         text.setEffect(ds);
         text.setCache(true);
         text.setFill(Color.WHITE);
-        text.setFont(GameApp.assets.font(GameApp.assets.arcadeFont, 24));
+        text.setFont(GameApp.assets.font(GameApp.assets.arcadeFont, 30));
         BorderPane.setAlignment(text, Pos.CENTER);
 
-        clickPane = new StackPane(text);
-        clickPane.setMaxHeight(100);
-        clickPane.setMaxWidth(400);
-        clickPane.setPadding(new Insets(10));
-        clickPane.setBackground(ResourceManager.colorBackground(
-                ResourceManager.color(Color.CORNFLOWERBLUE, 0.8)));
+        // TODO that should probably be a button but GWT has its problems
+        clickArea = new StackPane(text);
+        clickArea.setMaxSize(200,100);
+        clickArea.setPadding(new Insets(10));
+        clickArea.setCursor(Cursor.HAND);
+        clickArea.setBackground(ResourceManager.colorBackgroundRounded(
+                ResourceManager.color(Color.rgb(0, 155, 252), 1.0), 20));
 
-        setBottom(clickPane);
-        clickPane.setTranslateY(-20);
-        BorderPane.setAlignment(clickPane, Pos.CENTER);
-
-/*
-        if (UserAgent.isBrowser()) {
-            text.setTranslateY(20); //TODO fixme
-        }
-*/
+        setBottom(clickArea);
+        BorderPane.setAlignment(clickArea, Pos.CENTER);
+        clickArea.setTranslateY(-10);
 
         var bgImage = new BackgroundImage(
             GameApp.assets.greetingPaneWallpaper,
@@ -66,7 +61,7 @@ public class GreetingPane extends BorderPane {
      * @param handler code executed when primary mouse button has been clicked inside the click pane
      */
     public void onClicked(Runnable handler) {
-        clickPane.setOnMouseClicked(e -> {
+        clickArea.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 handler.run();
             }

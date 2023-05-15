@@ -161,7 +161,7 @@ public class GameHelp {
 		var bgColor = game().variant() == GameVariant.MS_PACMAN
 				? Color.rgb(255, 0, 0, 0.9)
 				: Color.rgb(33, 33, 255, 0.9);
-		pane.setBackground(ResourceManager.colorBackground(bgColor));
+		pane.setBackground(ResourceManager.colorBackgroundRounded(bgColor, 10));
 
 		return pane;
 	}
