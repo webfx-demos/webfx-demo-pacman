@@ -32,6 +32,7 @@ import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.canvas.GraphicsContext;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -51,7 +52,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature.add(overlay, 3.5 * TS, 33.5 * TS);
+		double dy = UserAgent.isBrowser() ? -0.5 : 0; // TODO workaround for GWT
+		signature.add(overlay, 6.0 * TS, (33.5 + dy) * TS);
 	}
 
 	@Override

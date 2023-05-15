@@ -20,9 +20,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class GreetingPane extends BorderPane {
 
-    private final StackPane clickArea;
-
-    public GreetingPane() {
+    public GreetingPane(Runnable onClicked) {
         var ds = new DropShadow();
         ds.setOffsetY(3.0f);
         ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
@@ -31,11 +29,11 @@ public class GreetingPane extends BorderPane {
         text.setEffect(ds);
         text.setCache(true);
         text.setFill(Color.WHITE);
-        text.setFont(GameApp.assets.font(GameApp.assets.arcadeFont, 30));
+        text.setFont(GameAssets.font(GameApp.assets.arcadeFont, 30));
         BorderPane.setAlignment(text, Pos.CENTER);
 
         // TODO that should probably be a button but GWT has its problems
-        clickArea = new StackPane(text);
+        var clickArea = new StackPane(text);
         clickArea.setMaxSize(200,100);
         clickArea.setPadding(new Insets(10));
         clickArea.setCursor(Cursor.HAND);
@@ -46,6 +44,12 @@ public class GreetingPane extends BorderPane {
         BorderPane.setAlignment(clickArea, Pos.CENTER);
         clickArea.setTranslateY(-10);
 
+        clickArea.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY)) {
+                onClicked.run();
+            }
+        });
+
         var bgImage = new BackgroundImage(
             GameApp.assets.greetingPaneWallpaper,
             BackgroundRepeat.NO_REPEAT,
@@ -55,16 +59,5 @@ public class GreetingPane extends BorderPane {
                 true, false)
         );
         setBackground(new Background(bgImage));
-    }
-
-    /**
-     * @param handler code executed when primary mouse button has been clicked inside the click pane
-     */
-    public void onClicked(Runnable handler) {
-        clickArea.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                handler.run();
-            }
-        });
     }
 }

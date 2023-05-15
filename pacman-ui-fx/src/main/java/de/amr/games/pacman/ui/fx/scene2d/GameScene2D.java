@@ -32,10 +32,7 @@ import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
@@ -61,8 +58,6 @@ public abstract class GameScene2D implements GameEventListener {
 	private static final float HEIGHT = World.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
-	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
-
 	protected final GameSceneContext context;
 	protected final BorderPane root;
 	protected final StackPane layers = new StackPane();
@@ -76,6 +71,9 @@ public abstract class GameScene2D implements GameEventListener {
 		context = new GameSceneContext(gameController);
 
 		root = new BorderPane();
+		// separate from edges
+		root.setScaleX(0.98);
+		root.setScaleY(0.98);
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
 			canvas.setScaleX(scaling);
@@ -83,8 +81,6 @@ public abstract class GameScene2D implements GameEventListener {
 			// don't ask me why this works but setScaleX/Y doesn't
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
-		root.setScaleX(0.98);
-		root.setScaleY(0.98);
 
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
@@ -137,26 +133,26 @@ public abstract class GameScene2D implements GameEventListener {
 		if (helpButton != null) {
 			overlay.getChildren().remove(helpButton);
 		}
+
 		helpButton = new ImageView(variant == GameVariant.MS_PACMAN
 			? GameApp.assets.helpIconMsPacManGame
 			: GameApp.assets.helpIconPacManGame);
 		helpButton.setTranslateX(4);
 		helpButton.setTranslateY(4);
+		helpButton.setPreserveRatio(true);
 		helpButton.setFitHeight(12);
 		helpButton.setFitWidth(12);
-		//TODO seems like mouse click is ignored over transparent color pixels?
 		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
+
 		overlay.getChildren().add(helpButton);
 	}
 
-	//TODO rework
-	public void onEmbedIntoParentScene(Scene parentScene) {
-		resize(parentScene.getHeight());
+	public void onEmbedIntoParent(Pane parent) {
+		resize(parent.getHeight());
 	}
 
-	//TODO rework
-	public void onParentSceneResize(Scene parentScene) {
-		resize(parentScene.getHeight());
+	public void onParentResize(Pane parent) {
+		resize(parent.getHeight());
 	}
 
 	/**
@@ -194,9 +190,6 @@ public abstract class GameScene2D implements GameEventListener {
 			}
 		}
 		drawScene(g);
-		if (infoVisiblePy.get()) {
-			drawInfo(g);
-		}
 	}
 
 	/**
@@ -205,15 +198,6 @@ public abstract class GameScene2D implements GameEventListener {
 	 * @param g graphics context
 	 */
 	protected abstract void drawScene(GraphicsContext g);
-
-	/**
-	 * Draws scene info, e.g. maze structure and special tiles
-	 * 
-	 * @param g graphics context
-	 */
-	protected void drawInfo(GraphicsContext g) {
-		// empty by default
-	}
 
 	protected void drawLevelCounter(GraphicsContext g) {
 		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());

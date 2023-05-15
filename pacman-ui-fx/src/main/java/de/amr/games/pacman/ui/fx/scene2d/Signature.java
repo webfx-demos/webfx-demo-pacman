@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.ui.fx.app.GameApp;
+import de.amr.games.pacman.ui.fx.app.GameAssets;
 import javafx.animation.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,13 +20,12 @@ public class Signature {
 
     public Signature() {
         part1 = new Text("Remake (2023) by ");
-        part1.setFill(Color.gray(0.5));
+        part1.setFill(Color.gray(0.42));
         part1.setFont(Font.font("Helvetica", 9));
 
-
         part2 = new Text("Armin Reichert");
-        part2.setFill(Color.gray(0.66));
-        part2.setFont(GameApp.assets.font(GameApp.assets.handwritingFont, 9));
+        part2.setFill(Color.gray(0.42));
+        part2.setFont(GameAssets.font(GameApp.assets.handwritingFont, 9));
     }
 
     public void add(Pane parent, double x, double y) {

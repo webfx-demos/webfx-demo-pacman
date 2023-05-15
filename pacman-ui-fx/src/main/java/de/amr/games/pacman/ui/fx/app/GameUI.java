@@ -61,7 +61,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
- * User interface for Pac-Man and Ms. Pac-Man games.
+ * User interface for Pac-Man and Ms. Pac-Man.
  *
  * @author Armin Reichert
  */
@@ -79,19 +79,25 @@ public class GameUI implements GameEventListener {
 	private final StackPane root = new StackPane();
 	private final List<Node> layers = new ArrayList<>();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final GameHelp csHelp;
+	private final GameHelp gameSceneHelp;
 	private GreetingPane greetingPane;
 	private GameScene2D currentGameScene;
 	private AudioClip currentVoiceMessage;
 
-	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
+	public GameUI(Stage stage, Settings settings, GameController gameController) {
 		checkNotNull(stage);
 		checkNotNull(settings);
+		checkNotNull(gameController);
 
 		this.stage = stage;
 		this.gameController = gameController;
 
-		clock = new GameClock(GameModel.FPS) {
+		this.clock = new GameClock(GameModel.FPS) {
+			{
+				pausedPy.bind(GameApp.simulationPausedPy);
+				targetFrameratePy.bind(GameApp.simulationSpeedPy);
+			}
+
 			@Override
 			public void doUpdate() {
 				gameController.update();
@@ -113,31 +119,46 @@ public class GameUI implements GameEventListener {
 		);
 		gameController.setManualPacSteering(keyboardSteering);
 
-		csHelp = new GameHelp(gameController, GameApp.assets.messageBundle);
-		csHelp.setFont(GameApp.assets.helpFont);
+		gameSceneHelp = new GameHelp(gameController, GameApp.assets.messageBundle);
+		gameSceneHelp.setFont(GameApp.assets.helpFont);
 
-		createSceneConfiguration();
+		sceneConfig.put(GameVariant.MS_PACMAN,
+				new GameSceneConfiguration(new MsPacManGameRenderer(),
+						new BootScene(gameController),
+						new MsPacManIntroScene(gameController),
+						new MsPacManCreditScene(gameController),
+						new PlayScene2D(gameController),
+						new MsPacManIntermissionScene1(gameController),
+						new MsPacManIntermissionScene2(gameController),
+						new MsPacManIntermissionScene3(gameController)));
 
+		sceneConfig.put(GameVariant.PACMAN,
+				new GameSceneConfiguration(new PacManGameRenderer(),
+						new BootScene(gameController),
+						new PacManIntroScene(gameController),
+						new PacManCreditScene(gameController),
+						new PlayScene2D(gameController),
+						new PacManCutscene1(gameController),
+						new PacManCutscene2(gameController),
+						new PacManCutscene3(gameController)));
+
+		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
 		var mainScene = createMainScene(TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+
 		stage.setScene(mainScene);
-
-
-		GameEvents.addListener(this);
-		initEnv();
-
-		updateMainView();
-
+		stage.setTitle(stageTitle());
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
 
+		GameEvents.addListener(this);
+
 		boolean showGreeting = true; // UserAgent.isBrowser();
 		if (showGreeting) {
-			greetingPane = new GreetingPane();
-			greetingPane.onClicked(this::closeGreetingAndStart);
+			greetingPane = new GreetingPane(this::closeGreetingAndStart);
 			layers.add(greetingPane);
 			rebuildMainSceneLayers();
 		} else {
@@ -160,43 +181,18 @@ public class GameUI implements GameEventListener {
 		clock.start();
 	}
 
-	private void createSceneConfiguration() {
-		sceneConfig.put(GameVariant.MS_PACMAN,
-			new GameSceneConfiguration(new MsPacManGameRenderer(),
-				new BootScene(gameController),
-				new MsPacManIntroScene(gameController),
-				new MsPacManCreditScene(gameController),
-				new PlayScene2D(gameController),
-				new MsPacManIntermissionScene1(gameController),
-				new MsPacManIntermissionScene2(gameController),
-				new MsPacManIntermissionScene3(gameController)));
-
-		sceneConfig.put(GameVariant.PACMAN,
-			new GameSceneConfiguration(new PacManGameRenderer(),
-				new BootScene(gameController),
-				new PacManIntroScene(gameController),
-				new PacManCreditScene(gameController),
-				new PlayScene2D(gameController),
-				new PacManCutscene1(gameController),
-				new PacManCutscene2(gameController),
-				new PacManCutscene3(gameController)));
-	}
-
-
 	private Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentGameScene != null) {
-				currentGameScene.onParentSceneResize(scene);
+				currentGameScene.onParentResize(root);
 			}
 		});
 
 		layers.add(new Label("")); // game scene layer
 		layers.add(flashMessageView);
 		rebuildMainSceneLayers();
-
-		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
 
 		return scene;
 	}
@@ -205,40 +201,18 @@ public class GameUI implements GameEventListener {
 		root.getChildren().setAll(layers);
 	}
 
-
 	public void showHelp() {
-		if (currentGameScene instanceof GameScene2D) {
-			GameScene2D gameScene2d = (GameScene2D) currentGameScene;
-			csHelp.show(gameScene2d, Duration.seconds(2));
-		}
+		gameSceneHelp.show(currentGameScene, Duration.seconds(2));
 	}
 
-
-	private void updateMainView() {
-		switch (gameController.game().variant()) {
-		case MS_PACMAN: {
-			stage.setTitle("Ms. Pac-Man (WebFX)");
-			break;
-		}
-		case PACMAN: {
-			stage.setTitle("Pac-Man (WebFX)");
-			break;
-		}
-		default:
-			throw new IllegalGameVariantException(gameController.game().variant());
-		}
+	private String stageTitle() {
+		return game().variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man (WebFX)" : "Pac-Man (WebFX)";
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		Keyboard.clearState();
-	}
-
-	private void initEnv() {
-		GameApp.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		clock.pausedPy.bind(GameApp.simulationPausedPy);
-		clock.targetFrameratePy.bind(GameApp.simulationSpeedPy);
 	}
 
 	private GameScene2D sceneMatchingCurrentGameState() {
@@ -271,19 +245,17 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void updateGameScene(boolean reload) {
-		var nextGameScene = sceneMatchingCurrentGameState();
-		if (nextGameScene == null) {
+		var scenes = sceneConfig.get(game().variant());
+		var gameScene = sceneMatchingCurrentGameState();
+		if (gameScene == null) {
 			throw new IllegalStateException("No game scene found for game state " + gameController.state());
 		}
-		if (reload || nextGameScene != currentGameScene) {
-			changeGameScene(nextGameScene);
+		if (reload || gameScene != currentGameScene) {
+			changeGameScene(gameScene);
 		}
-		updateMainView();
-		var scenes = sceneConfig.get(game().variant());
-		nextGameScene.setHelpButtonStyle(game().variant());
-		boolean visible = nextGameScene != scenes.bootScene();
-		nextGameScene.helpButton().setVisible(visible);
-		Logger.info("Help visible: " + visible);
+		stage.setTitle(stageTitle());
+		gameScene.setHelpButtonStyle(game().variant());
+		gameScene.helpButton().setVisible(gameScene != scenes.bootScene());
 	}
 
 	private void changeGameScene(GameScene2D nextGameScene) {
@@ -295,8 +267,8 @@ public class GameUI implements GameEventListener {
 		nextGameScene.init();
 		layers.set(LAYER_GAME_SCENE, nextGameScene.root());
 		rebuildMainSceneLayers();
-		nextGameScene.onEmbedIntoParentScene(mainScene());
-		csHelp.clear(nextGameScene);
+		nextGameScene.onEmbedIntoParent(root);
+		gameSceneHelp.clear(nextGameScene);
 		currentGameScene = nextGameScene;
 	}
 
@@ -479,10 +451,6 @@ public class GameUI implements GameEventListener {
 
 	public GameModel game() {
 		return gameController.game();
-	}
-
-	public Scene mainScene() {
-		return stage.getScene();
 	}
 
 	public GameScene2D currentGameScene() {
