@@ -24,13 +24,13 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,7 +55,7 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameScene {
+public abstract class GameScene2D implements GameEventListener {
 
 	private static final float WIDTH = World.TILES_X * TS;
 	private static final float HEIGHT = World.TILES_Y * TS;
@@ -101,12 +101,26 @@ public abstract class GameScene2D implements GameScene {
 		root.setCenter(layers);
 	}
 
-	@Override
+	public void init() {
+		// empty default
+	}
+
+	public void update() {
+		// empty default
+	}
+
+	public void end() {
+		// empty default
+	}
+
+	public void handleKeyboardInput() {
+		// empty default
+	}
+
 	public GameSceneContext context() {
 		return context;
 	}
 
-	@Override
 	public Node root() {
 		return root;
 	}
@@ -135,19 +149,14 @@ public abstract class GameScene2D implements GameScene {
 		overlay.getChildren().add(helpButton);
 	}
 
-	@Override
+	//TODO rework
 	public void onEmbedIntoParentScene(Scene parentScene) {
 		resize(parentScene.getHeight());
 	}
 
-	@Override
+	//TODO rework
 	public void onParentSceneResize(Scene parentScene) {
 		resize(parentScene.getHeight());
-	}
-
-	@Override
-	public boolean is3D() {
-		return false;
 	}
 
 	/**
@@ -164,7 +173,6 @@ public abstract class GameScene2D implements GameScene {
 		root.setMaxSize(width, height);
 	}
 
-	@Override
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		var r = context.rendering2D();

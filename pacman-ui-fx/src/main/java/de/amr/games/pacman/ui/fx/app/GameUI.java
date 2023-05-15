@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
@@ -82,7 +81,7 @@ public class GameUI implements GameEventListener {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final GameHelp csHelp;
 	private GreetingPane greetingPane;
-	private GameScene currentGameScene;
+	private GameScene2D currentGameScene;
 	private AudioClip currentVoiceMessage;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController) {
@@ -489,7 +488,7 @@ public class GameUI implements GameEventListener {
 		return stage.getScene();
 	}
 
-	public GameScene currentGameScene() {
+	public GameScene2D currentGameScene() {
 		return currentGameScene;
 	}
 

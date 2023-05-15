@@ -25,12 +25,10 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.GameActions;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -38,12 +36,9 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -117,30 +112,6 @@ public class PlayScene2D extends GameScene2D {
 				r.drawLivesCounter(g, lives);
 			}
 			drawLevelCounter(g);
-		});
-	}
-
-	@Override
-	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, World.TILES_X, World.TILES_Y);
-		context.level().ifPresent(level -> {
-			level.upwardsBlockedTiles().forEach(tile -> {
-				g.setFill(Color.RED);
-				g.fillOval(tile.x() * TS, (tile.y() - 1) * TS, TS, TS);
-				g.setFill(Color.WHITE);
-				g.fillRect(tile.x() * TS + 1, tile.y() * TS - HTS - 1, TS - 2, 2);
-			});
-		});
-	}
-
-	@Override
-	public void onSceneVariantSwitch() {
-		context.level().ifPresent(level -> {
-			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
-			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
-			if (!level.isDemoLevel()) {
-				context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
-			}
 		});
 	}
 
