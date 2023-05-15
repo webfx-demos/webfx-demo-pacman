@@ -72,8 +72,8 @@ public abstract class GameScene2D implements GameEventListener {
 
 		root = new BorderPane();
 		// separate from edges
-		root.setScaleX(0.98);
-		root.setScaleY(0.98);
+		root.setScaleX(0.9);
+		root.setScaleY(0.9);
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
 			canvas.setScaleX(scaling);
@@ -204,7 +204,6 @@ public abstract class GameScene2D implements GameEventListener {
 	}
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
-		var r = context.rendering2D();
-		drawText(g, "© 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
+		drawText(g, "© 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, GameApp.assets.arcadeFont, TS * tileX, TS * tileY);
 	}
 }
