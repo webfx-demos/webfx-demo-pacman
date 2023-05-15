@@ -126,7 +126,7 @@ public class GameAssets {
 	public void load() {
 		arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
 		handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
-		helpFont = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 16);
+		helpFont = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 
 		messageBundle = Manager.loadBundle();
 

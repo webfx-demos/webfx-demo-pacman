@@ -55,7 +55,7 @@ public class PacManIntroScene extends GameScene2D {
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
 		double dy = UserAgent.isBrowser() ? -0.5 : 0; // TODO workaround for GWT
-		signature.add(overlay, 4.0 * TS, (33.5 + dy) * TS);
+		signature.add(overlay, 4.0 * TS, (33.0 + dy) * TS);
 	}
 
 	@Override

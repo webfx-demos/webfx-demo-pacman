@@ -29,14 +29,11 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import dev.webfx.platform.useragent.UserAgent;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -118,16 +115,6 @@ public class GameHelp {
 		return pane;
 	}
 
-	//TODO silly workaround for missing grid gaps in GWT
-	private Node padded(Text text) {
-		if (UserAgent.isBrowser()) {
-			var pane = new HBox(text);
-			pane.setPadding(new Insets(3,0,3,0));
-			return pane;
-		}
-		return text;
-	}
-
 	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
 
@@ -136,27 +123,23 @@ public class GameHelp {
 		grid.setVgap(10);
 
 		for (int row = 0; row < menu.column0.size(); ++row) {
-			grid.add(padded( menu.column0.get(row)), 0, row);
-			grid.add(padded(menu.column1.get(row)), 1, row);
+			grid.add(menu.column0.get(row), 0, row);
+			grid.add(menu.column1.get(row), 1, row);
 		}
 		int rowIndex = menu.size();
 		if (gameController.isAutoControlled()) {
 			var text = text(tt("help.autopilot_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(padded(text), 0, rowIndex++);
+			grid.add(text, 0, rowIndex++);
 		}
 		if (gameController.game().isImmune()) {
 			var text = text(tt("help.immunity_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(padded(text), 0, rowIndex++);
+			grid.add(text, 0, rowIndex++);
 		}
 
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		if (UserAgent.isBrowser()) {
-			//TODO remove this
-			grid.setTranslateY(-8);
-		}
 
 		var bgColor = game().variant() == GameVariant.MS_PACMAN
 				? Color.rgb(255, 0, 0, 0.8)

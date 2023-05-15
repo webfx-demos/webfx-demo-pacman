@@ -254,7 +254,6 @@ public class GameUI implements GameEventListener {
 			changeGameScene(gameScene);
 		}
 		stage.setTitle(stageTitle());
-		gameScene.setHelpButtonStyle(game().variant());
 		gameScene.helpButton().setVisible(gameScene != scenes.bootScene());
 	}
 

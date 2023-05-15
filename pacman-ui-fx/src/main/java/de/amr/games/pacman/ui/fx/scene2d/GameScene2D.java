@@ -32,14 +32,12 @@ import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
@@ -57,44 +55,59 @@ public abstract class GameScene2D implements GameEventListener {
 	private static final float WIDTH = World.TILES_X * TS;
 	private static final float HEIGHT = World.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
+	private static final Color UNDERLAY_COLOR = Color.rgb(248, 249, 249);
 
 	protected final GameSceneContext context;
-	protected final BorderPane root;
+	protected final BorderPane root = new BorderPane();
 	protected final StackPane layers = new StackPane();
+	protected final Pane underlay = new BorderPane();
 	protected final Canvas canvas = new Canvas();
-	protected final Pane overlay = new BorderPane();
-	protected final VBox helpRoot = new VBox();
+	protected final Pane overlay = new Pane();
+
+	protected final VBox helpPanelContainer = new VBox();
 	protected ImageView helpButton;
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
-		root = new BorderPane();
-		// separate from edges
-		root.setScaleX(0.9);
-		root.setScaleY(0.9);
+		root.setScaleY(0.99);
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
-			canvas.setScaleX(scaling);
-			canvas.setScaleY(scaling);
+			canvas.setScaleX(0.95 * scaling);
+			canvas.setScaleY(0.95 * scaling);
 			// don't ask me why this works but setScaleX/Y doesn't
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
 
+		underlay.setBackground(ResourceManager.colorBackgroundRounded(UNDERLAY_COLOR, 10));
+
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
-		helpRoot.setTranslateX(16);
-		helpRoot.setTranslateY(16);
+		helpPanelContainer.setTranslateX(15);
+		helpPanelContainer.setTranslateY(18);
 
-		// TODO: Graphic button rendering is broken in GWT
-		setHelpButtonStyle(GameVariant.PACMAN);
+		overlay.setMouseTransparent(true);
+		overlay.getChildren().add(helpPanelContainer);
 
-		overlay.getChildren().add(helpRoot);
-
-		layers.getChildren().addAll(canvas, overlay);
+		layers.getChildren().addAll(underlay, canvas, overlay);
 		root.setCenter(layers);
+
+
+		insertHelpButton(GameVariant.PACMAN);
+	}
+
+	// TODO: Graphic button rendering is broken in GWT
+	private void insertHelpButton(GameVariant variant) {
+		helpButton = new ImageView( GameApp.assets.helpIconMsPacManGame);
+		helpButton.setTranslateX(-34);
+		helpButton.setTranslateY(2);
+		helpButton.setPreserveRatio(true);
+		helpButton.setFitHeight(32);
+		helpButton.setFitWidth(32);
+		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
+		underlay.getChildren().add(helpButton);
 	}
 
 	public void init() {
@@ -122,29 +135,11 @@ public abstract class GameScene2D implements GameEventListener {
 	}
 
 	public VBox helpRoot() {
-		return helpRoot;
+		return helpPanelContainer;
 	}
 
 	public ImageView helpButton() {
 		return helpButton;
-	}
-
-	public void setHelpButtonStyle(GameVariant variant) {
-		if (helpButton != null) {
-			overlay.getChildren().remove(helpButton);
-		}
-
-		helpButton = new ImageView(variant == GameVariant.MS_PACMAN
-			? GameApp.assets.helpIconMsPacManGame
-			: GameApp.assets.helpIconPacManGame);
-		helpButton.setTranslateX(4);
-		helpButton.setTranslateY(4);
-		helpButton.setPreserveRatio(true);
-		helpButton.setFitHeight(12);
-		helpButton.setFitWidth(12);
-		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
-
-		overlay.getChildren().add(helpButton);
 	}
 
 	public void onEmbedIntoParent(Pane parent) {
@@ -172,13 +167,11 @@ public abstract class GameScene2D implements GameEventListener {
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		var r = context.rendering2D();
-
 		double w = canvas.getWidth();
 		double h = canvas.getHeight();
-		g.setFill(GameApp.assets.wallpaperColor);
-		g.fillRect(0, 0, w, h);
+
 		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, w, h, 20, 20);
+		g.fillRect(0, 0, w, h);
 
 		var color = ArcadeTheme.PALE;
 		var font = r.screenFont(TS);
