@@ -99,15 +99,15 @@ public class GameAssets {
 	public Image wallpaper;
 	public Color wallpaperColor = Color.rgb(0, 76, 149);
 
+	public Image helpIcon;
+
 	public Image iconPacManGame;
-	public Image helpIconPacManGame;
 	public Spritesheet spritesheetPacManGame;
 	public Image fullMazePacManGame;
 	public Image emptyMazePacManGame;
 	public Image flashingMazePacManGame;
 
 	public Image iconMsPacManGame;
-	public Image helpIconMsPacManGame;
 	public Spritesheet spritesheetMsPacManGame;
 	public Image logoMsPacManGame;
 	public Image flashingMazesMsPacManGame;
@@ -133,15 +133,15 @@ public class GameAssets {
 		greetingPaneWallpaper = Manager.image("graphics/mspacman/wallpaper-midway.png");
 		wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
+		helpIcon = Manager.image("graphics/icons/help-red-64.png");
+
 		iconPacManGame = Manager.image("graphics/icons/pacman.png");
-		helpIconPacManGame = Manager.image("graphics/icons/help-blue-64.png");
 		spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
 		fullMazePacManGame = Manager.image("graphics/pacman/maze_full.png");
 		emptyMazePacManGame = Manager.image("graphics/pacman/maze_empty.png");
 		flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
 		iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
-		helpIconMsPacManGame = Manager.image("graphics/icons/help-red-64.png");
 		spritesheetMsPacManGame = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
 		flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
 		logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");

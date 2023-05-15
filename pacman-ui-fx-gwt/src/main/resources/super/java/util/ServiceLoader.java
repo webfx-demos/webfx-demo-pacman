@@ -1,9 +1,8 @@
 // File managed by WebFX (DO NOT EDIT MANUALLY)
 package java.util;
 
+import java.util.Iterator;
 import java.util.logging.Logger;
-
-import de.amr.games.pacman.ui.fx.app.GameApp;
 import dev.webfx.platform.util.function.Factory;
 
 public class ServiceLoader<S> implements Iterable<S> {
@@ -26,7 +25,7 @@ public class ServiceLoader<S> implements Iterable<S> {
             case "dev.webfx.platform.storage.spi.SessionStorageProvider": return new ServiceLoader<S>(dev.webfx.platform.storage.spi.impl.gwt.GwtSessionStorageProvider::new);
             case "dev.webfx.platform.uischeduler.spi.UiSchedulerProvider": return new ServiceLoader<S>(dev.webfx.platform.uischeduler.spi.impl.gwt.GwtUiSchedulerProvider::new);
             case "dev.webfx.platform.useragent.spi.UserAgentProvider": return new ServiceLoader<S>(dev.webfx.platform.useragent.spi.impl.gwt.GwtUserAgentProvider::new);
-            case "javafx.application.Application": return new ServiceLoader<S>(GameApp::new);
+            case "javafx.application.Application": return new ServiceLoader<S>(de.amr.games.pacman.ui.fx.app.GameApp::new);
 
             // UNKNOWN SPI
             default:

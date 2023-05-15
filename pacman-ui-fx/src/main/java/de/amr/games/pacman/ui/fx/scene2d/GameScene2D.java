@@ -33,11 +33,15 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
@@ -71,7 +75,9 @@ public abstract class GameScene2D implements GameEventListener {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
+		root.setScaleX(0.99);
 		root.setScaleY(0.99);
+
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
 			canvas.setScaleX(0.95 * scaling);
@@ -100,13 +106,14 @@ public abstract class GameScene2D implements GameEventListener {
 
 	// TODO: Graphic button rendering is broken in GWT
 	private void insertHelpButton(GameVariant variant) {
-		helpButton = new ImageView( GameApp.assets.helpIconMsPacManGame);
-		helpButton.setTranslateX(-34);
-		helpButton.setTranslateY(2);
+		helpButton = new ImageView(GameApp.assets.helpIcon);
+		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
 		helpButton.setPreserveRatio(true);
 		helpButton.setFitHeight(32);
 		helpButton.setFitWidth(32);
-		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
+		helpButton.setCursor(Cursor.HAND);
+		helpButton.setTranslateX(-34);
+		helpButton.setTranslateY(2);
 		underlay.getChildren().add(helpButton);
 	}
 
@@ -176,8 +183,8 @@ public abstract class GameScene2D implements GameEventListener {
 		var color = ArcadeTheme.PALE;
 		var font = r.screenFont(TS);
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS*3, TS));
-			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
+			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
+			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 13, TS));
 			if (context.isCreditVisible()) {
 				Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);
 			}
