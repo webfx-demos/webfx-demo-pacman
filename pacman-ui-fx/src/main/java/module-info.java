@@ -13,6 +13,7 @@ module pacman.ui.fx {
     requires webfx.platform.resource;
     requires webfx.platform.useragent;
     requires webfx.platform.util;
+    requires webfx.platform.windowlocation;
 
     // Exported packages
     exports de.amr.games.pacman.ui.fx.app;

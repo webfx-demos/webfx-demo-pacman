@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -41,6 +42,9 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 
@@ -109,15 +113,62 @@ public class GameApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
-		var gameController = new GameController(GameVariant.MS_PACMAN);
+		var gameVariant = getGameVariantFromQuery().orElse(GameVariant.MS_PACMAN);
+		var gameController = new GameController(gameVariant);
 		GameApp.ui = new GameUI(primaryStage, settings, gameController);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
+	}
+
+	private static Optional<GameVariant> getGameVariantFromQuery() {
+		if (UserAgent.isBrowser()) {
+			var query = dev.webfx.platform.windowlocation.WindowLocation.getQueryString();
+			//var query = "x=1&y=2&game=mspacman&z=3";
+			Map<String, String> parameterMap = Collections.emptyMap();
+			if (query != null && !query.isEmpty()) {
+				parameterMap = parseQueryParameters(query);
+			}
+			if (parameterMap.containsKey("game")) {
+				var value = parameterMap.get("game");
+				if ("pacman".equals(value)) {
+					return Optional.of(GameVariant.PACMAN);
+				} else if ("mspacman".equals(value)) {
+					return Optional.of(GameVariant.MS_PACMAN);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	// Quick-and-dirty implementation
+	public static Map<String, String> parseQueryParameters(String query) {
+		var map = new HashMap<String, String>();
+		String[] params = query.split("&");
+		for (var p : params) {
+			String[] keyValue = p.split("=", 2);
+			String key = "";
+			String value = "";
+			if (keyValue.length >= 1) {
+				//TODO URLDecoder not available in GWT?
+				// key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+				key = keyValue[0];
+			}
+			if (keyValue.length >= 2) {
+				//TODO URLDecoder not available in GWT?
+				// value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+				value = keyValue[1];
+			}
+			if (!key.isEmpty()) {
+				map.put(key, value);
+			}
+		}
+		return map;
 	}
 
 	@Override
 	public void stop() {
 		GameApp.ui.clock().stop();
 	}
+
 
 	// --- Actions
 

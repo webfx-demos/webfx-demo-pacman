@@ -8,6 +8,7 @@ module pacman.ui.fx.gluon {
     requires webfx.kit.openjfx;
     requires webfx.platform.boot.java;
     requires webfx.platform.console.java;
+    requires webfx.platform.json.java;
     requires webfx.platform.os.gluon;
     requires webfx.platform.resource.gluon;
     requires webfx.platform.scheduler.java;
@@ -16,6 +17,8 @@ module pacman.ui.fx.gluon {
     requires webfx.platform.storagelocation.gluon;
     requires webfx.platform.useragent.gluon;
     requires webfx.platform.visibility.gluon;
+    requires webfx.platform.windowhistory.java;
+    requires webfx.platform.windowlocation.java;
 
     // Meta Resource package
     opens dev.webfx.platform.meta.exe;

@@ -219,6 +219,13 @@
     <source path="dev/webfx/platform/util/serviceloader"/>
     <source path="dev/webfx/platform/util/tuples"/>
     <source path="dev/webfx/platform/util/uuid"/>
+    <!--=========================< webfx-platform-windowlocation >==========================-->
+    <source path="dev/webfx/platform/windowlocation"/>
+    <source path="dev/webfx/platform/windowlocation/spi"/>
+    <source path="dev/webfx/platform/windowlocation/spi/impl"/>
+    <!--=======================< webfx-platform-windowlocation-gwt >========================-->
+    <source path="dev/webfx/platform/windowlocation/spi/impl/gwt"/>
+    <source path="dev/webfx/platform/windowlocation/spi/impl/gwt/jsinterop"/>
     <set-property name="user.agent" value="safari"/> <!-- to speed up GWT compilation - this single permutation is now working ok in all modern browsers -->
     <set-configuration-property name="user.agent.runtimeWarning" value="false"/> <!-- removing irrelevant warning in other browsers -->
     <set-property name="jre.checks.checkLevel" value="MINIMAL"/> <!-- to speed up execution time -->

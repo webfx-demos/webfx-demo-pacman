@@ -35,6 +35,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +66,6 @@ public class ResourceManager {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
-
 
 	private String rootDir = "/";
 	private final ArrayList<Image> loadedImages = new ArrayList<>();
