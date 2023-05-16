@@ -56,9 +56,9 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameApp.ADD_CREDIT) || Keyboard.pressed(GameApp.ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.pressed(GameApp.KEY_ADD_CREDIT) || Keyboard.pressed(GameApp.KEY_ADD_CREDIT_NUMPAD)) {
 			GameApp.app.addCredit();
-		} else if (Keyboard.pressed(GameApp.START_GAME) || Keyboard.pressed(GameApp.START_GAME_NUMPAD)) {
+		} else if (Keyboard.pressed(GameApp.KEY_START_GAME) || Keyboard.pressed(GameApp.KEY_START_GAME_NUMPAD)) {
 			GameApp.app.startGame();
 		}
 	}

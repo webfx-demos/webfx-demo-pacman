@@ -52,17 +52,17 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameApp.ADD_CREDIT) || Keyboard.pressed(GameApp.ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.pressed(GameApp.KEY_ADD_CREDIT) || Keyboard.pressed(GameApp.KEY_ADD_CREDIT_NUMPAD)) {
 			if (!context().hasCredit()) {
 				GameApp.app.addCredit();
 			}
-		} else if (Keyboard.pressed(GameApp.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(GameApp.KEY_CHEAT_EAT_ALL)) {
 			GameApp.app.cheatEatAllPellets();
-		} else if (Keyboard.pressed(GameApp.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(GameApp.KEY_CHEAT_ADD_LIVES)) {
 			GameApp.app.cheatAddLives(3);
-		} else if (Keyboard.pressed(GameApp.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(GameApp.KEY_CHEAT_NEXT_LEVEL)) {
 			GameApp.app.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(GameApp.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(GameApp.KEY_CHEAT_KILL_GHOSTS)) {
 			GameApp.app.cheatKillAllEatableGhosts();
 		}
 	}
