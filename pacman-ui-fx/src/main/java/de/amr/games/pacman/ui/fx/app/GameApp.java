@@ -62,36 +62,36 @@ public class GameApp extends Application {
 	}
 
 	// Game control
-	public static final KeyCodeCombination KEY_HELP = just(KeyCode.H);
-	public static final KeyCodeCombination KEY_BOOT = just(KeyCode.F3);
-	public static final KeyCodeCombination KEY_QUIT = just(KeyCode.Q);
+	public static final KeyCodeCombination KEY_HELP                = just(KeyCode.H);
+	public static final KeyCodeCombination KEY_BOOT                = just(KeyCode.F3);
+	public static final KeyCodeCombination KEY_QUIT                = just(KeyCode.Q);
 	public static final KeyCodeCombination KEY_CHANGE_GAME_VARIANT = just(KeyCode.V);
-	public static final KeyCodeCombination KEY_ADD_CREDIT = just(KeyCode.DIGIT5);
-	public static final KeyCodeCombination KEY_ADD_CREDIT_NUMPAD = just(KeyCode.NUMPAD5);
-	public static final KeyCodeCombination KEY_START_GAME = just(KeyCode.DIGIT1);
-	public static final KeyCodeCombination KEY_START_GAME_NUMPAD = just(KeyCode.NUMPAD1);
+	public static final KeyCodeCombination KEY_ADD_CREDIT          = just(KeyCode.DIGIT5);
+	public static final KeyCodeCombination KEY_ADD_CREDIT_NUMPAD   = just(KeyCode.NUMPAD5);
+	public static final KeyCodeCombination KEY_START_GAME          = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination KEY_START_GAME_NUMPAD   = just(KeyCode.NUMPAD1);
 
 	// Pac-Man control
-	public static final KeyCodeCombination KEY_AUTOPILOT = altShift(KeyCode.A);
-	public static final KeyCodeCombination KEY_IMMUNITY = altShift(KeyCode.I);
+	public static final KeyCodeCombination KEY_AUTOPILOT           = altShift(KeyCode.A);
+	public static final KeyCodeCombination KEY_IMMUNITY            = altShift(KeyCode.I);
 
 	// Cheats (only available while game is playing)
-	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL = altShift(KeyCode.E);
-	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES = altShift(KeyCode.L);
-	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
-	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = altShift(KeyCode.X);
+	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL       = altShift(KeyCode.E);
+	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES     = altShift(KeyCode.L);
+	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL    = altShift(KeyCode.N);
+	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS   = altShift(KeyCode.X);
 
 	// Test modes (available from intro scenes)q
-	public static final KeyCodeCombination KEY_TEST_LEVELS = altShift(KeyCode.T);
-	public static final KeyCodeCombination KEY_TEST_CUTSCENES = altShift(KeyCode.C);
+	public static final KeyCodeCombination KEY_TEST_LEVELS         = altShift(KeyCode.T);
+	public static final KeyCodeCombination KEY_TEST_CUTSCENES      = altShift(KeyCode.C);
 
 	// Game loop control keys
-	public static final KeyCodeCombination KEY_PAUSE = just(KeyCode.P);
-	public static final KeyCodeCombination KEY_SINGLE_STEP = just(KeyCode.SPACE);
-	public static final KeyCodeCombination KEY_TEN_STEPS = just(KeyCode.T);
-	public static final KeyCodeCombination KEY_SIMULATION_FASTER = altShift(KeyCode.F);
-	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = altShift(KeyCode.S);
-	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = altShift(KeyCode.DIGIT0);
+	public static final KeyCodeCombination KEY_PAUSE               = just(KeyCode.P);
+	public static final KeyCodeCombination KEY_SINGLE_STEP         = just(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_TEN_STEPS           = just(KeyCode.T);
+	public static final KeyCodeCombination KEY_SIMULATION_FASTER   = altShift(KeyCode.F);
+	public static final KeyCodeCombination KEY_SIMULATION_SLOWER   = altShift(KeyCode.S);
+	public static final KeyCodeCombination KEY_SIMULATION_NORMAL   = altShift(KeyCode.DIGIT0);
 
 	public static void main(String[] args) {
 		launch(args);
