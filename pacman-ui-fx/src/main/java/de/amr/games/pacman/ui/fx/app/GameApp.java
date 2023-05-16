@@ -104,21 +104,6 @@ public class GameApp extends Application {
 	public static GameAssets assets;
 	public static GameUI ui;
 
-	@Override
-	public void init() {
-		app = this;
-		assets = new GameAssets();
-	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		var settings = new Settings(Collections.emptyMap()); // no command-line args used
-		var gameVariant = getGameVariantFromQuery().orElse(GameVariant.MS_PACMAN);
-		var gameController = new GameController(gameVariant);
-		GameApp.ui = new GameUI(primaryStage, settings, gameController);
-		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
-	}
-
 	private static Optional<GameVariant> getGameVariantFromQuery() {
 		if (UserAgent.isBrowser()) {
 			var query = dev.webfx.platform.windowlocation.WindowLocation.getQueryString();
@@ -165,20 +150,33 @@ public class GameApp extends Application {
 	}
 
 	@Override
-	public void stop() {
-		GameApp.ui.clock().stop();
+	public void init() {
+		app = this;
+		assets = new GameAssets();
 	}
 
+	@Override
+	public void start(Stage primaryStage) {
+		var settings = new Settings(Collections.emptyMap()); // no command-line args used
+		var gameVariant = getGameVariantFromQuery().orElse(GameVariant.MS_PACMAN);
+		var gameController = new GameController(gameVariant);
+		ui = new GameUI(primaryStage, settings, gameController);
+		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
+	}
 
-	// --- Actions
+	@Override
+	public void stop() {
+		ui.clock().stop();
+	}
 
+	// --- Actions ---
 
 	public void showHelp() {
 		ui.showHelp();
 	}
 
 	public void playHelpVoiceMessageAfterSeconds(int seconds) {
-		Ufx.afterSeconds(seconds, () -> ui.playVoiceMessage(GameApp.assets.voiceHelp)).play();
+		Ufx.afterSeconds(seconds, () -> ui.playVoiceMessage(assets.voiceHelp)).play();
 	}
 
 	public void showFlashMessage(String message, Object... args) {
@@ -224,21 +222,21 @@ public class GameApp extends Application {
 	}
 
 	public void togglePaused() {
-		Ufx.toggle(GameApp.simulationPausedPy);
+		Ufx.toggle(simulationPausedPy);
 		// TODO mute and unmute?
-		if (GameApp.simulationPausedPy.get()) {
-			GameApp.assets.gameSounds.get(ui.game().variant()).stopAll();
+		if (simulationPausedPy.get()) {
+			assets.gameSounds.get(ui.game().variant()).stopAll();
 		}
 	}
 
 	public void oneSimulationStep() {
-		if (GameApp.simulationPausedPy.get()) {
+		if (simulationPausedPy.get()) {
 			ui.clock().executeSingleStep(true);
 		}
 	}
 
 	public void tenSimulationSteps() {
-		if (GameApp.simulationPausedPy.get()) {
+		if (simulationPausedPy.get()) {
 			ui.clock().executeSteps(10, true);
 		}
 	}
@@ -246,14 +244,14 @@ public class GameApp extends Application {
 	public void changeSimulationSpeed(int delta) {
 		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			GameApp.simulationSpeedPy.set(newFramerate);
+			simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, newFramerate + "Hz");
 		}
 	}
 
 	public void resetSimulationSpeed() {
-		GameApp.simulationSpeedPy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, GameApp.simulationSpeedPy.get() + "Hz");
+		simulationSpeedPy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, simulationSpeedPy.get() + "Hz");
 	}
 
 	public void selectNextGameVariant() {
@@ -265,17 +263,17 @@ public class GameApp extends Application {
 	public void toggleAutopilot() {
 		ui.gameController().toggleAutoControlled();
 		var autoPilotOn = ui.gameController().isAutoControlled();
-		String message = GameApp.assets.message(autoPilotOn ? "autopilot_on" : "autopilot_off");
+		String message = assets.message(autoPilotOn ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		ui.playVoiceMessage(autoPilotOn ? GameApp.assets.voiceAutopilotOn : GameApp.assets.voiceAutoPilotOff);
+		ui.playVoiceMessage(autoPilotOn ? assets.voiceAutopilotOn : assets.voiceAutoPilotOff);
 	}
 
 	public void toggleImmunity() {
 		ui.game().setImmune(!ui.game().isImmune());
 		var immune = ui.game().isImmune();
-		String message = GameApp.assets.message(immune ? "player_immunity_on" : "player_immunity_off");
+		String message = assets.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		ui.playVoiceMessage(immune ? GameApp.assets.voiceImmunityOn : GameApp.assets.voiceImmunityOff);
+		ui.playVoiceMessage(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
 	}
 
 	public void startLevelTestMode() {
@@ -288,7 +286,7 @@ public class GameApp extends Application {
 	public void cheatAddLives(int numLives) {
 		if (ui.game().isPlaying()) {
 			ui.game().setLives(numLives + ui.game().lives());
-			showFlashMessage(GameApp.assets.message("cheat_add_lives", ui.game().lives()));
+			showFlashMessage(assets.message("cheat_add_lives", ui.game().lives()));
 		}
 	}
 
