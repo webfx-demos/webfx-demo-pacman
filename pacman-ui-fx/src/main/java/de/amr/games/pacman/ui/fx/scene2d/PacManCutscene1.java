@@ -129,6 +129,5 @@ public class PacManCutscene1 extends GameScene2D {
 	public void drawScene(GraphicsContext g) {
 		context.rendering2D().drawPac(g, pac);
 		context.rendering2D().drawGhost(g, blinky);
-		drawLevelCounter(g);
 	}
 }

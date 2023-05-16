@@ -67,8 +67,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameUI implements GameEventListener {
 
-	private static final byte TILES_X = 28;
-	private static final byte TILES_Y = 36;
+	public static final byte TILES_X = 28;
+	public static final byte TILES_Y = 36;
 
 	private static final int LAYER_GAME_SCENE = 0;
 

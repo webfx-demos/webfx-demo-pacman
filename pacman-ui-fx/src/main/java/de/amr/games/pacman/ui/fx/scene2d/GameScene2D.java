@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
@@ -56,21 +55,21 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
  */
 public abstract class GameScene2D implements GameEventListener {
 
-	public static final float WIDTH = World.TILES_X * TS;
-	public static final float HEIGHT = World.TILES_Y * TS;
+	public static final float WIDTH  = 28 * 8;
+	public static final float HEIGHT = 36 * 8;
 	public static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
 	private static final Color UNDERLAY_COLOR = Color.rgb(248, 249, 249);
 
-	protected final GameSceneContext context;
 	protected final BorderPane root = new BorderPane();
 	protected final StackPane layers = new StackPane();
 	protected final Pane underlay = new BorderPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new Pane();
-
 	protected final VBox helpPanelContainer = new VBox();
 	protected ImageView helpButton;
+
+	protected final GameSceneContext context;
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -102,21 +101,12 @@ public abstract class GameScene2D implements GameEventListener {
 		root.setCenter(layers);
 
 		double size = 8;
-		insertHelpButton(size, (WIDTH-size)-1, 1);
+		insertHelpButton(size, WIDTH - size - 1, 1);
 	}
 
-	public double getWidth() {
-		return overlay.getWidth();
-	}
-
-	public double getHeight() {
-		return overlay.getHeight();
-	}
-
-	// TODO: Graphic button rendering is broken in GWT
+	// TODO: Graphic button rendering is broken in GWT, so I use an image with mouse handlers
 	private void insertHelpButton(double size, double x, double y) {
 		helpButton = new ImageView(GameApp.assets.helpIcon);
-		//helpButton.setOnMouseClicked(e -> GameApp.app.showHelp());
 		helpButton.setOnMouseEntered(e -> {
 			helpButton.setImage(GameApp.assets.helpIconHover);
 			GameApp.app.showHelp();
@@ -171,11 +161,6 @@ public abstract class GameScene2D implements GameEventListener {
 		resize(parent.getHeight());
 	}
 
-	/**
-	 * Resizes the game scene to the given height, keeping the aspect ratio.
-	 * 
-	 * @param height new game scene height
-	 */
 	public void resize(double height) {
 		if (height <= 0) {
 			throw new IllegalArgumentException("Scene height must be positive");
@@ -193,17 +178,18 @@ public abstract class GameScene2D implements GameEventListener {
 		} else {
 			drawRoundedCanvasBackground(g, Color.WHITE, Color.BLACK);
 		}
+		var r = context.rendering2D();
+		var color = ArcadeTheme.PALE;
+		var font = r.screenFont(TS);
 		if (context.isScoreVisible()) {
-			var r = context.rendering2D();
-			var color = ArcadeTheme.PALE;
-			var font = r.screenFont(TS);
 			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
 			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 13, TS));
-			if (context.isCreditVisible()) {
-				Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);
-			}
+		}
+		if (context.isCreditVisible()) {
+			Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);
 		}
 		drawScene(g);
+		drawLevelCounter(g);
 	}
 
 	protected void drawRoundedCanvasBackground(GraphicsContext g, Color frameColor, Color canvasColor) {
@@ -222,14 +208,9 @@ public abstract class GameScene2D implements GameEventListener {
 		g.fillRect(0, 0, w, h);
 	}
 
-	/**
-	 * Draws the scene content, e.g. the maze and the guys.
-	 * 
-	 * @param g graphics context
-	 */
 	protected abstract void drawScene(GraphicsContext g);
 
-	protected void drawLevelCounter(GraphicsContext g) {
+	private void drawLevelCounter(GraphicsContext g) {
 		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 

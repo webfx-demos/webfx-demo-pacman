@@ -81,6 +81,5 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		r.drawPac(g, im.context().pacMan);
 		r.drawEntitySprite(g, im.context().stork, flyingStork.animate());
 		r.drawEntitySprite(g, im.context().bag, im.context().bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
-		drawLevelCounter(g);
 	}
 }
