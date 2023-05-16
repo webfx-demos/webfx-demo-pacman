@@ -27,7 +27,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.app.GameActions;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -91,16 +90,16 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameActions.ADD_CREDIT)) {
-			GameApp.actions.addCredit();
-		} else if (Keyboard.pressed(GameActions.START_GAME)) {
-			GameApp.actions.startGame();
-		} else if (Keyboard.pressed(GameActions.CHANGE_GAME_VARIANT)) {
-			GameApp.actions.selectNextGameVariant();
-		} else if (Keyboard.pressed(GameActions.TEST_CUTSCENES)) {
-			GameApp.actions.startCutscenesTest();
-		} else if (Keyboard.pressed(GameActions.TEST_LEVELS)) {
-			GameApp.actions.startLevelTestMode();
+		if (Keyboard.pressed(GameApp.ADD_CREDIT)) {
+			GameApp.app.addCredit();
+		} else if (Keyboard.pressed(GameApp.START_GAME)) {
+			GameApp.app.startGame();
+		} else if (Keyboard.pressed(GameApp.CHANGE_GAME_VARIANT)) {
+			GameApp.app.selectNextGameVariant();
+		} else if (Keyboard.pressed(GameApp.TEST_CUTSCENES)) {
+			GameApp.app.startCutscenesTest();
+		} else if (Keyboard.pressed(GameApp.TEST_LEVELS)) {
+			GameApp.app.startLevelTestMode();
 		}
 	}
 

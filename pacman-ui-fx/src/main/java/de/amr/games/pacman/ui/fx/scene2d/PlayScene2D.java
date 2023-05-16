@@ -29,7 +29,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.app.GameActions;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -53,16 +52,16 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameActions.ADD_CREDIT) && !context.hasCredit()) {
-			GameApp.actions.addCredit();
-		} else if (Keyboard.pressed(GameActions.CHEAT_EAT_ALL)) {
-			GameApp.actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(GameActions.CHEAT_ADD_LIVES)) {
-			GameApp.actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(GameActions.CHEAT_NEXT_LEVEL)) {
-			GameApp.actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(GameActions.CHEAT_KILL_GHOSTS)) {
-			GameApp.actions.cheatKillAllEatableGhosts();
+		if (Keyboard.pressed(GameApp.ADD_CREDIT) && !context.hasCredit()) {
+			GameApp.app.addCredit();
+		} else if (Keyboard.pressed(GameApp.CHEAT_EAT_ALL)) {
+			GameApp.app.cheatEatAllPellets();
+		} else if (Keyboard.pressed(GameApp.CHEAT_ADD_LIVES)) {
+			GameApp.app.cheatAddLives(3);
+		} else if (Keyboard.pressed(GameApp.CHEAT_NEXT_LEVEL)) {
+			GameApp.app.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(GameApp.CHEAT_KILL_GHOSTS)) {
+			GameApp.app.cheatKillAllEatableGhosts();
 		}
 	}
 

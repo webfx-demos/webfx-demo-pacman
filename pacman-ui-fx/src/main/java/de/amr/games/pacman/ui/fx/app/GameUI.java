@@ -170,13 +170,13 @@ public class GameUI implements GameEventListener {
 		layers.remove(greetingPane);
 		rebuildMainSceneLayers();
 		root.setBackground(ResourceManager.imageBackground(GameApp.assets.wallpaper));
-		GameApp.actions.playHelpVoiceMessageAfterSeconds(4);
+		GameApp.app.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
 		startUI();
 	}
 
 	public void startUI() {
-		GameApp.actions.playHelpVoiceMessageAfterSeconds(4);
+		GameApp.app.playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
 		clock.start();
 	}
@@ -272,28 +272,28 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void handleKeyboardInput() {
-		if (Keyboard.pressed(GameActions.HELP)) {
+		if (Keyboard.pressed(GameApp.HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(GameActions.AUTOPILOT)) {
-			GameApp.actions.toggleAutopilot();
-		} else if (Keyboard.pressed(GameActions.BOOT)) {
-			GameApp.actions.reboot();
-		} else if (Keyboard.pressed(GameActions.IMMUNITY)) {
-			GameApp.actions.toggleImmunity();
-		} else if (Keyboard.pressed(GameActions.PAUSE)) {
-			GameApp.actions.togglePaused();
-		} else if (Keyboard.pressed(GameActions.SINGLE_STEP)) {
-			GameApp.actions.oneSimulationStep();
-		} else if (Keyboard.pressed(GameActions.TEN_STEPS)) {
-			GameApp.actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(GameActions.SIMULATION_FASTER)) {
-			GameApp.actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(GameActions.SIMULATION_SLOWER)) {
-			GameApp.actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(GameActions.SIMULATION_NORMAL)) {
-			GameApp.actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(GameActions.QUIT)) {
-			GameApp.actions.restartIntro();
+		} else if (Keyboard.pressed(GameApp.AUTOPILOT)) {
+			GameApp.app.toggleAutopilot();
+		} else if (Keyboard.pressed(GameApp.BOOT)) {
+			GameApp.app.reboot();
+		} else if (Keyboard.pressed(GameApp.IMMUNITY)) {
+			GameApp.app.toggleImmunity();
+		} else if (Keyboard.pressed(GameApp.PAUSE)) {
+			GameApp.app.togglePaused();
+		} else if (Keyboard.pressed(GameApp.SINGLE_STEP)) {
+			GameApp.app.oneSimulationStep();
+		} else if (Keyboard.pressed(GameApp.TEN_STEPS)) {
+			GameApp.app.tenSimulationSteps();
+		} else if (Keyboard.pressed(GameApp.SIMULATION_FASTER)) {
+			GameApp.app.changeSimulationSpeed(5);
+		} else if (Keyboard.pressed(GameApp.SIMULATION_SLOWER)) {
+			GameApp.app.changeSimulationSpeed(-5);
+		} else if (Keyboard.pressed(GameApp.SIMULATION_NORMAL)) {
+			GameApp.app.resetSimulationSpeed();
+		} else if (Keyboard.pressed(GameApp.QUIT)) {
+			GameApp.app.restartIntro();
 		} else if (currentGameScene != null) {
 			currentGameScene.handleKeyboardInput();
 		}

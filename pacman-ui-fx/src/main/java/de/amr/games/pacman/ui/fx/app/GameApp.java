@@ -24,21 +24,69 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.util.Collections;
+
+import static de.amr.games.pacman.controller.GameState.INTRO;
 
 /**
  * @author Armin Reichert
  */
 public class GameApp extends Application {
+
+	private static KeyCodeCombination just(KeyCode code) {
+		return new KeyCodeCombination(code);
+	}
+
+	private static KeyCodeCombination altShift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN);
+	}
+
+	// Game control
+	public static final KeyCodeCombination HELP = just(KeyCode.H);
+	public static final KeyCodeCombination BOOT = just(KeyCode.F3); // does not work, why?
+	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
+	public static final KeyCodeCombination CHANGE_GAME_VARIANT = just(KeyCode.V);
+	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
+	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+
+	// Pac-Man control
+	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);
+	public static final KeyCodeCombination IMMUNITY = altShift(KeyCode.I);
+
+	// Cheats (only available while game is playing)
+	public static final KeyCodeCombination CHEAT_EAT_ALL = altShift(KeyCode.E);
+	public static final KeyCodeCombination CHEAT_ADD_LIVES = altShift(KeyCode.L);
+	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = altShift(KeyCode.N);
+	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = altShift(KeyCode.X);
+
+	// Test modes (available from intro scenes)q
+	public static final KeyCodeCombination TEST_LEVELS = altShift(KeyCode.T);
+	public static final KeyCodeCombination TEST_CUTSCENES = altShift(KeyCode.C);
+
+	// Game loop control keys
+	public static final KeyCodeCombination PAUSE = just(KeyCode.P);
+	public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
+	public static final KeyCodeCombination TEN_STEPS = just(KeyCode.T);
+	public static final KeyCodeCombination SIMULATION_FASTER = altShift(KeyCode.F);
+	public static final KeyCodeCombination SIMULATION_SLOWER = altShift(KeyCode.S);
+	public static final KeyCodeCombination SIMULATION_NORMAL = altShift(KeyCode.DIGIT0);
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -47,12 +95,13 @@ public class GameApp extends Application {
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationSpeedPy  = new SimpleIntegerProperty(60);
 
-	public static GameActions actions;
+	public static GameApp app;
 	public static GameAssets assets;
 	public static GameUI ui;
 
 	@Override
 	public void init() {
+		app = this;
 		assets = new GameAssets();
 		GameApp.assets.load();
 	}
@@ -62,7 +111,6 @@ public class GameApp extends Application {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
 		var gameController = new GameController(GameVariant.MS_PACMAN);
 		GameApp.ui = new GameUI(primaryStage, settings, gameController);
-		GameApp.actions = new GameActions(GameApp.ui);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());
 	}
 
@@ -70,4 +118,141 @@ public class GameApp extends Application {
 	public void stop() {
 		GameApp.ui.clock().stop();
 	}
+
+	// --- Actions
+
+
+	public void showHelp() {
+		ui.showHelp();
+	}
+
+	public void playHelpVoiceMessageAfterSeconds(int seconds) {
+		Ufx.afterSeconds(seconds, () -> ui.playVoiceMessage(GameApp.assets.voiceHelp)).play();
+	}
+
+	public void showFlashMessage(String message, Object... args) {
+		showFlashMessageSeconds(1, message, args);
+	}
+
+	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
+		ui.flashMessageView().showMessage(message/* String.format(message, args) */, seconds);
+	}
+
+	public void startGame() {
+		if (ui.game().hasCredit()) {
+			ui.stopVoiceMessage();
+			ui.gameController().startPlaying();
+		}
+	}
+
+	public void startCutscenesTest() {
+		ui.gameController().startCutscenesTest();
+		showFlashMessage("Cut scenes");
+	}
+
+	public void restartIntro() {
+		ui.currentGameScene().end();
+		GameEvents.setSoundEventsEnabled(true);
+		if (ui.game().isPlaying()) {
+			ui.game().changeCredit(-1);
+		}
+		ui.gameController().restart(INTRO);
+	}
+
+	public void reboot() {
+		if (ui.currentGameScene() != null) {
+			ui.currentGameScene().end();
+		}
+		//playHelpVoiceMessageAfterSeconds(4);
+		ui.gameController().restart(GameState.BOOT);
+	}
+
+	public void addCredit() {
+		GameEvents.setSoundEventsEnabled(true);
+		ui.gameController().addCredit();
+	}
+
+	public void togglePaused() {
+		Ufx.toggle(GameApp.simulationPausedPy);
+		// TODO mute and unmute?
+		if (GameApp.simulationPausedPy.get()) {
+			GameApp.assets.gameSounds(ui.game().variant()).stopAll();
+		}
+	}
+
+	public void oneSimulationStep() {
+		if (GameApp.simulationPausedPy.get()) {
+			ui.clock().executeSingleStep(true);
+		}
+	}
+
+	public void tenSimulationSteps() {
+		if (GameApp.simulationPausedPy.get()) {
+			ui.clock().executeSteps(10, true);
+		}
+	}
+
+	public void changeSimulationSpeed(int delta) {
+		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
+		if (newFramerate > 0 && newFramerate < 120) {
+			GameApp.simulationSpeedPy.set(newFramerate);
+			showFlashMessageSeconds(0.75, newFramerate + "Hz");
+		}
+	}
+
+	public void resetSimulationSpeed() {
+		GameApp.simulationSpeedPy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, GameApp.simulationSpeedPy.get() + "Hz");
+	}
+
+	public void selectNextGameVariant() {
+		var gameVariant = ui.game().variant().next();
+		ui.gameController().selectGameVariant(gameVariant);
+		playHelpVoiceMessageAfterSeconds(4);
+	}
+
+	public void toggleAutopilot() {
+		ui.gameController().toggleAutoControlled();
+		var autoPilotOn = ui.gameController().isAutoControlled();
+		String message = GameApp.assets.message(autoPilotOn ? "autopilot_on" : "autopilot_off");
+		showFlashMessage(message);
+		ui.playVoiceMessage(autoPilotOn ? GameApp.assets.voiceAutopilotOn : GameApp.assets.voiceAutoPilotOff);
+	}
+
+	public void toggleImmunity() {
+		ui.game().setImmune(!ui.game().isImmune());
+		var immune = ui.game().isImmune();
+		String message = GameApp.assets.message(immune ? "player_immunity_on" : "player_immunity_off");
+		showFlashMessage(message);
+		ui.playVoiceMessage(immune ? GameApp.assets.voiceImmunityOn : GameApp.assets.voiceImmunityOff);
+	}
+
+	public void startLevelTestMode() {
+		if (ui.gameController().state() == GameState.INTRO) {
+			ui.gameController().restart(GameState.LEVEL_TEST);
+			showFlashMessage("Level TEST MODE");
+		}
+	}
+
+	public void cheatAddLives(int numLives) {
+		if (ui.game().isPlaying()) {
+			ui.game().setLives(numLives + ui.game().lives());
+			showFlashMessage(GameApp.assets.message("cheat_add_lives", ui.game().lives()));
+		}
+	}
+
+	public void cheatEatAllPellets() {
+		if (ui.game().isPlaying()) {
+			ui.gameController().cheatEatAllPellets();
+		}
+	}
+
+	public void cheatEnterNextLevel() {
+		ui.gameController().cheatEnterNextLevel();
+	}
+
+	public void cheatKillAllEatableGhosts() {
+		ui.gameController().cheatKillAllEatableGhosts();
+	}
+
 }

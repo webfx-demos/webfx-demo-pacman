@@ -107,7 +107,7 @@ public abstract class GameScene2D implements GameEventListener {
 	// TODO: Graphic button rendering is broken in GWT
 	private void insertHelpButton(GameVariant variant) {
 		helpButton = new ImageView(GameApp.assets.helpIcon);
-		helpButton.setOnMouseClicked(e -> GameApp.actions.showHelp());
+		helpButton.setOnMouseClicked(e -> GameApp.app.showHelp());
 		helpButton.setPreserveRatio(true);
 		helpButton.setFitHeight(32);
 		helpButton.setFitWidth(32);

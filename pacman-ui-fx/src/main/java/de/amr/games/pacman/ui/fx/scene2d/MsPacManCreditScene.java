@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.app.GameActions;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -57,10 +56,10 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameActions.ADD_CREDIT)) {
-			GameApp.actions.addCredit();
-		} else if (Keyboard.pressed(GameActions.START_GAME)) {
-			GameApp.actions.startGame();
+		if (Keyboard.pressed(GameApp.ADD_CREDIT)) {
+			GameApp.app.addCredit();
+		} else if (Keyboard.pressed(GameApp.START_GAME)) {
+			GameApp.app.startGame();
 		}
 	}
 
