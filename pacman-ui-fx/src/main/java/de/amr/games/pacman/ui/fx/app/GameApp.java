@@ -67,7 +67,9 @@ public class GameApp extends Application {
 	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
 	public static final KeyCodeCombination CHANGE_GAME_VARIANT = just(KeyCode.V);
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
+	public static final KeyCodeCombination ADD_CREDIT_NUMPAD = just(KeyCode.NUMPAD5);
 	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination START_GAME_NUMPAD = just(KeyCode.NUMPAD1);
 
 	// Pac-Man control
 	public static final KeyCodeCombination AUTOPILOT = altShift(KeyCode.A);

@@ -52,8 +52,10 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(GameApp.ADD_CREDIT) && !context.hasCredit()) {
-			GameApp.app.addCredit();
+		if (Keyboard.pressed(GameApp.ADD_CREDIT) || Keyboard.pressed(GameApp.ADD_CREDIT_NUMPAD)) {
+			if (!context().hasCredit()) {
+				GameApp.app.addCredit();
+			}
 		} else if (Keyboard.pressed(GameApp.CHEAT_EAT_ALL)) {
 			GameApp.app.cheatEatAllPellets();
 		} else if (Keyboard.pressed(GameApp.CHEAT_ADD_LIVES)) {
