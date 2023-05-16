@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -20,7 +21,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class GreetingPane extends BorderPane {
 
-    public GreetingPane(Runnable onClicked) {
+    public GreetingPane(Image greetingImage, Runnable onClicked) {
         var ds = new DropShadow();
         ds.setOffsetY(3.0f);
         ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
@@ -51,7 +52,7 @@ public class GreetingPane extends BorderPane {
         });
 
         var bgImage = new BackgroundImage(
-            GameApp.assets.greetingPaneWallpaper,
+            greetingImage,
             BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,

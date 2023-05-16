@@ -158,7 +158,10 @@ public class GameUI implements GameEventListener {
 
 		boolean showGreeting = true; // UserAgent.isBrowser();
 		if (showGreeting) {
-			greetingPane = new GreetingPane(this::closeGreetingAndStart);
+			var greetingImage = game().variant() == GameVariant.MS_PACMAN
+				? GameApp.assets.greetingMsPacMan
+				: GameApp.assets.greetingPacMan;
+			greetingPane = new GreetingPane(greetingImage, this::closeGreetingAndStart);
 			layers.add(greetingPane);
 			rebuildMainSceneLayers();
 		} else {

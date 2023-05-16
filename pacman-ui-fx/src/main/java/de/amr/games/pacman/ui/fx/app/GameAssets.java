@@ -95,7 +95,8 @@ public class GameAssets {
 	public Font handwritingFont;
 	public Font helpFont;
 
-	public Image greetingPaneWallpaper;
+	public Image greetingMsPacMan;
+	public Image greetingPacMan;
 	public Image wallpaper;
 	public Color wallpaperColor = Color.rgb(0, 76, 149);
 
@@ -131,7 +132,9 @@ public class GameAssets {
 
 		messageBundle = Manager.loadBundle();
 
-		greetingPaneWallpaper = Manager.image("graphics/mspacman/wallpaper-midway.png");
+		greetingMsPacMan = Manager.image("graphics/mspacman/wallpaper-midway.png");
+		greetingPacMan = Manager.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg");
+
 		wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
 		helpIcon = Manager.image("graphics/icons/help-gray-64.png");
