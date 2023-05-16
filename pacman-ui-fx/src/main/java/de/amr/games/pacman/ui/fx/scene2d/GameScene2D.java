@@ -26,13 +26,13 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.GameApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -56,9 +56,10 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
  */
 public abstract class GameScene2D implements GameEventListener {
 
-	private static final float WIDTH = World.TILES_X * TS;
-	private static final float HEIGHT = World.TILES_Y * TS;
-	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
+	public static final float WIDTH = World.TILES_X * TS;
+	public static final float HEIGHT = World.TILES_Y * TS;
+	public static final float ASPECT_RATIO = WIDTH / HEIGHT;
+
 	private static final Color UNDERLAY_COLOR = Color.rgb(248, 249, 249);
 
 	protected final GameSceneContext context;
@@ -80,8 +81,8 @@ public abstract class GameScene2D implements GameEventListener {
 
 		root.heightProperty().addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / HEIGHT;
-			canvas.setScaleX(0.95 * scaling);
-			canvas.setScaleY(0.95 * scaling);
+			canvas.setScaleX(0.93 * scaling);
+			canvas.setScaleY(0.93 * scaling);
 			// don't ask me why this works but setScaleX/Y doesn't
 			overlay.getTransforms().setAll(new Scale(scaling,scaling));
 		});
@@ -91,30 +92,43 @@ public abstract class GameScene2D implements GameEventListener {
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
-		helpPanelContainer.setTranslateX(15);
-		helpPanelContainer.setTranslateY(18);
+		// position where left-top corner of help popup appears
+		helpPanelContainer.setTranslateX(16);
+		helpPanelContainer.setTranslateY(40);
 
-		overlay.setMouseTransparent(true);
 		overlay.getChildren().add(helpPanelContainer);
 
 		layers.getChildren().addAll(underlay, canvas, overlay);
 		root.setCenter(layers);
 
+		double size = 8;
+		insertHelpButton(size, (WIDTH-size)-1, 1);
+	}
 
-		insertHelpButton(GameVariant.PACMAN);
+	public double getWidth() {
+		return overlay.getWidth();
+	}
+
+	public double getHeight() {
+		return overlay.getHeight();
 	}
 
 	// TODO: Graphic button rendering is broken in GWT
-	private void insertHelpButton(GameVariant variant) {
+	private void insertHelpButton(double size, double x, double y) {
 		helpButton = new ImageView(GameApp.assets.helpIcon);
-		helpButton.setOnMouseClicked(e -> GameApp.app.showHelp());
+		//helpButton.setOnMouseClicked(e -> GameApp.app.showHelp());
+		helpButton.setOnMouseEntered(e -> {
+			helpButton.setImage(GameApp.assets.helpIconHover);
+			GameApp.app.showHelp();
+		});
+		helpButton.setOnMouseExited(e -> helpButton.setImage(GameApp.assets.helpIcon));
 		helpButton.setPreserveRatio(true);
-		helpButton.setFitHeight(32);
-		helpButton.setFitWidth(32);
+		helpButton.setFitHeight(size);
+		helpButton.setFitWidth(size);
 		helpButton.setCursor(Cursor.HAND);
-		helpButton.setTranslateX(-34);
-		helpButton.setTranslateY(2);
-		underlay.getChildren().add(helpButton);
+		helpButton.setTranslateX(x);
+		helpButton.setTranslateY(y);
+		overlay.getChildren().add(helpButton);
 	}
 
 	public void init() {
@@ -173,7 +187,12 @@ public abstract class GameScene2D implements GameEventListener {
 
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		drawRoundedCanvasBackground(g);
+		if (UserAgent.isBrowser()) {
+			//TODO in the browser, the rounded corners look like la merde
+			drawCanvasBackground(g);
+		} else {
+			drawRoundedCanvasBackground(g, Color.WHITE, Color.BLACK);
+		}
 		if (context.isScoreVisible()) {
 			var r = context.rendering2D();
 			var color = ArcadeTheme.PALE;
@@ -187,15 +206,20 @@ public abstract class GameScene2D implements GameEventListener {
 		drawScene(g);
 	}
 
-	protected void drawRoundedCanvasBackground(GraphicsContext g) {
+	protected void drawRoundedCanvasBackground(GraphicsContext g, Color frameColor, Color canvasColor) {
 		double w = canvas.getWidth();
 		double h = canvas.getHeight();
-
-		g.setFill(Color.WHITE);
+		g.setFill(frameColor);
 		g.fillRect(0, 0, w, h);
+		g.setFill(canvasColor);
+		g.fillRoundRect(0, 0, w, h, 10, 8);
+	}
 
+	protected void drawCanvasBackground(GraphicsContext g) {
+		double w = canvas.getWidth();
+		double h = canvas.getHeight();
 		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, w, h,10,8);
+		g.fillRect(0, 0, w, h);
 	}
 
 	/**

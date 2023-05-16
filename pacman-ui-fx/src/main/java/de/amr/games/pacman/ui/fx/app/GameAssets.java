@@ -100,6 +100,7 @@ public class GameAssets {
 	public Color wallpaperColor = Color.rgb(0, 76, 149);
 
 	public Image helpIcon;
+	public Image helpIconHover;
 
 	public Image iconPacManGame;
 	public Spritesheet spritesheetPacManGame;
@@ -133,7 +134,8 @@ public class GameAssets {
 		greetingPaneWallpaper = Manager.image("graphics/mspacman/wallpaper-midway.png");
 		wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
-		helpIcon = Manager.image("graphics/icons/help-red-64.png");
+		helpIcon = Manager.image("graphics/icons/help-gray-64.png");
+		helpIconHover = Manager.image("graphics/icons/help-red-64.png");
 
 		iconPacManGame = Manager.image("graphics/icons/pacman.png");
 		spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
