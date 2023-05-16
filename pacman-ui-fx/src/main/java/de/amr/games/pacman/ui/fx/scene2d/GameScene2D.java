@@ -173,16 +173,11 @@ public abstract class GameScene2D implements GameEventListener {
 
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		var r = context.rendering2D();
-		double w = canvas.getWidth();
-		double h = canvas.getHeight();
-
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, w, h);
-
-		var color = ArcadeTheme.PALE;
-		var font = r.screenFont(TS);
+		drawRoundedCanvasBackground(g);
 		if (context.isScoreVisible()) {
+			var r = context.rendering2D();
+			var color = ArcadeTheme.PALE;
+			var font = r.screenFont(TS);
 			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
 			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 13, TS));
 			if (context.isCreditVisible()) {
@@ -190,6 +185,17 @@ public abstract class GameScene2D implements GameEventListener {
 			}
 		}
 		drawScene(g);
+	}
+
+	protected void drawRoundedCanvasBackground(GraphicsContext g) {
+		double w = canvas.getWidth();
+		double h = canvas.getHeight();
+
+		g.setFill(Color.WHITE);
+		g.fillRect(0, 0, w, h);
+
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(0, 0, w, h,10,8);
 	}
 
 	/**
