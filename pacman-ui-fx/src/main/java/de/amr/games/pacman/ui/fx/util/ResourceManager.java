@@ -46,11 +46,44 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class ResourceManager {
 
+	public static Background colorBackground(Color color) {
+		checkNotNull(color);
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static Background colorBackgroundRounded(Color color, double cornerRadius) {
+		checkNotNull(color);
+		return new Background(new BackgroundFill(color, new CornerRadii(cornerRadius), null));
+	}
+
+	public static Background imageBackground(Image image) {
+		return new Background(new BackgroundImage(image, null, null, null, null));
+	}
+
+	public static Color color(Color color, double opacity) {
+		checkNotNull(color);
+		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+	}
+
+
 	private String rootDir = "/";
+	private final ArrayList<Image> loadedImages = new ArrayList<>();
 
 	public ResourceManager(String rootDir) {
 		checkNotNull(rootDir);
 		this.rootDir = rootDir;
+	}
+
+	//TODO improve webfx resource bundle support
+	public Map<String, String> loadBundle() {
+		String messages = Resource.getText(urlFromRelPath("texts/messages.properties")); // Text returned immediately because embed
+		Map<String, String> map = new HashMap<>();
+		for (String line : messages.split("\n")) {
+			int p = line.indexOf('=');
+			if (p > 0 && !line.trim().startsWith("#"))
+				map.put(line.substring(0, p).trim(), line.substring(p + 1).trim());
+		}
+		return map;
 	}
 
 	/**
@@ -88,12 +121,6 @@ public class ResourceManager {
 		return font;
 	}
 
-	private final ArrayList<Image> loadedImages = new ArrayList<>();
-
-	public Image[] getLoadedImages() {
-		return loadedImages.toArray(new Image[0]);
-	}
-
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return image loaded from resource addressed by this path.
@@ -104,43 +131,7 @@ public class ResourceManager {
 		return image;
 	}
 
-	public static Background colorBackground(Color color) {
-		checkNotNull(color);
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
-	public static Background colorBackgroundRounded(Color color, double cornerRadius) {
-		checkNotNull(color);
-		return new Background(new BackgroundFill(color, new CornerRadii(cornerRadius), null));
-	}
-
-	public static Background imageBackground(Image image) {
-		return new Background(new BackgroundImage(image, null, null, null, null));
-	}
-
-	public static Color color(Color color, double opacity) {
-		checkNotNull(color);
-		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-	}
-
-	public Picker<String> createPicker(Map<String, String> bundle, String prefix) {
-		checkNotNull(bundle);
-		return new Picker<>(bundle.keySet().stream()//
-				.filter(key -> key.startsWith(prefix))//
-				.sorted()//
-				.map(bundle::get)//
-				.toArray(String[]::new));
-	}
-
-	// TODO: doesn't webfx support resource bundles at all?
-	public Map<String, String> loadBundle() {
-		String messages = Resource.getText(urlFromRelPath("texts/messages.properties")); // Text returned immediately because embed
-		Map<String, String> map = new HashMap<>();
-		for (String line : messages.split("\n")) {
-			int p = line.indexOf('=');
-			if (p > 0 && !line.trim().startsWith("#"))
-				map.put(line.substring(0, p).trim(), line.substring(p + 1).trim());
-		}
-		return map;
+	public Image[] getLoadedImages() {
+		return loadedImages.toArray(new Image[loadedImages.size()]);
 	}
 }
