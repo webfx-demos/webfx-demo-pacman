@@ -63,7 +63,7 @@ public class GameApp extends Application {
 
 	// Game control
 	public static final KeyCodeCombination HELP = just(KeyCode.H);
-	public static final KeyCodeCombination BOOT = just(KeyCode.F3); // does not work, why?
+	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
 	public static final KeyCodeCombination CHANGE_GAME_VARIANT = just(KeyCode.V);
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
@@ -107,7 +107,6 @@ public class GameApp extends Application {
 	public void init() {
 		app = this;
 		assets = new GameAssets();
-		GameApp.assets.load();
 	}
 
 	@Override
@@ -227,7 +226,7 @@ public class GameApp extends Application {
 		Ufx.toggle(GameApp.simulationPausedPy);
 		// TODO mute and unmute?
 		if (GameApp.simulationPausedPy.get()) {
-			GameApp.assets.gameSounds(ui.game().variant()).stopAll();
+			GameApp.assets.gameSounds.get(ui.game().variant()).stopAll();
 		}
 	}
 

@@ -104,6 +104,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return GameApp.assets.gameSounds(gameVariant());
+		return GameApp.assets.gameSounds.get(gameVariant());
 	}
 }

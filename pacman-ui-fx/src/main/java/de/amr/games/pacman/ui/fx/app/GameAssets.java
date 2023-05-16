@@ -25,17 +25,16 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -91,75 +90,41 @@ public class GameAssets {
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 },
 	};
 
-	public Font arcadeFont;
-	public Font handwritingFont;
-	public Font helpFont;
+	public final Font arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
+	public final Font handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
+	public final Font helpFont = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 
-	public Image greetingMsPacMan;
-	public Image greetingPacMan;
-	public Image wallpaper;
-	public Color wallpaperColor = Color.rgb(0, 76, 149);
+	public final Image greetingMsPacMan = Manager.image("graphics/mspacman/wallpaper-midway.png");
+	public final Image greetingPacMan = Manager.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg");
+	public final Image wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
 
-	public Image helpIcon;
-	public Image helpIconHover;
+	public final Image helpIcon = Manager.image("graphics/icons/help-gray-64.png");
+	public final Image helpIconHover = Manager.image("graphics/icons/help-red-64.png");
 
-	public Image iconPacManGame;
-	public Spritesheet spritesheetPacManGame;
-	public Image fullMazePacManGame;
-	public Image emptyMazePacManGame;
-	public Image flashingMazePacManGame;
+	public final Image iconPacManGame = Manager.image("graphics/icons/pacman.png");
+	public final Spritesheet spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
+	public final Image fullMazePacManGame = Manager.image("graphics/pacman/maze_full.png");
+	public final Image emptyMazePacManGame = Manager.image("graphics/pacman/maze_empty.png");
+	public final Image flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
-	public Image iconMsPacManGame;
-	public Spritesheet spritesheetMsPacManGame;
-	public Image logoMsPacManGame;
-	public Image flashingMazesMsPacManGame;
+	public final Image iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
+	public final Spritesheet spritesheetMsPacManGame =  new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
+	public final Image logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");
+	public final Image flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
 
-	public Map<String, String> messageBundle;
+	public final Map<String, String> messageBundle = Manager.loadBundle();
 
-	private GameSounds gameSoundsMsPacMan;
-	private GameSounds gameSoundsPacMan;
-
-	public AudioClip voiceHelp;
-	public AudioClip voiceAutoPilotOff;
-	public AudioClip voiceAutopilotOn;
-	public AudioClip voiceImmunityOff;
-	public AudioClip voiceImmunityOn;
-
-	public void load() {
-		arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
-		handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
-		helpFont = Manager.font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
-
-		messageBundle = Manager.loadBundle();
-
-		greetingMsPacMan = Manager.image("graphics/mspacman/wallpaper-midway.png");
-		greetingPacMan = Manager.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg");
-
-		wallpaper = Manager.image("graphics/icons/pacman_wallpaper_gray.png"); //TODO not an icon
-
-		helpIcon = Manager.image("graphics/icons/help-gray-64.png");
-		helpIconHover = Manager.image("graphics/icons/help-red-64.png");
-
-		iconPacManGame = Manager.image("graphics/icons/pacman.png");
-		spritesheetPacManGame = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
-		fullMazePacManGame = Manager.image("graphics/pacman/maze_full.png");
-		emptyMazePacManGame = Manager.image("graphics/pacman/maze_empty.png");
-		flashingMazePacManGame = Manager.image("graphics/pacman/maze_empty_flashing.png");
-
-		iconMsPacManGame = Manager.image("graphics/icons/mspacman.png");
-		spritesheetMsPacManGame = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
-		flashingMazesMsPacManGame = Manager.image("graphics/mspacman/mazes-flashing.png");
-		logoMsPacManGame = Manager.image("graphics/mspacman/midway.png");
-
-		voiceHelp = Manager.audioClip("sound/voice/press-key.mp3");
-		voiceAutoPilotOff = Manager.audioClip("sound/voice/autopilot-off.mp3");
-		voiceAutopilotOn = Manager.audioClip("sound/voice/autopilot-on.mp3");
-		voiceImmunityOff = Manager.audioClip("sound/voice/immunity-off.mp3");
-		voiceImmunityOn = Manager.audioClip("sound/voice/immunity-on.mp3");
-
-		gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
-		gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
+	public final Map<GameVariant, GameSounds> gameSounds = new EnumMap<>(GameVariant.class);
+	{
+		gameSounds.put(GameVariant.MS_PACMAN, new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true));
+		gameSounds.put(GameVariant.PACMAN, new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true));
 	}
+
+	public final AudioClip voiceHelp = Manager.audioClip("sound/voice/press-key.mp3");
+	public final AudioClip voiceAutoPilotOff = Manager.audioClip("sound/voice/autopilot-off.mp3");
+	public final AudioClip voiceAutopilotOn = Manager.audioClip("sound/voice/autopilot-on.mp3");
+	public final AudioClip voiceImmunityOff = Manager.audioClip("sound/voice/immunity-off.mp3");
+	public final AudioClip voiceImmunityOn = Manager.audioClip("sound/voice/immunity-on.mp3");
 
 	/**
 	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
@@ -177,18 +142,6 @@ public class GameAssets {
 		} catch (Exception x) {
 			Logger.error("No text resource found for key '{}'", keyPattern);
 			return "missing{%s}"/*.formatted(keyPattern)*/;
-		}
-	}
-
-	private Image emptyMazeMsPacManGame(int i) {
-		return spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
-	}
-
-	public GameSounds gameSounds(GameVariant variant) {
-		switch (variant) {
-			case MS_PACMAN: return gameSoundsMsPacMan;
-			case PACMAN: return gameSoundsPacMan;
-			default: throw new IllegalGameVariantException(variant);
 		}
 	}
 }
