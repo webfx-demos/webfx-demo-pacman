@@ -52,7 +52,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature.add(overlay, 4.0 * TS, 33.0 * TS);
+		signature.add(overlay, 4.0 * TS, 32.5 * TS);
 	}
 
 	@Override

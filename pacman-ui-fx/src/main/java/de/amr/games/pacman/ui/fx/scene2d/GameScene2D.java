@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import dev.webfx.platform.useragent.UserAgent;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -42,6 +41,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -59,11 +59,12 @@ public abstract class GameScene2D implements GameEventListener {
 	public static final float HEIGHT = 36 * 8;
 	public static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
-	private static final Color UNDERLAY_COLOR = Color.rgb(248, 249, 249);
+	private static final Color IPAD_FRAME_COLOR = Color.rgb(240, 240, 240);
 
 	protected final BorderPane root = new BorderPane();
 	protected final StackPane layers = new StackPane();
 	protected final Pane underlay = new BorderPane();
+	protected final Canvas behindCanvas = new Canvas();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new Pane();
 	protected final VBox helpPanelContainer = new VBox();
@@ -75,33 +76,74 @@ public abstract class GameScene2D implements GameEventListener {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
-		root.setScaleX(0.99);
-		root.setScaleY(0.99);
+		root.setScaleX(0.98);
+		root.setScaleY(0.98);
 
-		root.heightProperty().addListener((py, ov, nv) -> {
-			double scaling = nv.doubleValue() / HEIGHT;
-			canvas.setScaleX(0.93 * scaling);
-			canvas.setScaleY(0.93 * scaling);
-			// don't ask me why this works but setScaleX/Y doesn't
-			overlay.getTransforms().setAll(new Scale(scaling,scaling));
-		});
+		underlay.setBackground(ResourceManager.colorBackgroundRounded(IPAD_FRAME_COLOR, 10));
 
-		underlay.setBackground(ResourceManager.colorBackgroundRounded(UNDERLAY_COLOR, 10));
+		behindCanvas.setWidth(WIDTH);
+		behindCanvas.setHeight(HEIGHT);
 
 		canvas.setWidth(WIDTH);
 		canvas.setHeight(HEIGHT);
 
 		// position where left-top corner of help popup appears
 		helpPanelContainer.setTranslateX(16);
-		helpPanelContainer.setTranslateY(40);
-
+		helpPanelContainer.setTranslateY(HEIGHT * 0.25);
 		overlay.getChildren().add(helpPanelContainer);
 
-		layers.getChildren().addAll(underlay, canvas, overlay);
+		layers.getChildren().addAll(underlay, behindCanvas, canvas, overlay);
 		root.setCenter(layers);
 
-		double size = 8;
-		insertHelpButton(size, WIDTH - size - 1, 1);
+		insertHelpButton(8, WIDTH /2, HEIGHT-10);
+
+		// for iPad look, we need a cam of course
+		var cam = new Circle(0.8, Color.gray(0.25));
+		cam.setTranslateX(WIDTH/2);
+		cam.setTranslateY(6);
+		overlay.getChildren().add(cam);
+
+		root.heightProperty().addListener((py, ov, nv) -> {
+			double magnification = (nv.doubleValue() / HEIGHT); // ratio between screen and model height
+			double canvasShrink = 0.90;
+			double canvasScaling = magnification * canvasShrink;
+			canvas.setScaleX(canvasScaling);
+			canvas.setScaleY(canvasScaling);
+			behindCanvas.setScaleX(canvasScaling * 1.05);
+			behindCanvas.setScaleY(canvasScaling * 1.025);
+			overlay.getTransforms().setAll(new Scale(magnification, magnification));
+		});
+	}
+
+	public void render() {
+		var g = canvas.getGraphicsContext2D();
+		var r = context.rendering2D();
+		drawRoundedCanvasBackground(IPAD_FRAME_COLOR, Color.BLACK);
+		if (context.isScoreVisible()) {
+			context.game().score().ifPresent(score ->
+					r.drawScore(g, score, "SCORE", GameApp.assets.arcadeFont, ArcadeTheme.PALE, TS, TS));
+			context.game().highScore().ifPresent(score ->
+					r.drawScore(g, score, "HIGH SCORE", GameApp.assets.arcadeFont, ArcadeTheme.PALE, TS * 13, TS));
+		}
+		if (context.isCreditVisible()) {
+			Rendering2D.drawText(g, "CREDIT " + context.game().credit(), ArcadeTheme.PALE, GameApp.assets.arcadeFont,TS * 2, TS * 36 - 1);
+		}
+		drawScene(g);
+		drawLevelCounter(g);
+	}
+
+	protected void drawRoundedCanvasBackground(Color frameColor, Color canvasColor) {
+		// small black padding around the game canvas
+		var bgCtx = behindCanvas.getGraphicsContext2D();
+		bgCtx.setFill(Color.BLACK);
+		// That doesn't look good:
+		//bgCtx.fillRoundRect(0, 0, behindCanvas.getWidth(), behindCanvas.getHeight(), 10, 10);
+		bgCtx.fillRect(0, 0, behindCanvas.getWidth(), behindCanvas.getHeight());
+
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(canvasColor);
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	// TODO: Graphic button rendering is broken in GWT, so I use an image with mouse handlers
@@ -168,44 +210,6 @@ public abstract class GameScene2D implements GameEventListener {
 		var width = ASPECT_RATIO * height;
 		root.setMinSize(width, height);
 		root.setMaxSize(width, height);
-	}
-
-	public void render() {
-		var g = canvas.getGraphicsContext2D();
-		if (UserAgent.isBrowser()) {
-			//TODO in the browser, the rounded corners look like la merde
-			drawCanvasBackground(g);
-		} else {
-			drawRoundedCanvasBackground(g, Color.WHITE, Color.BLACK);
-		}
-		var r = context.rendering2D();
-		var color = ArcadeTheme.PALE;
-		var font = r.screenFont(TS);
-		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
-			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 13, TS));
-		}
-		if (context.isCreditVisible()) {
-			Rendering2D.drawText(g, "CREDIT " + context.game().credit(), color, font,TS * 2, TS * 36 - 1);
-		}
-		drawScene(g);
-		drawLevelCounter(g);
-	}
-
-	protected void drawRoundedCanvasBackground(GraphicsContext g, Color frameColor, Color canvasColor) {
-		double w = canvas.getWidth();
-		double h = canvas.getHeight();
-		g.setFill(frameColor);
-		g.fillRect(0, 0, w, h);
-		g.setFill(canvasColor);
-		g.fillRoundRect(0, 0, w, h, 10, 8);
-	}
-
-	protected void drawCanvasBackground(GraphicsContext g) {
-		double w = canvas.getWidth();
-		double h = canvas.getHeight();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, w, h);
 	}
 
 	protected abstract void drawScene(GraphicsContext g);

@@ -93,10 +93,6 @@ public class GameApp extends Application {
 	public static final KeyCodeCombination KEY_SIMULATION_SLOWER   = altShift(KeyCode.S);
 	public static final KeyCodeCombination KEY_SIMULATION_NORMAL   = altShift(KeyCode.DIGIT0);
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationSpeedPy  = new SimpleIntegerProperty(60);
 
@@ -147,6 +143,10 @@ public class GameApp extends Application {
 			}
 		}
 		return map;
+	}
+
+	public static void main(String[] args) {
+		launch(args);
 	}
 
 	@Override
