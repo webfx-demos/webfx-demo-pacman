@@ -34,12 +34,12 @@ public class GreetingPane extends BorderPane {
         BorderPane.setAlignment(text, Pos.CENTER);
 
         // TODO that should probably be a button but GWT has its problems
+        var color = Color.rgb(0, 155, 252, 0.9);
         var clickArea = new StackPane(text);
         clickArea.setMaxSize(200,100);
         clickArea.setPadding(new Insets(10));
         clickArea.setCursor(Cursor.HAND);
-        clickArea.setBackground(ResourceManager.colorBackgroundRounded(
-                ResourceManager.color(Color.rgb(0, 155, 252), 1.0), 20));
+        clickArea.setBackground(ResourceManager.colorBackgroundRounded(color, 20));
 
         setBottom(clickArea);
         BorderPane.setAlignment(clickArea, Pos.CENTER);

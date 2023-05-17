@@ -95,7 +95,7 @@ public abstract class GameScene2D implements GameEventListener {
 		layers.getChildren().addAll(underlay, behindCanvas, canvas, overlay);
 		root.setCenter(layers);
 
-		insertHelpButton(8, WIDTH /2, HEIGHT-10);
+		insertHelpButton(8, WIDTH /2 - 4, HEIGHT - 9);
 
 		// for iPad look, we need a cam of course
 		var cam = new Circle(0.8, Color.gray(0.25));
