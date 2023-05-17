@@ -39,9 +39,9 @@ Play scene cheats:
 
 ## How it looks
 
-![Start Pages(startpages.png)
+![Start Pages](startpages.png)
 
-![Intro Screens(introscreens.png)
+![Intro Screens](introscreens.png)
 
-![Play Screens(playscreens.png)
+![Play Screens](playscreens.png)
 
