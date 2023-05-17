@@ -19,6 +19,9 @@ Simulation control:
   - <kbd>P</kbd> Toggle pause mode
   - <kbd>Shift+P</kbd> or <kbd>Space</kbd> Single step
   - <kbd>T</kbd> Ten steps
+  - <kbd>Alt+Shift+F</kbd>Run faster (in 5 Hz steps)
+  - <kbd>Alt+Shift+S</kbd>Run slower (in 5 Hz steps)
+  - <kbd>Alt+Shift+0</kbd>Run at 60 Hz
 
 Test modes: (available from intro screens)
   - <kbd>Alt+Shift+T</kbd>Start level test mode (plays each level for some seconds)
@@ -30,7 +33,6 @@ Cheats:
 
 Play scene cheats:
   - <kbd>Alt+Shift+E</kbd> Eat all pills except the energizers
-  - <kbd>Alt+Shift+I</kbd> Toggle immunity of player against ghost attacks
   - <kbd>Alt+Shift+L</kbd> Add 3 player lives
   - <kbd>Alt+Shift+N</kbd> Enter next game level
   - <kbd>Alt+Shift+X</kbd> Kill all ghosts outside of the ghosthouse 
