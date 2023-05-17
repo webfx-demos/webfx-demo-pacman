@@ -2,7 +2,7 @@
 
 ## About this project
 
-This is the WebFX versions of a JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. This version contains no 3D scenes. It can be run on all platforms supported by WebFX, especially inside a browser via the GWT implementation.
+This is the WebFX version of a JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. This version contains no 3D scenes. It can be run on all platforms supported by WebFX, especially inside a browser via the GWT implementation.
 
 ## How to use
 
