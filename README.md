@@ -7,8 +7,8 @@ This is the WebFX version of a JavaFX user interface for my UI-agnostic [Pac-Man
 ## How to use
 
 The game can be started by opening the following URL(s) in a browser:
-- (https://pacman.webfx.dev/)[Ms. Pac-Man]
-- (https://pacman.webfx.dev/?game=pacman)[Pac-Man]
+- [Ms. Pac-Man game](https://pacman.webfx.dev/)
+- [Pac-Man game](https://pacman.webfx.dev/?game=pacman)
 
 On the intro screen of either game, you can switch to the other game by pressing the key <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd>. I used these keys because they are also used by the MAME Aracde emulator.
 
