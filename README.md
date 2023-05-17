@@ -10,7 +10,7 @@ The game can be started by opening the following URL(s) in a browser:
 - [Ms. Pac-Man game](https://pacman.webfx.dev/)
 - [Pac-Man game](https://pacman.webfx.dev/?game=pacman)
 
-From the intro scene of either game, you can switch to the other game by pressing <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd>. I used these keys because they are also used by the MAME Aracde emulator.
+From the intro scene of either game, you can switch to the other game by pressing <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd> (I used these keys because they are also used by the MAME Arcade emulator).
 
 Pac-Man steering:
 - Pac-Man is steered using the cursor keys.
