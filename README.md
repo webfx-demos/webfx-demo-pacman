@@ -1,4 +1,4 @@
-# A JavaFX UI (2D + 3D) for Pac-Man and Ms. Pac-Man
+# A JavaFX UI (2D) for Pac-Man and Ms. Pac-Man
 
 ## About this project
 
