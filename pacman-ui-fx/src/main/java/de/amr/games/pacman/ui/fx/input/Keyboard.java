@@ -62,7 +62,7 @@ public class Keyboard {
 		if (currentEvent.getCode().isLetterKey()) {
 			var letter = currentEvent.getText().toUpperCase();
 			var letterCode = KeyCode.getKeyCode(letter);
-			if (!letterCode.equals(currentEvent.getCode())) {
+			if (letterCode != null && !letterCode.equals(currentEvent.getCode())) {
 				Logger.info("Replace code " + letterCode + " in event " + currentEvent);
 				currentEvent = replaceKeyCode(currentEvent, letterCode);
 				Logger.info("Modified event: " + currentEvent);
