@@ -24,16 +24,19 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
+ *
+ * TODO This whole thing needs to be rethought.
  */
 public class Keyboard {
 
-	private static KeyEvent currentKeyEvent;
+	private static KeyEvent currentEvent;
 
 	/**
 	 * If the event is not yet consumed, it is stored and can be matched against key combinations.
@@ -42,28 +45,40 @@ public class Keyboard {
 	 */
 	public static void accept(KeyEvent e) {
 		if (e.isConsumed()) {
-			currentKeyEvent = null;
+			currentEvent = null;
 			Logger.trace("Ignored key event ({}): {}", e.getCode(), e);
 		} else {
-			currentKeyEvent = e;
+			currentEvent = e;
 			e.consume();
 			Logger.trace("Consumed key event ({}): {}", e.getCode(), e);
 		}
 	}
 
 	public static boolean pressed(KeyCodeCombination combination) {
-		if (currentKeyEvent == null) {
+		if (currentEvent == null) {
 			return false;
 		}
-		var match = combination.match(currentKeyEvent);
-		if (match) {
-			Logger.trace("Key event matches combination {}", combination.getName());
+		// French keyboard with AZERTY layout delivers KeyCode.Q when pressing "A" key! (Les Français sont marrant :-)
+		if (currentEvent.getCode().isLetterKey()) {
+			var letter = currentEvent.getText().toUpperCase();
+			var letterCode = KeyCode.getKeyCode(letter);
+			if (!letterCode.equals(currentEvent.getCode())) {
+				Logger.info("Replace code " + letterCode + " in event " + currentEvent);
+				currentEvent = replaceKeyCode(currentEvent, letterCode);
+				Logger.info("Modified event: " + currentEvent);
+			}
 		}
-		return match;
+		return combination.match(currentEvent);
+	}
+
+	private static KeyEvent replaceKeyCode(KeyEvent event, KeyCode newCode) {
+		return new KeyEvent(event.getSource(), event.getTarget(), event.getEventType(), event.getCharacter(),
+				event.getText(), event.getCode(), event.isShiftDown(), event.isControlDown(), event.isAltDown(),
+				event.isMetaDown());
 	}
 
 	public static void clearState() {
-		currentKeyEvent = null;
+		currentEvent = null;
 	}
 
 	private Keyboard() {
