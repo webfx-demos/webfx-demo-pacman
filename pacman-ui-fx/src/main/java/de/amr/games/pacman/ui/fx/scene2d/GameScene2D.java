@@ -149,11 +149,9 @@ public abstract class GameScene2D implements GameEventListener {
 	// TODO: Graphic button rendering is broken in GWT, so I use an image with mouse handlers
 	private void insertHelpButton(double size, double x, double y) {
 		helpButton = new ImageView(GameApp.assets.helpIcon);
-		helpButton.setOnMouseEntered(e -> {
-			helpButton.setImage(GameApp.assets.helpIconHover);
-			GameApp.app.showHelp();
-		});
+		helpButton.setOnMouseEntered(e -> helpButton.setImage(GameApp.assets.helpIconHover));
 		helpButton.setOnMouseExited(e -> helpButton.setImage(GameApp.assets.helpIcon));
+		helpButton.setOnMousePressed(e -> GameApp.app.showHelp());
 		helpButton.setPreserveRatio(true);
 		helpButton.setFitHeight(size);
 		helpButton.setFitWidth(size);
