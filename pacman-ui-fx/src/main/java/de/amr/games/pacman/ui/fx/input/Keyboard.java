@@ -73,7 +73,7 @@ public class Keyboard {
 
 	private static KeyEvent replaceKeyCode(KeyEvent event, KeyCode newCode) {
 		return new KeyEvent(event.getSource(), event.getTarget(), event.getEventType(), event.getCharacter(),
-				event.getText(), event.getCode(), event.isShiftDown(), event.isControlDown(), event.isAltDown(),
+				event.getText(), newCode, event.isShiftDown(), event.isControlDown(), event.isAltDown(),
 				event.isMetaDown());
 	}
 
