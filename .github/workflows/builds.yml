@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        app: [{name: 'PacMan', module-token: 'pacman-ui-fx', gwt-token: 'pacman_ui_fx', gluon-token: 'PacmanUiFxGluon', web-push-branch: 'pacman', android-package-name: 'dev.webfx.demo.pacman', android-track: 'beta', ios-bundle-id: 'dev.webfx.demo.pacman', version: '0.1.0-SNAPSHOT'}]
+        app: [{name: 'PacMan', module-token: 'pacman-ui-fx', gwt-token: 'pacman_ui_fx', gluon-token: 'PacmanUiFxGluon', web-push-branch: 'pacman', web-push-branch2: 'mspacman', android-package-name: 'dev.webfx.demo.pacman', android-track: 'beta', ios-bundle-id: 'dev.webfx.demo.pacman', version: '0.1.0-SNAPSHOT'}]
         os-config:  [1, 2, 3, 4]
         include:
           - os-config: 1 # Generates builds 1) 2) 3) 4) & 5)
@@ -181,6 +181,19 @@ jobs:
           destination-repository-username: ${{ env.web-push-repository-owner }}
           destination-repository-name: ${{ env.web-push-repository-name }}
           target-branch: ${{ matrix.app.web-push-branch }}
+          destination-github-username: ${{ env.web-push-username }}
+          user-email: ${{ env.web-push-email }}
+
+      - if: matrix.web-artifact-suffix != null && env.API_GITHUB_TOKEN != ''
+        name: Push GWT build to ${{ matrix.app.web-push-branch2 }} branch
+        uses: cpina/github-action-push-to-another-repository@master
+        env:
+          API_TOKEN_GITHUB: ${{ env.API_GITHUB_TOKEN }}
+        with:
+          source-directory: ${{ env.app-gwt-build-dir }}
+          destination-repository-username: ${{ env.web-push-repository-owner }}
+          destination-repository-name: ${{ env.web-push-repository-name }}
+          target-branch: ${{ matrix.app.web-push-branch2 }}
           destination-github-username: ${{ env.web-push-username }}
           user-email: ${{ env.web-push-email }}
 
