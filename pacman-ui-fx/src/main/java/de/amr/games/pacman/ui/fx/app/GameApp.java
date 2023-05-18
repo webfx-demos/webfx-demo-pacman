@@ -30,7 +30,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import dev.webfx.kit.util.scene.DeviceSceneUtil;
-import dev.webfx.platform.useragent.UserAgent;
+import dev.webfx.platform.windowlocation.WindowLocation;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -100,6 +100,19 @@ public class GameApp extends Application {
 	public static GameAssets assets;
 	public static GameUI ui;
 
+	private static Optional<GameVariant> getGameVariantFromHostname() {
+		var hostname = WindowLocation.getHostname();
+		if (hostname != null) {
+			if (hostname.startsWith("pacman"))
+				return Optional.of(GameVariant.PACMAN);
+			if (hostname.startsWith("mspacman"))
+				return Optional.of(GameVariant.MS_PACMAN);
+		}
+		return Optional.empty();
+	}
+
+/* Keeping the previous code in case the above doesn't work
+
 	private static Optional<GameVariant> getGameVariantFromQuery() {
 		if (UserAgent.isBrowser()) {
 			var query = dev.webfx.platform.windowlocation.WindowLocation.getQueryString();
@@ -144,6 +157,7 @@ public class GameApp extends Application {
 		}
 		return map;
 	}
+*/
 
 	public static void main(String[] args) {
 		launch(args);
@@ -158,7 +172,7 @@ public class GameApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		var settings = new Settings(Collections.emptyMap()); // no command-line args used
-		var gameVariant = getGameVariantFromQuery().orElse(GameVariant.MS_PACMAN);
+		var gameVariant = getGameVariantFromHostname().orElse(GameVariant.MS_PACMAN);
 		var gameController = new GameController(gameVariant);
 		ui = new GameUI(primaryStage, settings, gameController);
 		DeviceSceneUtil.onFontsAndImagesLoaded(() -> {} , GameAssets.Manager.getLoadedImages());

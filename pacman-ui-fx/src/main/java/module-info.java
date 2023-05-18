@@ -11,7 +11,6 @@ module pacman.ui.fx {
     requires pacman.core;
     requires webfx.kit.util.scene;
     requires webfx.platform.resource;
-    requires webfx.platform.useragent;
     requires webfx.platform.util;
     requires webfx.platform.windowlocation;
 
