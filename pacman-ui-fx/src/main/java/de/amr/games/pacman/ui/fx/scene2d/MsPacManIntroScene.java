@@ -32,6 +32,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
@@ -52,7 +53,10 @@ public class MsPacManIntroScene extends GameScene2D {
 		super(gameController);
 		signature.add(overlay, 6.0 * TS, 32.5 * TS);
 
-		overlay.setOnMouseClicked(e -> GameApp.app.addCredit());
+		overlay.setOnMouseClicked(e -> {
+			Logger.info("Overlay mouse clicked: " + e);
+			GameApp.app.addCredit();
+		});
 	}
 
 	@Override

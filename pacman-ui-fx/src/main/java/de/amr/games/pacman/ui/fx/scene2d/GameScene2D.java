@@ -43,6 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -151,7 +152,11 @@ public abstract class GameScene2D implements GameEventListener {
 		helpButton = new ImageView(GameApp.assets.helpIcon);
 		helpButton.setOnMouseEntered(e -> helpButton.setImage(GameApp.assets.helpIconHover));
 		helpButton.setOnMouseExited(e -> helpButton.setImage(GameApp.assets.helpIcon));
-		helpButton.setOnMousePressed(e -> GameApp.app.showHelp());
+		helpButton.setOnMouseClicked(e -> {
+			Logger.info("Help button mouse clicked: " + e);
+			e.consume();
+			GameApp.app.showHelp();
+		});
 		helpButton.setPreserveRatio(true);
 		helpButton.setFitHeight(size);
 		helpButton.setFitWidth(size);
