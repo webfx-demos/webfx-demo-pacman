@@ -50,15 +50,15 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 public class PlayScene2D extends GameScene2D {
 
 	private GestureHandler gestureHandler;
-	private Rectangle touchPad = new Rectangle(80, 50);
+	private Rectangle touchPad = new Rectangle(200, 80);
 
 	public PlayScene2D(GameController gameController) {
 		super(gameController);
 
 		// Dragging the mouse from some point in the ghosthouse to any direction steers Pac-Man
 		touchPad.setTranslateX(0.5 * (GameScene2D.WIDTH - touchPad.getWidth()));
-		touchPad.setTranslateY(0.5 * (GameScene2D.HEIGHT - touchPad.getHeight()) - 4);
-		touchPad.setFill(Color.gray(0.25, 0.1));
+		touchPad.setTranslateY(GameScene2D.HEIGHT - touchPad.getHeight() - 20);
+		touchPad.setFill(Color.gray(0.25, 0.0));
 		overlay.getChildren().add(touchPad);
 		gestureHandler = new GestureHandler(touchPad);
 		gestureHandler.setOnDirectionRecognized(dir -> {
