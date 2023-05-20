@@ -30,11 +30,14 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.GameApp;
+import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
@@ -46,8 +49,22 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
  */
 public class PlayScene2D extends GameScene2D {
 
+	private GestureHandler gestureHandler;
+	private Rectangle touchPad = new Rectangle(80, 50);
+
 	public PlayScene2D(GameController gameController) {
 		super(gameController);
+		// Dragging the mouse from some point in the ghosthouse to any direction steers Pac-Man
+		touchPad.setTranslateX(0.5 * (GameScene2D.WIDTH - touchPad.getWidth()));
+		touchPad.setTranslateY(0.5 * (GameScene2D.HEIGHT - touchPad.getHeight()) - 4);
+		touchPad.setFill(Color.gray(0.25, 0.1));
+		overlay.getChildren().add(touchPad);
+		gestureHandler = new GestureHandler(touchPad);
+		gestureHandler.setOnDirectionRecognized(dir -> {
+			context.game().level().ifPresent(level -> {
+				level.pac().setWishDir(dir);
+			});
+		});
 	}
 
 	@Override
