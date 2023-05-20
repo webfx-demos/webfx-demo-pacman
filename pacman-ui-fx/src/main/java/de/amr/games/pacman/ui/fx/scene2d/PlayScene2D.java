@@ -54,6 +54,7 @@ public class PlayScene2D extends GameScene2D {
 
 	public PlayScene2D(GameController gameController) {
 		super(gameController);
+
 		// Dragging the mouse from some point in the ghosthouse to any direction steers Pac-Man
 		touchPad.setTranslateX(0.5 * (GameScene2D.WIDTH - touchPad.getWidth()));
 		touchPad.setTranslateY(0.5 * (GameScene2D.HEIGHT - touchPad.getHeight()) - 4);
@@ -64,6 +65,12 @@ public class PlayScene2D extends GameScene2D {
 			context.game().level().ifPresent(level -> {
 				level.pac().setWishDir(dir);
 			});
+		});
+
+		overlay.setOnMouseClicked(e -> {
+			if (context.level().isPresent() && context.level().get().isDemoLevel()) {
+				GameApp.app.addCredit();
+			}
 		});
 	}
 
