@@ -40,6 +40,8 @@ public class PacManCreditScene extends GameScene2D {
 
 	public PacManCreditScene(GameController gameController) {
 		super(gameController);
+
+		overlay.setOnMouseClicked(e -> GameApp.app.startGame());
 	}
 
 	@Override
