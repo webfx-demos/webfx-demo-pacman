@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.input;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.scene.Node;
 import org.tinylog.Logger;
 
@@ -34,14 +36,11 @@ import java.util.function.Consumer;
  */
 public class GestureHandler {
 
-	private boolean dragged;
-	private double gestureStartX;
-	private double gestureStartY;
-	private double gestureEndX;
-	private double gestureEndY;
+	private final GameSceneContext context;
 	private Consumer<Direction> dirConsumer = dir -> Logger.info("Move {}", dir);
 
-	public GestureHandler(Node node) {
+	public GestureHandler(Node node, GameSceneContext context) {
+		this.context = context;
 		// This works in the desktop implementation but not with GWT:
 		//node.setOnDragDetected(event -> {
 
@@ -51,15 +50,11 @@ public class GestureHandler {
 		// between the *first* drag and the release event carries the information for computing the direction.
 		// TODO: Does this also work on a touchscreen?
 		node.setOnMouseDragged(event -> {
-			Logger.info("Dragged " + event);
-			if (!dragged) {
-				dragged = true;
-				gestureStartX = event.getX();
-				gestureStartY = event.getY();
-			}
-
+			var dir = computeDirection(event.getX(), event.getY());
+			if (dir != null)
+				dirConsumer.accept(dir);
 		});
-		node.setOnMouseReleased(event -> {
+		/*node.setOnMouseReleased(event -> {
 			Logger.info("Released " + event);
 			if (dragged) {
 				gestureEndX = event.getX();
@@ -69,18 +64,22 @@ public class GestureHandler {
 				dirConsumer.accept(dir);
 				dragged = false;
 			}
-		});
+		});*/
 	}
 
-	private Direction computeDirection() {
-		double dx = Math.abs(gestureEndX - gestureStartX);
-		double dy = Math.abs(gestureEndY - gestureStartY);
-		if (dx > dy) {
+	private Direction computeDirection(double gestureX, double gestureY) {
+		GameLevel level = context.game().level().orElse(null);
+		if (level == null)
+			return null;
+		var pos = level.pac().center();
+		double dx = gestureX - pos.x();
+		double dy = gestureY - pos.y();
+		if (Math.abs(dx) > Math.abs(dy)) {
 			// horizontal
-			return gestureEndX > gestureStartX ? Direction.RIGHT : Direction.LEFT;
+			return dx > 0 ? Direction.RIGHT : Direction.LEFT;
 		} else {
 			// vertical
-			return gestureEndY > gestureStartY ? Direction.DOWN : Direction.UP;
+			return dy > 0 ? Direction.DOWN : Direction.UP;
 		}
 	}
 

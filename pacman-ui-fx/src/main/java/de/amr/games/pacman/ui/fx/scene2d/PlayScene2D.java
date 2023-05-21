@@ -60,7 +60,7 @@ public class PlayScene2D extends GameScene2D {
 		touchPad.setScaleY(0.9);
 		touchPad.setFill(Color.gray(0.55, 0.0));
 		overlay.getChildren().add(touchPad);
-		gestureHandler = new GestureHandler(touchPad);
+		gestureHandler = new GestureHandler(touchPad, context);
 		gestureHandler.setOnDirectionRecognized(dir -> {
 			context.game().level().ifPresent(level -> {
 				level.pac().setWishDir(dir);
