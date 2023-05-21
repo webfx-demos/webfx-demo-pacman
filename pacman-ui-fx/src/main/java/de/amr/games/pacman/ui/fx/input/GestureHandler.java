@@ -42,21 +42,32 @@ public class GestureHandler {
 	private Consumer<Direction> dirConsumer = dir -> Logger.info("Move {}", dir);
 
 	public GestureHandler(Node node) {
-		node.setOnMousePressed(event -> {
-			dragged = false;
-			gestureStartX = event.getX();
-			gestureStartY = event.getY();
+		// This works in the desktop implementation but not with GWT:
+		//node.setOnDragDetected(event -> {
+
+		// When dragging the mouse and releasing it, a series of drag events is generated followed
+		// by a mouse release event.
+		// So the pattern (drag+ release) forms a "swipe" gesture and the mouse position
+		// between the *first* drag and the release event carries the information for computing the direction.
+		// TODO: Does this also work on a touchscreen?
+		node.setOnMouseDragged(event -> {
+			Logger.info("Dragged " + event);
+			if (!dragged) {
+				dragged = true;
+				gestureStartX = event.getX();
+				gestureStartY = event.getY();
+			}
 
 		});
-		node.setOnMouseDragged(event -> {
-			dragged = true;
-		});
 		node.setOnMouseReleased(event -> {
+			Logger.info("Released " + event);
 			if (dragged) {
 				gestureEndX = event.getX();
 				gestureEndY = event.getY();
-				Direction dir = computeDirection();
+				var dir = computeDirection();
+				Logger.info("Move " + dir);
 				dirConsumer.accept(dir);
+				dragged = false;
 			}
 		});
 	}
