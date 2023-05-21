@@ -10,6 +10,8 @@ The game can be started by opening the following URL(s) in a browser:
 - [Ms. Pac-Man game](https://pacman.webfx.dev/)
 - [Pac-Man game](https://pacman.webfx.dev/?game=pacman)
 
+### With a keyboard
+
 From the intro scene of either game, you can switch to the other game by pressing <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd> (I used these keys because they are also used by the MAME Arcade emulator).
 
 Pac-Man steering:
@@ -36,6 +38,12 @@ Play scene cheats:
   - <kbd>Alt+Shift+L</kbd>: Add 3 player lives
   - <kbd>Alt+Shift+N</kbd>: Enter next game level
   - <kbd>Alt+Shift+X</kbd>: Kill all ghosts outside of the ghosthouse 
+
+### With mouse or touch screen
+
+- Intro scene: Click/tap anywhere to "add a coin" and change to the "credit scene".
+- Credit scene: Click/tap anywhere to start the game and change to the play scene. 
+- Play scene: To steer Pac-Man, use a mouse drag or a "wipe" gesture. Dragging / wiping on the lower part of the maze to any direction causes Pac-Man to move to that direction (as soon as he can).
 
 ## How it looks
 
