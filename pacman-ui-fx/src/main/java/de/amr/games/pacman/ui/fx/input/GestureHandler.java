@@ -32,7 +32,7 @@ import org.tinylog.Logger;
 import java.util.function.Consumer;
 
 /**
- * @author Armin Reichert
+ * @author Armin Reichert, Bruno Salmon
  */
 public class GestureHandler {
 
@@ -42,30 +42,11 @@ public class GestureHandler {
 
 	public GestureHandler(Node node, GameSceneContext context) {
 		this.context = context;
-		// This works in the desktop implementation but not with GWT:
-		//node.setOnDragDetected(event -> {
-
-		// When dragging the mouse and releasing it, a series of drag events is generated followed
-		// by a mouse release event.
-		// So the pattern (drag+ release) forms a "swipe" gesture and the mouse position
-		// between the *first* drag and the release event carries the information for computing the direction.
-		// TODO: Does this also work on a touchscreen?
 		node.setOnMouseDragged(event -> {
 			var dir = computeDirection(event.getX(), event.getY());
 			if (dir != null)
 				dirConsumer.accept(dir);
 		});
-		/*node.setOnMouseReleased(event -> {
-			Logger.info("Released " + event);
-			if (dragged) {
-				gestureEndX = event.getX();
-				gestureEndY = event.getY();
-				var dir = computeDirection();
-				Logger.info("Move " + dir);
-				dirConsumer.accept(dir);
-				dragged = false;
-			}
-		});*/
 	}
 
 	private Direction computeDirection(double gestureX, double gestureY) {
