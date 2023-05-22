@@ -54,6 +54,9 @@ public class GestureHandler {
 		if (level == null)
 			return null;
 		var pos = level.pac().center();
+		if (Math.abs(gestureX - pos.x()) < 8 && Math.abs(gestureY - pos.y()) < 8) {
+			return null;
+		}
 		// Angle between Pac-Man and the mouse (between -180° and +180°)
 		double angle = Math.atan2(pos.y() - gestureY, gestureX - pos.x()) / Math.PI * 180;
 		// We will consider all cardinal directions (RIGHT, UP, LEFT & DOWN) and all intermediate directions (RIGHT_UP,
