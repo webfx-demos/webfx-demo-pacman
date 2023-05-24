@@ -7,12 +7,12 @@ This is a WebFX port of the user interface for the UI-agnostic [Pac-Man / Ms. Pa
 ## How to use
 
 The game can be started by opening the following URL(s) in a browser:
-- [Ms. Pac-Man game](https://pacman.webfx.dev/)
-- [Pac-Man game](https://pacman.webfx.dev/?game=pacman)
+- [Ms. Pac-Man game](https://mspacman.webfx.dev)
+- [Pac-Man game](https://pacman.webfx.dev)
 
 ### With a keyboard
 
-From the intro scene of either game, you can switch to the other game by pressing <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd> (I used these keys because they are also used by the MAME Arcade emulator).
+From the intro scene of either game, you can switch to the other game by pressing <kbd>V</kbd>. To start the game, you first have to "insert a coin" by pressing <kbd>5</kbd>. After you have credit, the game can be started by pressing <kbd>1</kbd> (I used these keys because they are also used by the MAME Arcade emulator). To quit a scene, press <kbd>Q</kbd>.
 
 Pac-Man steering:
 - Pac-Man is steered using the cursor keys.
@@ -43,7 +43,7 @@ Play scene cheats:
 
 - Intro scene: Click/tap anywhere to "add a coin" and change to the "credit scene".
 - Credit scene: Click/tap anywhere to start the game and change to the play scene. 
-- Play scene: To steer Pac-Man, use a mouse drag or a "wipe" gesture. Dragging / wiping on the lower part of the maze to any direction causes Pac-Man to move to that direction (as soon as he can).
+- Play scene: To steer Pac-Man, use a mouse drag or a "wipe" gesture. Dragging / wiping anywhere inside the maze to any direction causes Pac-Man to move to that direction (as soon as he can).
 
 ## How it looks
 
