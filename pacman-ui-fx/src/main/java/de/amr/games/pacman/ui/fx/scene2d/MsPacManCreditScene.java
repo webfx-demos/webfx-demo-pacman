@@ -41,7 +41,6 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	public MsPacManCreditScene(GameController gameController) {
 		super(gameController);
-
 		overlay.setOnMouseClicked(e -> GameApp.app.startGame());
 	}
 
