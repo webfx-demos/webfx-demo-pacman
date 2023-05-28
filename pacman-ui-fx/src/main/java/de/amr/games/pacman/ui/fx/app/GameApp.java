@@ -42,8 +42,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
@@ -77,7 +75,7 @@ public class GameApp extends Application {
 
 	// Cheats (only available while game is playing)
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL       = altShift(KeyCode.E);
-	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES     = altShift(KeyCode.L);
+	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES     = altShift(KeyCode.V);
 	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL    = altShift(KeyCode.N);
 	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS   = altShift(KeyCode.X);
 
