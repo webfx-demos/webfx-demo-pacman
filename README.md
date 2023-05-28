@@ -35,7 +35,7 @@ Cheats:
 
 Play scene cheats:
   - <kbd>Alt+Shift+E</kbd>: Eat all pills except the energizers
-  - <kbd>Alt+Shift+L</kbd>: Add 3 player lives
+  - <kbd>Alt+Shift+V</kbd>: Add 3 player lives
   - <kbd>Alt+Shift+N</kbd>: Enter next game level
   - <kbd>Alt+Shift+X</kbd>: Kill all ghosts outside of the ghosthouse 
 
