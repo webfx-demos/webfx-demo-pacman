@@ -105,7 +105,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public Rectangle2D lifeSymbolRegion() {
-		return spritesheet.tile(8, 1);
+		return spritesheet.region(129,15,16,16);
 	}
 
 	@Override
@@ -121,9 +121,9 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var wide = spritesheet.tile(0, d);
-			var middle = spritesheet.tile(1, d);
-			var closed = spritesheet.tile(2, 0);
+			var wide = spritesheet.region(0, d * 16, 14, 14);
+			var middle = spritesheet.region(16, d * 16, 14, 14);
+			var closed = spritesheet.region(32, 0, 14, 14);
 			var animation = new SimpleAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
@@ -133,7 +133,11 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet.tilesRightOf(3, 0, 11));
+		var r = new Rectangle2D[11];
+		for (int i = 0; i < 11; ++i) {
+			r[i] = new Rectangle2D(48 + i * 16, 0, 15, 15);
+		}
+		var animation = new SimpleAnimation<>(r);
 		animation.setFrameDuration(8);
 		return animation;
 	}
