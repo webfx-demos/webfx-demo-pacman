@@ -6,6 +6,7 @@ module pacman.ui.fx.gluon {
     requires javafx.media;
     requires pacman.ui.fx;
     requires webfx.kit.openjfx;
+    requires webfx.platform.audio.gluon;
     requires webfx.platform.boot.java;
     requires webfx.platform.console.java;
     requires webfx.platform.json.java;
